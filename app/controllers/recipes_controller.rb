@@ -5,8 +5,9 @@ class RecipesController < ApplicationController
     # raise "hell"
     f2fkey="18eb516313da0e6e327844bf73c1c8e0"
     url1 = "http://food2fork.com/api/search?key=#{f2fkey}&q=#{params[:recipesearch]}"
-    raise "hell"
+
     @f2f = HTTParty.get(url1);
+    
   end
 
   def show
