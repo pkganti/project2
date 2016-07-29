@@ -1,2 +1,14 @@
-<h1>Pages#home</h1>
-<p>Find me in app/views/pages/home.html.erb</p>
+
+
+
+<div class="container col-xs-6 col-xs-offset-4">
+  <h1>Recipe World !!!</h1>
+<%= form_tag :class => "form-signin" '/login' do %>
+  <h2 class="form-signin-heading">Please sign in<span class='glyphicon glyphicon-send'></span></h2>
+  <%= label_tag(:email, "Email", :autofocus => true) %>
+  <%= text_field_tag(:email, nil, :id => "inputEmail", :class => "form-control",  :placeholder => "Email address") %>
+  <%= label_tag(:password, "Password") %>
+  <%= password_field_tag(:password, nil, :id => "inputPassword", :class => "form-control",  :placeholder => "Password") %>
+  <%= submit_tag('Login', :id => "submit", :class => "btn btn-lg btn-primary btn-block" )%>
+<% end %>
+</div>
