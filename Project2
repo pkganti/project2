@@ -1,0 +1,49 @@
+Project 2: Recipies
+
+DURATION:
+
+
+
+assuming that total_seconds = 3600
+
+Option 1:
+
+distance_of_time_in_words(total_seconds) #=> "about 1 hour"
+Option 2:
+
+Time.at(total_seconds).utc.strftime("%H:%M:%S") #=> "01:00:00"
+Option 3:
+
+seconds = total_seconds % 60
+minutes = (total_seconds / 60) % 60
+hours = total_seconds / (60 * 60)
+
+format("%02d:%02d:%02d", hours, minutes, seconds) #=> "01:00:00"
+
+
+UNITWISE gem
+
+
+APIs:
+BigOven
+food2Fork
+
+WebScrape:
+Taste.com
+foodnetwork.com
+
+
+User - name:string emailid:string password:string isAdmin:boolean image:text
+Recipie - title:string directions:text duration:integer ratings:decimal category:string cuisine:string images:text level:integer userId:integer
+Ingredients - name:string,category:string
+Quantity - unit:unitwise,size:float, RecipieId, IngredientsId
+Favorites - userID, RecipieId
+
+
+rails generate model User name:string emailid:string password:string isAdmin:boolean image:text
+
+rails generate model Recipe title:string directions:text duration:integer ratings:decimal category:string cuisine:string images:text level:integer userId:integer
+
+rails generate model Ingredients name:string category:string
+rails generate model Favorites userId:integer recipeId:integer 
+
