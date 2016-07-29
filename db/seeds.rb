@@ -1,7 +1,7 @@
 User.destroy_all
-u1 = User.create(:name => "Tripti", :password => "chicken", :email => "tripti.895@gmail.com", :isAdmin =>true, :image => "https://media.licdn.com/mpr/mpr/shrinknp_400_400/AAEAAQAAAAAAAAj5AAAAJDI5NWE1NDA0LWMzZTItNDI2NC04MThhLTBjOTJhZDhmODExYw.jpg")
-u2 = User.create(:name => "Phani", :password => "chicken", :email => "ganti.phani@gmail.com", :isAdmin =>false, :image =>"http://res.cloudinary.com/sydjs/image/upload/c_thumb,f_auto,g_faces,h_360,w_360/v1465866066/gc0esgwzwcog58px8xfz.jpg")
-u3 = User.create(:name => "Katrina", :password => "chicken", :email => "katrinamarielee@gmail.com", :isAdmin =>false, :image =>"http://www.checkmate.io/wordpress/wp-content/uploads/2015/05/Katrina_Marie_Lee.png")
+u1 = User.create(:name => "Tripti", :password => "chicken", :password_confirmation => 'chicken', :email => "tripti.895@gmail.com", :isAdmin =>true, :image => "https://media.licdn.com/mpr/mpr/shrinknp_400_400/AAEAAQAAAAAAAAj5AAAAJDI5NWE1NDA0LWMzZTItNDI2NC04MThhLTBjOTJhZDhmODExYw.jpg")
+u2 = User.create(:name => "Phani", :password => "chicken", :password_confirmation => 'chicken', :email => "ganti.phani@gmail.com", :isAdmin =>false, :image =>"http://res.cloudinary.com/sydjs/image/upload/c_thumb,f_auto,g_faces,h_360,w_360/v1465866066/gc0esgwzwcog58px8xfz.jpg")
+u3 = User.create(:name => "Katrina", :password => "chicken", :password_confirmation => 'chicken', :email => "katrinamarielee@gmail.com", :isAdmin =>false, :image =>"http://www.checkmate.io/wordpress/wp-content/uploads/2015/05/Katrina_Marie_Lee.png")
 Recipe.destroy_all
 r1 = Recipe.create(:title => "Honey-soy chicken", :ratings => 5, :category => "poultry", :cuisine => "Asian", :cook_duration => 3600, :level => "easy", :images => "http://www.taste.com.au/images/recipes/sfi/2011/04/honeysoy-chicken-21995_l.jpeg", :directions => "Step 1
 Combine soy sauce, honey, ginger and garlic in a large dish. Add chicken. Turn to coat. Cover with plastic wrap. Refrigerate for 2 hours, turning occasionally.
