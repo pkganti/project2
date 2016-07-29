@@ -47,3 +47,7 @@ rails generate model Recipe title:string directions:text duration:integer rating
 rails generate model Ingredients name:string category:string
 rails generate model Favorites userId:integer recipeId:integer 
 
+
+Routes:
+root_path
+resources : users, recipes
