@@ -5,7 +5,8 @@ class RecipesController < ApplicationController
   end
 
   def show
-    @recipe = Recipe.find_by(where user_id)
+    @recipe = Recipe.find_by(where id => params[:id])
+    @quantity = Quantity.where(recipe_id => params[:id])
   end
 
   def new
