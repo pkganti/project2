@@ -1,0 +1,56 @@
+<%= form_for @recipe, :html => {:multipart => true} do |f| %>
+  <div class="form-group">
+    <%= f.label :title%>
+    <%= f.text_field :title, :class => 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :images, 'Image of Dish' %>
+    <%= f.url_field :images, :class => 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :servings, 'Yield' %>
+    <%= f.text_field :servings, :class => 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :ratings %>
+    <%= f.text_area :ratings, :class => 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :prep_duration, 'Prep Time'%>
+    <%= f.input_field :prep_duration, :class => 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :cook_duration, 'Cook Time' %>
+    <%= f.input_field :cook_duration, :class => 'form-control' %>
+    <!-- This will need a drop down hour and minutes -->
+  </div>
+
+  <div class="form-group">
+    <%= f.label :category %>
+    <%= f.text_field :category, :class => 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :cuisine, 'Must see?' %>
+    <%= f.text_field :cuisine, :class => 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :level, 'Level of Difficulty' %>
+    <%= f.text_field :level, :class => 'form-control' %>
+    <!-- Need drop down -->
+  </div>
+
+  <div class="form-group">
+    <%= f.label :directions %>
+    <%= f.text_field :directions, :class => 'form-control' %>
+  </div>
+
+  <%= f.submit %>
+
+<% end %>
