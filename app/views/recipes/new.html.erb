@@ -1,25 +1,2 @@
-<%= form_for @recipe do |f| %>
-  Addresses:
-  <ul>
-    <%= f.fields_for :quantities do |quantities_form| %>
-      <li>
-        <%= quantities_form.check_box :_destroy%>
-        <%= quantities_form.label :unit %>
-        <%= quantities_form.text_field :unit %>
-
-        <%= quantities_form.label :size %>
-        <%= quantities_form.text_field :size %>
-      </li>
-    <% end %>
-    <%= f.fields_for :quantities do |quantities_form| %>
-      <li>
-        <%= quantities_form.check_box :_destroy%>
-        <%= quantities_form.label :unit %>
-        <%= quantities_form.text_field :unit %>
-
-        <%= quantities_form.label :size %>
-        <%= quantities_form.text_field :size %>
-      </li>
-    <% end %>
-  </ul>
-<% end %>
+<h1>New Recipe</h1>
+<%= render :partial => 'form' %>

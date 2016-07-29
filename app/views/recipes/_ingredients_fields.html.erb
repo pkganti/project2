@@ -1,0 +1,22 @@
+<div class="form-group">
+
+      <%= f.fields_for :ingredients do |ingredients_form| %>
+        <li>
+          <%= ingredients_form.check_box :_destroy%>
+          <%= ingredients_form.label :name %>
+          <%= ingredients_form.text_field :name %>
+
+          <%= ingredients_form.label :category %>
+          <%= ingredients_form.text_field :category %>
+
+          <%= f.fields_for :quantities do |quantities_form| %>
+            <%= quantities_form.label :unit %>
+            <%= quantities_form.text_field :unit %>
+
+            <%= quantities_form.label :size %>
+            <%= quantities_form.text_field :size %>
+          <% end %>
+      </li>
+    <% end %>
+
+</div>
