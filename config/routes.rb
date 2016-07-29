@@ -1,8 +1,8 @@
 Rails.application.routes.draw do
   root :to => 'pages#home'
-  resources: 'pages'
-  resources: 'recipes'
-  resources: 'users'
+  resources :pages
+  resources :recipes
+  resources :users
 
   get '/login' => 'session#new'
   post '/login' => 'session#create'
