@@ -1,2 +1,22 @@
-<h1>Recipe#show</h1>
-<p>Find me in app/views/recipe/show.html.erb</p>
+<h1><%= @recipe.title %></h1>
+<%= @recipe.images %>
+<%= @recipe.ratings %>
+<%= @recipe.level %>
+<%= @recipe.cook_duration %>
+<%= @recipe.prep_duration %>
+<%= @recipe.category %>
+<%= @recipe.cuisine %>
+
+<div id="ingredients">
+<h2>Ingredients</h2>
+  <% @quantity.each do |q| %>
+    <%= q.size %>
+    <%= q.unit %>
+    <%= q.ingredient.name %>
+  <% end %>
+</div>
+<!-- Nested ingredients -->
+<div id="directions">
+<h2>Directions</h2>
+<%= @recipe.directions %>
+</div>
