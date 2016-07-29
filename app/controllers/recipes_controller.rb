@@ -13,6 +13,8 @@ class RecipesController < ApplicationController
   end
 
   def create
+    @recipe = Recipe.new recipe_params
+    @recipe.save
   end
 
   def edit
@@ -22,5 +24,13 @@ class RecipesController < ApplicationController
   end
 
   def destroy
+  end
+
+  private
+
+  def recipe_params
+    params.require(:recipe).permit(:title,:directions,:cook_duration,:ratings,:category,:cuisine,:images,:level,:servings,:source_url,:prep_duration)
+  end
+
   end
 end
