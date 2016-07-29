@@ -6,6 +6,10 @@ class UsersController < ApplicationController
     @user = User.new
   end
 
+  def edit
+    @user = @current_user
+  end
+
   def create
     @user = User.new (user_params)
     if @user.save
@@ -43,7 +47,15 @@ class UsersController < ApplicationController
 
   private
     def user_params
-      params.require(:user).permit(:name, :email, :password, :isAdmin, :image)
+      params.require(:user).permit(:name, :email, :password, :password_confirmation, :image)
+    end
+
+    def authorise_user
+      redirect_to root_path unless  @current_user.present? &&   @current_user.admin?
+    end
+
+    def check_for_user
+      redirect_to new_user_path unless  @current_user.present?
     end
 
 end

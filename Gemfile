@@ -37,6 +37,8 @@ group :development, :test do
   gem 'byebug'
   gem 'pry-rails'
   gem 'rails_12factor'
+  gem 'bootstrap-sass'
+  gem 'cloudinary'
 end
 
 group :development do
