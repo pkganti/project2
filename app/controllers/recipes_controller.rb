@@ -18,7 +18,13 @@ class RecipesController < ApplicationController
 
   def create
     @recipe = Recipe.new recipe_params
+    raise "hegdl"
+    @recipe.quantities.each do |f|
+      f.quantity_type_id = Quantity_type.find_by_name(f.quantity_type_id).id
+    end
     @recipe.save
+
+    redirect_to recipes_path
   end
 
   def edit

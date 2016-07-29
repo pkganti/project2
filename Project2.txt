@@ -51,3 +51,24 @@ rails generate model Favorites userId:integer recipeId:integer
 Routes:
 root_path
 resources : users, recipes
+
+
+
+
+
+details of recipe:
+r = Recipe.find 11
+q = Quantity.where( :recipe_id => r.id)
+53] pry(main)> q[0].ingredient_id
+=> 25
+[54] pry(main)> q[0].ingredient.name
+  Ingredient Load (0.6ms)  SELECT  "ingredients".* FROM "ingredients" WHERE "ingredients"."id" = $1 LIMIT 1  [["id", 25]]
+  Ingredient Load (0.6ms)  SELECT  "ingredients".* FROM "ingredients" WHERE "ingredients"."id" = $1 LIMIT 1  [["id", 25]]
+=> "Chicken"
+[55] pry(main)> q[0].ingredient.category
+=> "Poultry"
+[56] pry(main)> q[0].unit
+=> "cup"
+[57] pry(main)> q[0].size
+=> 0.5
+[58] pry(main)>
