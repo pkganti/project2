@@ -1,13 +1,17 @@
 <h1>All Recipes </h1>
-<input type="text" name="name" id="search" placeholder="eg. italian chicken"></input>
-<button id="searchButton"> </button>
+<input type="text" name="recipesearch" id="search" placeholder="eg. italian chicken"></input>
+<button id="searchButton">Search</button>
 <div>
+
   <% @recipes.each do |recipe| %>
-  <%= recipe.image %>
-  <%= recipe.name %>
-  <%= recipe.ratings %>
-  <%= recipe.level %>
-  <%= recipe.cook_duration %>
-  <%= recipe.prep_duration %>
+    <ul>
+      <li><img src="<%= recipe.images %>" alt=""></li>
+      <li><%= recipe.title %></li>
+      <li><%= recipe.ratings %></li>
+      <li><%= recipe.level %></li>
+      <li><%= Time.at(recipe.cook_duration ).utc.strftime("%H:%M")%> Hrs</li>
+      <li><%= recipe.prep_duration %></li>
+    </ul>
   <% end %>
+
 </div>

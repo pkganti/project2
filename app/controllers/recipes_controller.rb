@@ -2,11 +2,15 @@ class RecipesController < ApplicationController
 
   def index
     @recipes = Recipe.all
+    # raise "hell"
+    f2fkey="18eb516313da0e6e327844bf73c1c8e0"
+    url1 = "http://food2fork.com/api/search?key=#{f2fkey}&q=#{params[:recipesearch]}"
+    raise "hell"
+    @f2f = HTTParty.get(url1);
   end
 
   def show
-    @recipe = Recipe.find_by(where id => params[:id])
-    @quantity = Quantity.where(recipe_id => params[:id])
+    @recipe = Recipe.find_by(where user_id)
   end
 
   def new
@@ -19,13 +23,7 @@ class RecipesController < ApplicationController
 
   def create
     @recipe = Recipe.new recipe_params
-    raise "hegdl"
-    @recipe.quantities.each do |f|
-      f.quantity_type_id = Quantity_type.find_by_name(f.quantity_type_id).id
-    end
     @recipe.save
-
-    redirect_to recipes_path
   end
 
   def edit
