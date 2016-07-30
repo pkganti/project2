@@ -18,36 +18,49 @@ class RecipesController < ApplicationController
   end
 
   def create
-    @recipe = Recipe.new recipe_params
-    raise "hegdl"
-    @recipe.quantities.each do |f|
-      f.quantity_type_id = Quantity_type.find_by_name(f.quantity_type_id).id
-    end
+    @recipe = Recipe.new params[:recipe]  params[:recipe][:ingredients_attributes]
+
+    # @recipe.quantities.each do |f|
+    #   f.quantity_type_id = Quantity_type.find_by_name(f.quantity_type_id).id
+    # end
+#     params[:recipe][:ingredients_attributes].values.each do |ingredient|
+#         ingredient[:type_id].values.each do |a|
+#           a[:type_id]
+#         end
+# end if params[:recipe] and params[:recipe][:ingredients_attributes]
+    abc= params[:recipe][:ingredients_attributes].values.each do |ingredient|
+        ingredient[:type_id].values.each do |a|
+          a[:type_id]
+        end
+end if params[:recipe] and params[:recipe][:ingredients_attributes]
+raise "hegdl"
+
     @recipe.save
 
     redirect_to recipes_path
   end
 
   def edit
+    @recipe = Recipe.find_by :id => params[:id]
   end
 
   def update
+    @recipe = Recipe.find_by :id => params[:id]
+    @recipe.update recipe
+
+    redirect_to @recipe
   end
 
   def destroy
+    @recipe = Recipe.find_by(:id => params[:id])
+    @recipe.destroy
+
+    redirect_to recipes_path
   end
 
   private
 
   def recipe_params
-    params.require(:recipe).permit(:title,:directions,:cook_duration,:ratings,:category,:cuisine,:images,:level,:servings,:source_url,:prep_duration,quantities_attributes: [:unit, :size, :_destroy],ingredients_attributes: [:name, :category, :_destroy])
-  end
-
-  def ingredient_params
-    params.require(:ingredient).permit(:name,:category)
-  end
-
-  def quantities_params
-    params.require(:quantities).permit(:unit,:size)
+    params.require(:recipe).permit(:title,:directions,:cook_duration,:ratings,:category,:cuisine,:images,:level,:servings,:source_url,:prep_duration,quantities: [:unit, :size, :_destroy],ingredients: [:name, :category, :_destroy])
   end
 end
