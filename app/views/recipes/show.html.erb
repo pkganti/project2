@@ -1,5 +1,6 @@
 <h1><%= @recipe.title %></h1>
-<%= @recipe.images %>
+<%= image_tag("http://www.marthastewart.com/sites/files/marthastewart.com/styles/wmax-520-highdpi/public/d22/1103_recipe_macncheese/1103_recipe_macncheese_vert.jpg?itok=0-9kgX5Y")%> 
+<%#= cl_image_tag @recipe.image, :width=>300, :height=>300, :gravity=>"auto", :class => 'thumbnail' %>
 <%= @recipe.ratings %>
 <%= @recipe.level %>
 <%= @recipe.cook_duration %>
