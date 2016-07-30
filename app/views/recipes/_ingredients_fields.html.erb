@@ -1,7 +1,7 @@
 <div class="form-group">
 
       <%= f.fields_for :ingredients do |ingredients_form| %>
-        <li>
+        <li class="form-group">
           <%= ingredients_form.label :name %>
           <%= ingredients_form.text_field :name %>
 

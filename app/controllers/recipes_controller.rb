@@ -30,8 +30,15 @@ class RecipesController < ApplicationController
   end
 
   def create
+    prep_duration = convert_time_to_seconds((params[:recipe][:prep_duration_hour]).to_i ,(params[:recipe][:prep_duration_mins]).to_i)
+    cook_duration = convert_time_to_seconds((params[:recipe][:cook_duration_hour]).to_i,(params[:recipe][:cook_duration_mins]).to_i)
 
+    # raise "bgjda"
     @recipe = Recipe.create recipe_params
+    @recipe.prep_duration = prep_duration
+    @recipe.cook_duration = cook_duration
+    @recipe.save
+
     quantities = params[:recipe][:ingredients_attributes].map { |i| i[1]["quantities"] }
     ingredients = params[:recipe][:ingredients_attributes].map { |i| i[1]["ingredients"] }
       # binding.pry
@@ -67,7 +74,14 @@ class RecipesController < ApplicationController
   private
 
   def recipe_params
-    params.require(:recipe).permit(:title,:directions,:cook_duration,:ratings,:category,:cuisine,:images,:level,:servings,:source_url,:prep_duration)
+    params.require(:recipe).permit(:title,:directions,:cook_duration,:ratings,:category,:cuisine,:images,:level,:servings,:source_url)
+    # ,:prep_duration,:prep_duration_hour,:prep_duration_mins, :cook_duration_mins, :cook_duration_hour)
   end
 
+  def convert_time_to_seconds(h,m)
+    hour = 60 * 60 * (h).to_i
+    mins = 60 * (m).to_i
+
+    duration = hour + mins
+  end
 end
