@@ -2,7 +2,6 @@
 
       <%= f.fields_for :ingredients do |ingredients_form| %>
         <li>
-          <%= ingredients_form.check_box :_destroy%>
           <%= ingredients_form.label :name %>
           <%= ingredients_form.text_field :name %>
 
