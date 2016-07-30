@@ -26,25 +26,16 @@ class RecipesController < ApplicationController
   def create
 
     @recipe = Recipe.create recipe_params
-    quantities = params[:recipe][:ingredients_attributes].map { |i| p i[1]["quantities"] }
-    ingredients = params[:recipe][:ingredients_attributes].map { |i| p i[1]["ingredients"] }
-      binding.pry
+    quantities = params[:recipe][:ingredients_attributes].map { |i| i[1]["quantities"] }
+    ingredients = params[:recipe][:ingredients_attributes].map { |i| i[1]["ingredients"] }
+      # binding.pry
     ingredients.each_with_index do |i, index|
-      ingredient = Ingredient.create(i.to_hash)
-      @recipe.ingredients << ingredient
-      # quantity = Quantity.create( quantities[index].to_hash )
-      p quantities[index]
-      # ingredient.quantities << quantity
+      quantity = Quantity.new( quantities[index].to_hash )
+      quantity.recipe_id = @recipe.id
+      ingredient = Ingredient.create( i.to_hash )
+      quantity.ingredient_id = ingredient.id
+      quantity.save
     end
-    ingredients.each_with_index do |i, index|
-      ingredient = Ingredient.create(i.to_hash)
-      @recipe.ingredients << ingredient
-      # quantity = Quantity.create( quantities[index].to_hash )
-      p quantities[index][:unit]
-      # ingredient.quantities << quantity
-    end
-
-    @recipe.save
 
     redirect_to @recipe
   end
