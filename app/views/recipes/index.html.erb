@@ -9,12 +9,25 @@
 
     <ul>
       <li><img src="<%= recipe.images %>" alt=""></li>
-      <li><%= recipe.title %></li>
-      <li><%= recipe.ratings %></li>
-      <li><%= recipe.level %></li>
-      <li><%= Time.at(recipe.cook_duration ).utc.strftime("%H:%M")%> Hrs</li>
-      <li><%= recipe.prep_duration %></li>
+      <li>Title: <%= recipe.title %></li>
+      <li>Rating: <%= recipe.ratings %></li>
+      <li>Difficulty Level: <%= recipe.level %></li>
+      <li>Cooking Duration: <%= Time.at(recipe.cook_duration ).utc.strftime("%H:%M")%> Hrs</li>
+      <li>Prep Duration: <%= recipe.prep_duration %></li>
     </ul>
+
+  <% end %>
+
+  <% if @searchrecipes.size > 0 %>
+  <% @searchrecipes.each_with_index do |x,i| %>
+      <ul>
+        <li><img src="<%= @searchrecipes[i]["image_url"] %>" alt=""></li>
+        <li>Title: <%= @searchrecipes[i]["title"] %></li>
+        <li><a href="<%= @searchrecipes[i]["source_url"] %>">Find about recipe</a></li>
+
+      </ul>
+
+    <% end %>
 
   <% end %>
 

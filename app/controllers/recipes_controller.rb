@@ -5,8 +5,11 @@ class RecipesController < ApplicationController
       @recipes = Recipe.all
       f2fkey="18eb516313da0e6e327844bf73c1c8e0"
       url1 = "http://food2fork.com/api/search?key=#{f2fkey}&q=#{params[:recipesearch]}"
-      @f2f = HTTParty.get(url1);
-      raise "hell"
+      string_obj = HTTParty.get(url1)
+      object_obj = JSON.parse(string_obj)
+      @searchrecipes = object_obj["recipes"]
+      # raise "hell"
+
     else
       @recipes = Recipe.all
       # raise "hell"
