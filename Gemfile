@@ -38,13 +38,6 @@ group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
   gem 'pry-rails'
-<<<<<<< HEAD
-=======
-  gem 'rails_12factor'
-  gem 'bootstrap-sass'
-  gem 'cloudinary'
-  gem 'httparty'
->>>>>>> 11cafbfd7bb6d0d69d50fc0730d11ebd6a162b69
 end
 
 group :development do
