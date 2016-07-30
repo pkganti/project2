@@ -39,6 +39,7 @@ group :development, :test do
   gem 'rails_12factor'
   gem 'bootstrap-sass'
   gem 'cloudinary'
+  gem 'httparty'
 end
 
 group :development do

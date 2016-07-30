@@ -9,10 +9,10 @@
 
 <div id="ingredients">
 <h2>Ingredients</h2>
-  <% @quantity.each do |q| %>
+  <% @quantities.each do |q| %>
     <%= q.size %>
     <%= q.unit %>
-    <%= q.ingredient.name %>
+    <%#= q.ingredient.name %>
   <% end %>
 </div>
 <!-- Nested ingredients -->

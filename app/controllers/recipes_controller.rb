@@ -2,11 +2,17 @@ class RecipesController < ApplicationController
 
   def index
     @recipes = Recipe.all
+    # raise "hell"
+    f2fkey="18eb516313da0e6e327844bf73c1c8e0"
+    url1 = "http://food2fork.com/api/search?key=#{f2fkey}&q=#{params[:recipesearch]}"
+
+    @f2f = HTTParty.get(url1);
+
   end
 
   def show
-    @recipe = Recipe.find_by(where id => params[:id])
-    @quantity = Quantity.where(recipe_id => params[:id])
+    @recipe = Recipe.find_by( :id => params[:id])
+    @quantities = Quantity.where(:recipe_id => params[:id])
   end
 
   def new
@@ -18,26 +24,29 @@ class RecipesController < ApplicationController
   end
 
   def create
-    @recipe = Recipe.new params[:recipe]  params[:recipe][:ingredients_attributes]
 
-    # @recipe.quantities.each do |f|
-    #   f.quantity_type_id = Quantity_type.find_by_name(f.quantity_type_id).id
-    # end
-#     params[:recipe][:ingredients_attributes].values.each do |ingredient|
-#         ingredient[:type_id].values.each do |a|
-#           a[:type_id]
-#         end
-# end if params[:recipe] and params[:recipe][:ingredients_attributes]
-    abc= params[:recipe][:ingredients_attributes].values.each do |ingredient|
-        ingredient[:type_id].values.each do |a|
-          a[:type_id]
-        end
-end if params[:recipe] and params[:recipe][:ingredients_attributes]
-raise "hegdl"
+    @recipe = Recipe.create recipe_params
+    quantities = params[:recipe][:ingredients_attributes].map { |i| p i[1]["quantities"] }
+    ingredients = params[:recipe][:ingredients_attributes].map { |i| p i[1]["ingredients"] }
+      binding.pry
+    ingredients.each_with_index do |i, index|
+      ingredient = Ingredient.create(i.to_hash)
+      @recipe.ingredients << ingredient
+      # quantity = Quantity.create( quantities[index].to_hash )
+      p quantities[index]
+      # ingredient.quantities << quantity
+    end
+    ingredients.each_with_index do |i, index|
+      ingredient = Ingredient.create(i.to_hash)
+      @recipe.ingredients << ingredient
+      # quantity = Quantity.create( quantities[index].to_hash )
+      p quantities[index][:unit]
+      # ingredient.quantities << quantity
+    end
 
     @recipe.save
 
-    redirect_to recipes_path
+    redirect_to @recipe
   end
 
   def edit
@@ -61,6 +70,6 @@ raise "hegdl"
   private
 
   def recipe_params
-    params.require(:recipe).permit(:title,:directions,:cook_duration,:ratings,:category,:cuisine,:images,:level,:servings,:source_url,:prep_duration,quantities: [:unit, :size, :_destroy],ingredients: [:name, :category, :_destroy])
+    params.require(:recipe).permit(:title,:directions,:cook_duration,:ratings,:category,:cuisine,:images,:level,:servings,:source_url,:prep_duration)
   end
 end
