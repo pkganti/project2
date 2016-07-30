@@ -8,7 +8,7 @@ class RecipesController < ApplicationController
       string_obj = HTTParty.get(url1)
       object_obj = JSON.parse(string_obj)
       @searchrecipes = object_obj["recipes"]
-      # raise "hell"
+      raise "hell"
 
     else
       @recipes = Recipe.all
