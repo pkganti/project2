@@ -14,9 +14,3 @@
  *= require_self
 
  */
-
- input {
-   width = 100px;
-   height=60px;
-   margin: 0 auto;
- }
