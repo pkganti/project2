@@ -1,10 +1,16 @@
 <h1><%= @recipe.title %></h1>
-<%= image_tag @recipe.images%> 
+<%= image_tag @recipe.images%>
 <%#= cl_image_tag @recipe.image, :width=>300, :height=>300, :gravity=>"auto", :class => 'thumbnail' %>
-<%= @recipe.ratings %>
-<%= @recipe.level %>
+<%#= raise "help" %>
+<% (@recipe.ratings).to_i.times do |i| %>
+  <span style="font-size:150%;color:yellow;">&#9733;</span>
+<% end %>
+<% recipe_levels = {1=>'Easy',2=>'Medium',3=>'Complex'} %>
+<%= recipe_levels[@recipe.level] %>
 <%= @recipe.cook_duration %>
 <%= @recipe.prep_duration %>
+<%#= @recipe.cook_duration.strftime '%M' if @recipe.cook_duration.present? %>
+<%#= @recipe.prep_duration.strftime '%M' if @recipe.prep_duration.present?%>
 <%= @recipe.category %>
 <%= @recipe.cuisine %>
 
