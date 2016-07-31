@@ -6,21 +6,23 @@
 <% (@recipe.ratings).to_i.times do |i| %>
   <span style="font-size:150%;color:yellow;">&#9733;</span>
 <% end %>
-<% recipe_levels = {1=>'Easy',2=>'Medium',3=>'Complex'} %>
-<%= recipe_levels[@recipe.level] %>
-<%= Time.at(@recipe.cook_duration).utc.strftime("%H:%M") %>
-<%= Time.at(@recipe.prep_duration).utc.strftime("%H:%M") %>
-<%= @recipe.category %>
-<%= @recipe.cuisine %>
+<% recipe_levels = {0=>'Easy',1=>'Medium',2=>'Complex'} %>
+<li>Level: <%= recipe_levels[@recipe.level] %></li>
+<li>Prep Time:<%= Time.at(@recipe.prep_duration).utc.strftime("%H:%M") if @recipe.prep_duration%></li>
+<li>Cook Time: <%= Time.at(@recipe.cook_duration).utc.strftime("%H:%M") if @recipe.cook_duration%>Hrs.</li>
+<li>Category: <%= @recipe.category %></li>
+<li>Cuisine: <%= @recipe.cuisine %></li>
 
 </div>
 
 <div id="ingredients">
 <h2>Ingredients</h2>
   <% @quantities.each do |q| %>
+    <li>
     <%= q.size %>
     <%= q.unit %>
     <%= q.ingredient.name %>
+    </li>
   <% end %>
 </div>
 <!-- Nested ingredients -->
