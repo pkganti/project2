@@ -1,5 +1,7 @@
 class RecipesController < ApplicationController
 
+  require 'open-uri'
+
   def index
     if params[:recipesearch].present?
       @recipes = Recipe.all
@@ -8,6 +10,10 @@ class RecipesController < ApplicationController
       string_obj = HTTParty.get(url1)
       object_obj = JSON.parse(string_obj)
       @searchrecipes = object_obj["recipes"]
+      html = @searchrecipes[1]["f2f_url"]
+      page = Nokogiri::HTML(open(html))
+
+      raise "hell"
 
     else
       @recipes = Recipe.all
