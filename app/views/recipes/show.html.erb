@@ -1,32 +1,42 @@
-<h1><%= @recipe.title %></h1>
-<%= image_tag @recipe.images%>
-<%#= cl_image_tag @recipe.image, :width=>300, :height=>300, :gravity=>"auto", :class => 'thumbnail' %>
+<div class="container">
+    <div class="row col-xs-12 col-md-6 col-md-offset-3" id="showContainer">
+        <div class="showHeader">
+        <h1><%= @recipe.title %></h1>
+        <%= image_tag @recipe.images%>
+        <%#= cl_image_tag @recipe.image, :width=>300, :height=>300, :gravity=>"auto", :class => 'thumbnail' %>
 
-<div>
-<% (@recipe.ratings).to_i.times do |i| %>
-  <span style="font-size:150%;color:yellow;">&#9733;</span>
-<% end %>
-<% recipe_levels = {0=>'Easy',1=>'Medium',2=>'Complex'} %>
-<li>Level: <%= recipe_levels[@recipe.level] %></li>
-<li>Prep Time:<%= Time.at(@recipe.prep_duration).utc.strftime("%H:%M") if @recipe.prep_duration%></li>
-<li>Cook Time: <%= Time.at(@recipe.cook_duration).utc.strftime("%H:%M") if @recipe.cook_duration%>Hrs.</li>
-<li>Category: <%= @recipe.category %></li>
-<li>Cuisine: <%= @recipe.cuisine %></li>
+        <div>
+            <% (@recipe.ratings).to_i.times do |i| %>
+            <span style="font-size:150%;color:#BFAB25;">&#9733;</span>
+            <% end %>
+            <% recipe_levels = {0=>'Easy',1=>'Medium',2=>'Complex'} %>
+            <li>Level:
+                <%= recipe_levels[@recipe.level] %></li>
+            <li>Prep Time:<%= Time.at(@recipe.prep_duration).utc.strftime("%H:%M") if @recipe.prep_duration%></li>
+            <li>Cook Time:
+                <%= Time.at(@recipe.cook_duration).utc.strftime("%H:%M") if @recipe.cook_duration%>Hrs.</li>
+            <li>Category:
+                <%= @recipe.category %></li>
+            <li>Cuisine:
+                <%= @recipe.cuisine %></li>
+        </div>
+        </div>
 
-</div>
-
-<div id="ingredients">
-<h2>Ingredients</h2>
-  <% @quantities.each do |q| %>
-    <li>
-    <%= q.size %>
-    <%= q.unit %>
-    <%= q.ingredient.name %>
-    </li>
-  <% end %>
-</div>
-<!-- Nested ingredients -->
-<div id="directions">
-<h2>Directions</h2>
-<%= @recipe.directions %>
+        <div id="ingredients">
+            <h2>Ingredients</h2>
+            <% @quantities.each do |q| %>
+            <li>
+                <%= q.size %>
+                <%= q.unit %>
+                <%= q.ingredient.name %>
+            </li>
+            <% end %>
+        </div>
+        <!-- Nested ingredients -->
+        <div id="directions">
+            <h2>Directions</h2>
+            <%= @recipe.directions %>
+        </div>
+    </div>
+  </div>
 </div>
