@@ -10,6 +10,7 @@ class RecipesController < ApplicationController
       string_obj = HTTParty.get(url1)
       object_obj = JSON.parse(string_obj)
       @searchrecipes = object_obj["recipes"]
+
       html = @searchrecipes[1]["f2f_url"]
       page = Nokogiri::HTML(open(html))
 
@@ -24,6 +25,7 @@ class RecipesController < ApplicationController
   def show
     @recipe = Recipe.find_by( :id => params[:id])
     @quantities = Quantity.where(:recipe_id => params[:id])
+
   end
 
   def new
@@ -80,7 +82,6 @@ class RecipesController < ApplicationController
 
   def recipe_params
     params.require(:recipe).permit(:title,:directions,:cook_duration,:ratings,:category,:cuisine,:images,:level,:servings,:source_url)
-    # ,:prep_duration,:prep_duration_hour,:prep_duration_mins, :cook_duration_mins, :cook_duration_hour)
   end
 
   def convert_time_to_seconds(h,m)
@@ -89,4 +90,5 @@ class RecipesController < ApplicationController
 
     duration = hour + mins
   end
+
 end
