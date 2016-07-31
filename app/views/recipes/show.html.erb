@@ -1,16 +1,25 @@
 <h1><%= @recipe.title %></h1>
 <%= image_tag @recipe.images%>
 <%#= cl_image_tag @recipe.image, :width=>300, :height=>300, :gravity=>"auto", :class => 'thumbnail' %>
-<%#= raise "help" %>
+
+<div>
 <% (@recipe.ratings).to_i.times do |i| %>
   <span style="font-size:150%;color:yellow;">&#9733;</span>
 <% end %>
-<% recipe_levels = {1=>'Easy',2=>'Medium',3=>'Complex'} %>
-<%= recipe_levels[@recipe.level] %>
-<%= Time.at(@recipe.cook_duration).utc.strftime("%H:%M") if @recipe.cook_duration.present?%>
-<%= Time.at(@recipe.prep_duration).utc.strftime("%H:%M") if @recipe.prep_duration.present?%>
-<%= @recipe.category %>
-<%= @recipe.cuisine %>
+
+<% recipe_levels = {0=>'Easy',1=>'Medium',2=>'Complex'} %>
+<li>Level: <%= recipe_levels[@recipe.level] %></li>
+<% if @recipe.prep_duration %>
+<li>Prep Time:<%= Time.at(@recipe.prep_duration).utc.strftime("%H:%M") %></li>
+<% end %>
+<% if @recipe.cook_duration %>
+<li>Cook Time: <%= Time.at(@recipe.cook_duration).utc.strftime("%H:%M") %>Hrs.</li>
+<% end %>
+<li>Category: <%= @recipe.category %></li>
+<li>Cuisine: <%= @recipe.cuisine %></li>
+
+</div>
+
 
 <div id="ingredients">
 <h2>Ingredients</h2>

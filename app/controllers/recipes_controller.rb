@@ -25,6 +25,7 @@ class RecipesController < ApplicationController
   def show
     @recipe = Recipe.find_by( :id => params[:id])
     @quantities = Quantity.where(:recipe_id => params[:id])
+    
   end
 
   def new
@@ -89,4 +90,5 @@ class RecipesController < ApplicationController
 
     duration = hour + mins
   end
+
 end
