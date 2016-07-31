@@ -19,6 +19,7 @@
 
     <% end %>
       <% @searchrecipes.each_with_index do |x,i| %>
+  <img src="<%= @searchrecipes[i]["image_url"] %>" alt="">
           <ul>
             <li><a href="/recipes/<%= @searchrecipes[i]["recipe_id"] %>"><img src="<%= @searchrecipes[i]["image_url"] %>" alt=""></a></li>
             <li>Title: <%= @searchrecipes[i]["title"] %></li>
