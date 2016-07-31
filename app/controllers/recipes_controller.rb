@@ -1,3 +1,5 @@
+require 'open-uri'
+
 class RecipesController < ApplicationController
 
   def index
@@ -8,6 +10,7 @@ class RecipesController < ApplicationController
       string_obj = HTTParty.get(url1)
       object_obj = JSON.parse(string_obj)
       @searchrecipes = object_obj["recipes"]
+      binding.pry
       # Commenting this part as unable to process https request
       # rId = object_obj["recipes"].first['recipe_id']
       # url1 = "http://food2fork.com/api/search?key=#{f2fkey}&q=#{params[:recipesearch]}"
@@ -25,7 +28,7 @@ class RecipesController < ApplicationController
   def show
     @recipe = Recipe.find_by( :id => params[:id])
     @quantities = Quantity.where(:recipe_id => params[:id])
-    
+
   end
 
   def new

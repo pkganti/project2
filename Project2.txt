@@ -22,7 +22,7 @@ format("%02d:%02d:%02d", hours, minutes, seconds) #=> "01:00:00"
 
 
 UNITWISE gem
-
+rating gem: https://github.com/wazery/ratyrate
 
 APIs:
 BigOven
@@ -279,3 +279,83 @@ food2fork:
   "image_url"=>"http://static.food2fork.com/chickenbiryani410x27351f3.jpg",
   "social_rank"=>34.80777735743579,
   "publisher_url"=>"http://tastykitchen.com"}]
+  
+  
+  
+  
+  
+  > doc = Nokogiri::HTML(open(@searchrecipes[0]["f2f_url"]))
+  
+  [2] pry(#<RecipesController>)> doc.css('.recipe-title').each do |title|
+[2] pry(#<RecipesController>)*   p title.content
+[2] pry(#<RecipesController>)* end
+"Chicken biryani"
+=> 0
+
+
+5] pry(#<RecipesController>)> doc.css('h5 ,li').each do |i|
+[5] pry(#<RecipesController>)*   p i.content
+[5] pry(#<RecipesController>)* end
+"BrowseRecipesPublishersAboutRecipe API"
+"Recipes"
+"Publishers"
+"About"
+"Recipe API"
+"Login"
+" "
+"Ingredients:"
+" 300g basmati rice"
+" 25g butter"
+" 1 large onion , finely sliced"
+" 1 bay leaf"
+" 3 cardamom pods"
+" small cinnamon stick"
+" 1 tsp turmeric"
+" 4 skinless chicken breasts , cut into large chunks"
+" 4 tbsp curry paste (we used Patak's balti paste))"
+" 85g raisins"
+" 850ml chicken stock"
+" chopped coriander and toasted flaked almonds to serve"
+"Directions:"
+"BBC Good Food"
+" Social Stats "
+"Rank"
+"Share"
+=> 0
+
+[14] pry(#<RecipesController>)> doc.css('li').count
+=> 19
+[15] pry(#<RecipesController>)> doc.css('li')[8]
+=> #(Element:0x3fdcbcb54040 { name = "li", attributes = [ #(Attr:0x3fdcbcb51228 { name = "itemprop", value = "ingredients" })], children = [ #(Text " 25g butter")] })
+[16] pry(#<RecipesController>)> doc.css('li')[7]
+=> #(Element:0x3fdcba9c8624 { name = "li", attributes = [ #(Attr:0x3fdcbcb81bbc { name = "itemprop", value = "ingredients" })], children = [ #(Text " 300g basmati rice")] })
+[17] pry(#<RecipesController>)> doc.css('li')[7].itemprop
+NoMethodError: undefined method `itemprop' for #<Nokogiri::XML::Element:0x007fb975390c48>
+from (pry):51:in `index'
+[18] pry(#<RecipesController>)> doc.css('li')[7]['itemprop']
+=> "ingredients"
+[19] pry(#<RecipesController>)> doc.css('li')[7]['content']
+=> nil
+[20] pry(#<RecipesController>)> doc.css('li')[7].content
+=> " 300g basmati rice"
+[21] pry(#<RecipesController>)> doc.css('li')[7]['children']
+=> nil
+[22] pry(#<RecipesController>)> doc.css('.recipe-image')
+=> [#<Nokogiri::XML::Element:0x3fdcbd624970 name="img" attributes=[#<Nokogiri::XML::Attr:0x3fdcbb0d7b68 name="src" value="http://static.food2fork.com/4686_MEDIUM0e58.jpg">, #<Nokogiri::XML::Attr:0x3fdcbb0d7b54 name="alt" value="Chicken biryani Recipe">, #<Nokogiri::XML::Attr:0x3fdcbb0d7b40 name="class" value="recipe-image">, #<Nokogiri::XML::Attr:0x3fdcbb0d7b2c name="itemprop" value="image">]>]
+[23] pry(#<RecipesController>)> doc.css('.recipe-image').first
+=> #(Element:0x3fdcbd624970 {
+  name = "img",
+  attributes = [
+    #(Attr:0x3fdcbb0d7b68 { name = "src", value = "http://static.food2fork.com/4686_MEDIUM0e58.jpg" }),
+    #(Attr:0x3fdcbb0d7b54 { name = "alt", value = "Chicken biryani Recipe" }),
+    #(Attr:0x3fdcbb0d7b40 { name = "class", value = "rec
+    ipe-image" }),
+    #(Attr:0x3fdcbb0d7b2c { name = "itemprop", value = "image" })]
+  })
+[24] pry(#<RecipesController>)> doc.css('.recipe-image').first.src
+NoMethodError: undefined method `src' for #<Nokogiri::XML::Element:0x007fb97ac492e0>
+from (pry):58:in `index'
+[25] pry(#<RecipesController>)> doc.css('.recipe-image').first['src']
+=> "http://static.food2fork.com/4686_MEDIUM0e58.jpg"
+[26] pry(#<RecipesController>)>
+30] pry(#<RecipesController>)> doc.css('li')[7..(doc.css('li').length)]
