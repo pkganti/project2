@@ -21,13 +21,70 @@
 
   <div class="form-group">
     <%= f.label :prep_duration, 'Prep Time'%>
-    <%= f.text_field :prep_duration, :class => 'form-control' %>
+    <%#= f.select :prep_duration,(0..10).to_a,:include_blank => true %>
+    <%#= f.select :prep_duration,(0..10).to_a,:include_blank => true %>
+    <select name="recipe[prep_duration_hour]" id="recipe_prep_duration">
+      <option value=""></option>
+      <option value="0">0</option>
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+      <option value="5">5</option>
+      <option value="6">6</option>
+      <option value="7">7</option>
+      <option value="8">8</option>
+      <option value="9">9</option>
+      <option value="10">10</option>
+    </select>
+    <select name="recipe[prep_duration_mins]" id="recipe_prep_duration">
+      <option value=""></option>
+      <option value="0">0</option>
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+      <option value="5">5</option>
+      <option value="6">6</option>
+      <option value="7">7</option>
+      <option value="8">8</option>
+      <option value="9">9</option>
+      <option value="10">10</option>
+    </select>
   </div>
 
   <div class="form-group">
     <%= f.label :cook_duration, 'Cook Time' %>
-    <%= f.text_field :cook_duration, :class => 'form-control' %>
-    <!-- This will need a drop down hour and minutes -->
+    <%#= f.select :cook_duration,(0..10).to_a,:include_blank => true %>
+    <%#= f.select :cook_duration,(0..10).to_a,:include_blank => true %>
+    <select name="recipe[cook_duration_hour]" id="recipe_prep_duration">
+      <option value=""></option>
+      <option value="0">0</option>
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+      <option value="5">5</option>
+      <option value="6">6</option>
+      <option value="7">7</option>
+      <option value="8">8</option>
+      <option value="9">9</option>
+      <option value="10">10</option>
+    </select>
+    <select name="recipe[cook_duration_mins]" id="recipe_prep_duration">
+      <option value=""></option>
+      <option value="0">0</option>
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+      <option value="5">5</option>
+      <option value="6">6</option>
+      <option value="7">7</option>
+      <option value="8">8</option>
+      <option value="9">9</option>
+      <option value="10">10</option>
+    </select>
   </div>
 
   <div class="form-group">
@@ -42,8 +99,7 @@
 
   <div class="form-group">
     <%= f.label :level, 'Level of Difficulty' %>
-    <%= f.text_field :level, :class => 'form-control' %>
-    <!-- Need drop down -->
+    <%= f.select :level,[['Easy',1],['Medium',2],['Complex',3]],:include_blank => true %>
   </div>
 
   <div class="form-group">
@@ -56,6 +112,7 @@
       <%= f.fields_for :ingredients do |builder| %>
           <%= render 'ingredients_fields', :f => builder %>
       <% end %>
+        <%=  '<span class="glyphicon glyphicon-plus add_ingredients" aria-hidden="true"></span>'.html_safe %>
     </div>
   </div>
   <%= f.submit %>
