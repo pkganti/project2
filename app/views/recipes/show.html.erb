@@ -14,11 +14,16 @@
 
 <div id="ingredients">
 <h2>Ingredients</h2>
+<ul>
   <% @quantities.each do |q| %>
-    <%= q.size %>
-    <%= q.unit %>
-    <%= q.ingredient.name %>
+    <li>
+      <%= q.size %>
+      <%= q.unit %>
+      <%= q.ingredient.name %>
+    </li>
   <% end %>
+</ul>
+
 </div>
 <!-- Nested ingredients -->
 <div id="directions">
