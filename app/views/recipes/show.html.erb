@@ -7,8 +7,8 @@
 <% end %>
 <% recipe_levels = {1=>'Easy',2=>'Medium',3=>'Complex'} %>
 <%= recipe_levels[@recipe.level] %>
-<%= Time.at(@recipe.cook_duration).utc.strftime("%H:%M") %>
-<%= Time.at(@recipe.prep_duration).utc.strftime("%H:%M") %>
+<%= Time.at(@recipe.cook_duration).utc.strftime("%H:%M") if @recipe.cook_duration.present?%>
+<%= Time.at(@recipe.prep_duration).utc.strftime("%H:%M") if @recipe.prep_duration.present?%>
 <%= @recipe.category %>
 <%= @recipe.cuisine %>
 
@@ -17,7 +17,7 @@
   <% @quantities.each do |q| %>
     <%= q.size %>
     <%= q.unit %>
-    <%#= q.ingredient.name %>
+    <%= q.ingredient.name %>
   <% end %>
 </div>
 <!-- Nested ingredients -->

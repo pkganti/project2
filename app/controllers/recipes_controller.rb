@@ -8,6 +8,13 @@ class RecipesController < ApplicationController
       string_obj = HTTParty.get(url1)
       object_obj = JSON.parse(string_obj)
       @searchrecipes = object_obj["recipes"]
+      # Commenting this part as unable to process https request
+      # rId = object_obj["recipes"].first['recipe_id']
+      # url1 = "http://food2fork.com/api/search?key=#{f2fkey}&q=#{params[:recipesearch]}"
+      # url2 = "https://community-food2fork.p.mashape.com/get?key=#{f2fkey}&rId=#{rId}"
+      # # binding.pry
+      # string_obj2 = HTTParty.get(url2)
+      # object_obj2 = JSON.parse(string_obj2)
 
     else
       @recipes = Recipe.all
@@ -74,7 +81,6 @@ class RecipesController < ApplicationController
 
   def recipe_params
     params.require(:recipe).permit(:title,:directions,:cook_duration,:ratings,:category,:cuisine,:images,:level,:servings,:source_url)
-    # ,:prep_duration,:prep_duration_hour,:prep_duration_mins, :cook_duration_mins, :cook_duration_hour)
   end
 
   def convert_time_to_seconds(h,m)
