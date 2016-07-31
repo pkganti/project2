@@ -2,6 +2,7 @@ class RecipesController < ApplicationController
 
   require 'open-uri'
 
+
   def index
     if params[:recipesearch].present?
       @recipes = Recipe.all
@@ -11,18 +12,20 @@ class RecipesController < ApplicationController
       object_obj = JSON.parse(string_obj)
       @searchrecipes = object_obj["recipes"]
 
-      html = @searchrecipes[1]["f2f_url"]
-      page = Nokogiri::HTML(open(html))
-
-      raise "hell"
-
+      # html = @searchrecipes[1]["f2f_url"]
+      # page = Nokogiri::HTML(open(html))
     else
       @recipes = Recipe.all
-      # raise "hell"
+
     end
   end
 
   def show
+    f2fkey="18eb516313da0e6e327844bf73c1c8e0"
+    url2 = "http://food2fork.com/api/get?key=#{f2fkey}&rId=#{params[:id]}"
+    string_obj = HTTParty.get(url2)
+    object_obj = JSON.parse(string_obj)
+    @searchrecipe = object_obj
     @recipe = Recipe.find_by( :id => params[:id])
     @quantities = Quantity.where(:recipe_id => params[:id])
 
