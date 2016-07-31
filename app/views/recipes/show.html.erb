@@ -1,19 +1,20 @@
 <h1><%= @recipe.title %></h1>
-<%= image_tag @recipe.images%> 
+<%= image_tag @recipe.images%>
 <%#= cl_image_tag @recipe.image, :width=>300, :height=>300, :gravity=>"auto", :class => 'thumbnail' %>
-<%= @recipe.ratings %>
-<%= @recipe.level %>
-<%= @recipe.cook_duration %>
-<%= @recipe.prep_duration %>
-<%= @recipe.category %>
-<%= @recipe.cuisine %>
-
+<div>
+<li>Ratings: <%= @recipe.ratings %></li>
+<li>Level: <%=@recipe.level %></li>
+<li><%= @recipe.cook_duration %></li>
+<li><%= @recipe.prep_duration %></li>
+<li><%= @recipe.category %></li>
+<li><%= @recipe.cuisine %></li>
+</div>
 <div id="ingredients">
 <h2>Ingredients</h2>
   <% @quantities.each do |q| %>
     <%= q.size %>
     <%= q.unit %>
-    <%#= q.ingredient.name %>
+    <%= q.ingredient.name %>
   <% end %>
 </div>
 <!-- Nested ingredients -->

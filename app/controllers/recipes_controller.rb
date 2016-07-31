@@ -13,6 +13,7 @@ class RecipesController < ApplicationController
   def show
     @recipe = Recipe.find_by( :id => params[:id])
     @quantities = Quantity.where(:recipe_id => params[:id])
+
   end
 
   def new
@@ -63,5 +64,5 @@ class RecipesController < ApplicationController
   def recipe_params
     params.require(:recipe).permit(:title,:directions,:cook_duration,:ratings,:category,:cuisine,:images,:level,:servings,:source_url,:prep_duration)
   end
-  
+
 end
