@@ -7,8 +7,8 @@
 <div>
   <% if (@searchrecipes != nil) %>
     <% @recipes.each do |recipe| %>
+      <a href="/recipes/<%= recipe.id %>"><img src="<%= recipe.images %>" alt=""></a>
       <ul>
-        <li><a href="/recipes/<%= recipe.id %>"><img src="<%= recipe.images %>" alt=""></a></li>
         <li>Title: <%= recipe.title %></li>
         <!-- <li>Rating: <%#= recipe.ratings %></li> -->
         <!-- <li>Difficulty Level: <%#= recipe.level %></li>
@@ -19,16 +19,17 @@
       <% @searchrecipes.each_with_index do |x,i| %>
         <!-- <img src="<%= @searchrecipes[i]["image_url"] %>" alt=""> -->
         <!-- <%#= image_tag @searchrecipes[i]["image_url"]%> -->
+        <a href="/recipes/<%= @searchrecipes[i]["recipe_id"] %>"><img src="<%= @searchrecipes[i]["image_url"] %>" alt=""></a>
           <ul>
-            <li><a href="/recipes/<%= @searchrecipes[i]["recipe_id"] %>"><img src="<%= @searchrecipes[i]["image_url"] %>" alt=""></a></li>
             <li>Title: <%= @searchrecipes[i]["title"] %></li>
             <!-- <li><a href="<%#= @searchrecipes[i]["f2f_url"] %>">Ingredients</a></li> -->
           </ul>
       <% end %>
   <% else %>
     <% @recipes.each do |recipe| %>
+      <a href="/recipes/<%= recipe.id %>"><img src="<%= recipe.images %>" alt=""></a>
       <ul>
-        <li><a href="/recipes/<%= recipe.id %>"><img src="<%= recipe.images %>" alt=""></a></li>
+        
         <li>Title: <%= recipe.title %></li>
         <!-- <li>Rating: <%#= recipe.ratings %></li> -->
         <!-- <li>Difficulty Level: <%#= recipe.level %></li>
