@@ -5,7 +5,9 @@ class RecipesController < ApplicationController
 
   def index
     if params[:recipesearch].present?
-      @recipes = Recipe.all
+      # @recipes = Recipe.all
+      @recipes = Recipe.where('title ILIKE ?', '%' + params[:recipesearch] + '%')
+
       f2fkey="18eb516313da0e6e327844bf73c1c8e0"
       url1 = "http://food2fork.com/api/search?key=#{f2fkey}&q=#{params[:recipesearch]}"
       string_obj = HTTParty.get(url1)
@@ -20,18 +22,7 @@ class RecipesController < ApplicationController
           @searchrecipes.push(r)
         end
       end
-      # raise "hell"
-      # binding.pry
-      # Commenting this part as unable to process https request
-      # rId = object_obj["recipes"].first['recipe_id']
-      # url1 = "http://food2fork.com/api/search?key=#{f2fkey}&q=#{params[:recipesearch]}"
-      # url2 = "https://community-food2fork.p.mashape.com/get?key=#{f2fkey}&rId=#{rId}"
-      # # binding.pry
-      # string_obj2 = HTTParty.get(url2)
-      # object_obj2 = JSON.parse(string_obj2)
-
-      # html = @searchrecipes[1]["f2f_url"]
-      # page = Nokogiri::HTML(open(html))
+    
     else
       @recipes = Recipe.all
 
