@@ -39,6 +39,13 @@ class RecipesController < ApplicationController
      3.times { @recipe.ingredients.build }
   end
 
+  def scrape
+    @url =  params.fetch(:url)
+    render json: "false",  :status => :ok
+    # head :ok
+
+  end
+
   def create
     prep_duration = convert_time_to_seconds((params[:recipe][:prep_duration_hour]).to_i ,(params[:recipe][:prep_duration_mins]).to_i)
     cook_duration = convert_time_to_seconds((params[:recipe][:cook_duration_hour]).to_i,(params[:recipe][:cook_duration_mins]).to_i)
