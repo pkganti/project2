@@ -37,11 +37,17 @@
                   <span style="font-size:150%;color:gold;">&#9733;</span>
                 <% end %></li>
                 <li>Level: <%= @searchrecipe['level'] %></li>
-                <% if (@searchrecipe['prep_duration']) %>
-                <li>Prep Time:<%= Time.at((@searchrecipe['prep_duration']).to_i*60).utc.strftime("%H:%M")%></li>
+                <% if ((@searchrecipe['prep_duration'][0]).to_i != 0) %>
+                <li>Prep Time:<%= Time.at((@searchrecipe['prep_duration'][0]).to_i*60).utc.strftime("%H:%M")%> Hrs
+                  <% if @searchrecipe['prep_duration'][1] %>  - <%=   Time.at((@searchrecipe['prep_duration'][1]).to_i*60).utc.strftime("%H:%M") %> Hrs.
+                  <% end %>
+                </li>
                 <% end %>
                 <% if (@searchrecipe['cook_duration']) %>
-                <li>Cook Time: <%= Time.at((@searchrecipe['cook_duration']).to_i*60).utc.strftime("%H:%M") %>Hrs.</li>
+                <li>Cook Time: <%= Time.at((@searchrecipe['cook_duration'][0]).to_i*60).utc.strftime("%H:%M") %> Hrs.
+                  <% if @searchrecipe['cook_duration'][1] %> - <%=   Time.at((@searchrecipe['cook_duration'][1]).to_i*60).utc.strftime("%H:%M") %> Hrs.
+                  <% end %>
+                </li>
                 <% end %>
                 <li>Servings: <%= @searchrecipe['servings'] %></li>
               </ul>

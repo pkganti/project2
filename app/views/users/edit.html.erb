@@ -1,5 +1,6 @@
-<div>
-  <h2 class="col-xs-4 col-xs-offset-5">Edit Profile
+<div class="container">
+<div class = "row col-xs-10 col-xs-offset-1">
+  <h2>Edit Profile
   </h2>
 
   <% if @user.errors.any? %>
@@ -9,7 +10,7 @@
       <% end %>
     </ol>
   <% end %>
-<div  class="col-xs-7 col-xs-offset-4">
+<div>
 <%= form_for(@user, :class => "form-horizontal", :html => {:multipart => true}) do |f| %>
   <div class="form-group">
     <%= f.label :name %>
@@ -45,7 +46,8 @@
     </div>
   </div>
 
-  <%= f.submit "Save Changes", :class => "btn btn-primary"%>
+  <%= f.submit "Save", :class => "btn btn-primary"%>
 <% end %>
+</div>
 </div>
 </div>
