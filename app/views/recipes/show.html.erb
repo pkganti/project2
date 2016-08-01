@@ -8,31 +8,41 @@
             <%= image_tag @recipe.images%>
           <% else %>
             <h1>
-              <%= @searchrecipe["recipe"]["title"] %>
+              <%= @searchrecipe["title"] %>
             </h1>
-            <%= image_tag @searchrecipe["recipe"]["image_url"]%>
+            <%= image_tag @searchrecipe["image_url"]%>
           <% end %>
             <%#= cl_image_tag @recipe.image, :width=>300, :height=>300, :gravity=>"auto", :class => 'thumbnail' %>
             <div>
               <% if @recipe !=nil %>
-                <% (@recipe.ratings).to_i.times do |i| %>
-                <span style="font-size:150%;color:#BFAB25;">&#9733;</span>
+                <ul>
+                  <li>Ratings: <% (@recipe.ratings).to_i.times do |i| %>
+                    <span style="font-size:150%;color:gold;">&#9733;</span>
+                  <% end %></li>
+                  <% recipe_levels = {0=>'Easy',1=>'Medium',2=>'Complex'} %>
+                  <li>Level: <%= recipe_levels[@recipe.level] %></li>
+                  <% if @recipe.prep_duration %>
+                  <li>Prep Time:<%= Time.at(@recipe.prep_duration).utc.strftime("%H:%M") %></li>
+                  <% end %>
+                  <% if @recipe.cook_duration %>
+                  <li>Cook Time: <%= Time.at(@recipe.cook_duration).utc.strftime("%H:%M") %>Hrs.</li>
+                  <% end %>
+                  <li>Category: <%= @recipe.category %></li>
+                  <li>Cuisine: <%= @recipe.cuisine %></li>
+                </ul>
+              <% else %>
+              <ul>
+                <li>Ratings: <% (@searchrecipe['ratings']).to_i.times do |i| %>
+                  <span style="font-size:150%;color:gold;">&#9733;</span>
+                <% end %></li>
+                <li>Level: <%= @searchrecipe['level'] %></li>
+                <% if (@searchrecipe['prep_duration']) %>
+                <li>Prep Time:<%= Time.at((@searchrecipe['prep_duration']).to_i*60).utc.strftime("%H:%M")%></li>
                 <% end %>
-
-                <% recipe_levels = {0=>'Easy',1=>'Medium',2=>'Complex'} %>
-                <li>Level:
-                    <%= recipe_levels[@recipe.level] %></li>
-                <% if @recipe.prep_duration %>
-                <li>Prep Time:<%= Time.at(@recipe.prep_duration).utc.strftime("%H:%M") %></li>
+                <% if (@searchrecipe['cook_duration']) %>
+                <li>Cook Time: <%= Time.at((@searchrecipe['cook_duration']).to_i*60).utc.strftime("%H:%M") %>Hrs.</li>
                 <% end %>
-                <% if @recipe.cook_duration %>
-                <li>Cook Time:
-                    <%= Time.at(@recipe.cook_duration).utc.strftime("%H:%M") %>Hrs.</li>
-                <% end %>
-                <li>Category:
-                    <%= @recipe.category %></li>
-                <li>Cuisine:
-                    <%= @recipe.cuisine %></li>
+              </ul>
               <% end %>
 
             </div>
@@ -49,7 +59,7 @@
                     </li>
                   <% end %>
                 <% else %>
-                    <% @searchrecipe["recipe"]["ingredients"].each do |i| %>
+                    <% @searchrecipe["ingredients"].each do |i| %>
                     <li>
                       <%= i %>
                     </li>
@@ -63,6 +73,9 @@
               <% if @recipe != nil%>
                 <h2>Directions</h2>
                 <%= @recipe.directions %>
+              <% else%>
+                <h2>Directions</h2>
+                <%== @searchrecipe['directions'][0] %>
               <% end %>
             </div>
       </div>

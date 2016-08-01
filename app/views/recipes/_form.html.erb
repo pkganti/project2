@@ -15,41 +15,26 @@
   </div>
 
   <div class="form-group">
-    <%= f.label :ratings, 'Number of Stars' %>
-    <%= f.text_field :ratings, :class => 'form-control' %>
+    <%#= f.label :ratings, 'Number of Stars' %>
+    <%#= f.text_field :ratings, :class => 'form-control' %>
   </div>
 
   <div class="form-group">
     <%= f.label :prep_duration, 'Prep Time'%>
+    <!-- ((0..12).to_a).map { |i| i*5} -->
     <%#= f.select :prep_duration,(0..10).to_a,:include_blank => true %>
     <%#= f.select :prep_duration,(0..10).to_a,:include_blank => true %>
     <select name="recipe[prep_duration_hour]" id="recipe_prep_duration">
-      <option value=""></option>
-      <option value="0">0</option>
-      <option value="1">1</option>
-      <option value="2">2</option>
-      <option value="3">3</option>
-      <option value="4">4</option>
-      <option value="5">5</option>
-      <option value="6">6</option>
-      <option value="7">7</option>
-      <option value="8">8</option>
-      <option value="9">9</option>
-      <option value="10">10</option>
+      <option value="">Hr</option>
+      <% ((0..10).to_a).each do |i| %>
+        <option value="<%= i %>"><%= i %></option>
+      <% end %>
     </select>
     <select name="recipe[prep_duration_mins]" id="recipe_prep_duration">
-      <option value=""></option>
-      <option value="0">0</option>
-      <option value="1">1</option>
-      <option value="2">2</option>
-      <option value="3">3</option>
-      <option value="4">4</option>
-      <option value="5">5</option>
-      <option value="6">6</option>
-      <option value="7">7</option>
-      <option value="8">8</option>
-      <option value="9">9</option>
-      <option value="10">10</option>
+      <option value="">Mins</option>
+      <% (((0..12).to_a).map { |i| i*5}).each do |i| %>
+        <option value="<%= i %>"><%= i %></option>
+      <% end %>
     </select>
   </div>
 
@@ -58,32 +43,16 @@
     <%#= f.select :cook_duration,(0..10).to_a,:include_blank => true %>
     <%#= f.select :cook_duration,(0..10).to_a,:include_blank => true %>
     <select name="recipe[cook_duration_hour]" id="recipe_prep_duration">
-      <option value=""></option>
-      <option value="0">0</option>
-      <option value="1">1</option>
-      <option value="2">2</option>
-      <option value="3">3</option>
-      <option value="4">4</option>
-      <option value="5">5</option>
-      <option value="6">6</option>
-      <option value="7">7</option>
-      <option value="8">8</option>
-      <option value="9">9</option>
-      <option value="10">10</option>
+      <option value="">Hr</option>
+      <% ((0..10).to_a).each do |i| %>
+        <option value="<%= i %>"><%= i %></option>
+      <% end %>
     </select>
     <select name="recipe[cook_duration_mins]" id="recipe_prep_duration">
-      <option value=""></option>
-      <option value="0">0</option>
-      <option value="1">1</option>
-      <option value="2">2</option>
-      <option value="3">3</option>
-      <option value="4">4</option>
-      <option value="5">5</option>
-      <option value="6">6</option>
-      <option value="7">7</option>
-      <option value="8">8</option>
-      <option value="9">9</option>
-      <option value="10">10</option>
+      <option value="">Mins</option>
+      <% (((0..12).to_a).map { |i| i*5}).each do |i| %>
+        <option value="<%= i %>"><%= i %></option>
+      <% end %>
     </select>
   </div>
 
@@ -99,12 +68,12 @@
 
   <div class="form-group">
     <%= f.label :level, 'Level of Difficulty' %>
-    <%= f.select :level,[['Easy',1],['Medium',2],['Complex',3]],:include_blank => true %>
+    <%= f.select :level,[['Easy',0],['Medium',1],['Complex',2]],:include_blank => true %>
   </div>
 
   <div class="form-group">
     <%= f.label :directions %>
-    <%= f.text_field :directions, :class => 'form-control' %>
+    <%= f.text_area :directions, :class => 'form-control' %>
   </div>
   <div class="form-group">
     Ingredients:

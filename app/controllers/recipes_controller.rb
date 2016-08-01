@@ -10,7 +10,19 @@ class RecipesController < ApplicationController
       url1 = "http://food2fork.com/api/search?key=#{f2fkey}&q=#{params[:recipesearch]}"
       string_obj = HTTParty.get(url1)
       object_obj = JSON.parse(string_obj)
-      @searchrecipes = object_obj["recipes"]
+      # @searchrecipes = object_obj["recipes"] no more needed
+      @searchrecipes = []
+      (object_obj["recipes"]).each do |r|;
+        @searchrecipes.push(r) if r["source_url"].include?"http://www.bbcgoodfood.com"
+      end
+      # binding.pry
+      # Commenting this part as unable to process https request
+      # rId = object_obj["recipes"].first['recipe_id']
+      # url1 = "http://food2fork.com/api/search?key=#{f2fkey}&q=#{params[:recipesearch]}"
+      # url2 = "https://community-food2fork.p.mashape.com/get?key=#{f2fkey}&rId=#{rId}"
+      # # binding.pry
+      # string_obj2 = HTTParty.get(url2)
+      # object_obj2 = JSON.parse(string_obj2)
 
       # html = @searchrecipes[1]["f2f_url"]
       # page = Nokogiri::HTML(open(html))
@@ -26,6 +38,11 @@ class RecipesController < ApplicationController
     string_obj = HTTParty.get(url2)
     object_obj = JSON.parse(string_obj)
     @searchrecipe = object_obj
+    source_url = @searchrecipe["recipe"]["source_url"]
+    recipeObj = @searchrecipe["recipe"]
+    # binding.pry
+    @searchrecipe  = bbc_scrape(source_url,recipeObj)
+
     @recipe = Recipe.find_by( :id => params[:id])
     @quantities = Quantity.where(:recipe_id => params[:id])
 
@@ -99,6 +116,25 @@ class RecipesController < ApplicationController
     mins = 60 * (m).to_i
 
     duration = hour + mins
+  end
+
+  def bbc_scrape(url,r)
+
+    # (@searchrecipe["recipe"]).merge!( {'level' => 'Easy'})
+    doc = Nokogiri::HTML(open(url))
+    ratings =  doc.css("meta[itemprop= 'ratingValue']").first['content']
+
+    prep_time= doc.css('.recipe-details__cooking-time-prep > span').text
+    cook_time = doc.css('.recipe-details__cooking-time-cook > span').text
+    level = doc.css('.recipe-details__item--skill-level').css('span').text.strip
+    servings = doc.css('.recipe-details__item--servings').css('span').text.strip
+    directions = []
+    doc.css('#recipe-method').css('ol').each do |step|
+     directions.push(step.css('li').text.strip.gsub("\n", '<br>'))
+
+    end
+    r.merge!( {'ratings' => ratings , 'prep_duration' => prep_time ,'cook_duration' => cook_time , 'level' => level , 'servings' => servings , 'directions' => directions})
+
   end
 
 end
