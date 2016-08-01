@@ -5,7 +5,9 @@ class RecipesController < ApplicationController
 
   def index
     if params[:recipesearch].present?
-      @recipes = Recipe.all
+      # @recipes = Recipe.all
+      @recipes = Recipe.where('title ILIKE ?', '%' + params[:recipesearch] + '%')
+
       f2fkey="18eb516313da0e6e327844bf73c1c8e0"
       url1 = "http://food2fork.com/api/search?key=#{f2fkey}&q=#{params[:recipesearch]}"
       string_obj = HTTParty.get(url1)
@@ -20,18 +22,7 @@ class RecipesController < ApplicationController
           @searchrecipes.push(r)
         end
       end
-      # raise "hell"
-      # binding.pry
-      # Commenting this part as unable to process https request
-      # rId = object_obj["recipes"].first['recipe_id']
-      # url1 = "http://food2fork.com/api/search?key=#{f2fkey}&q=#{params[:recipesearch]}"
-      # url2 = "https://community-food2fork.p.mashape.com/get?key=#{f2fkey}&rId=#{rId}"
-      # # binding.pry
-      # string_obj2 = HTTParty.get(url2)
-      # object_obj2 = JSON.parse(string_obj2)
 
-      # html = @searchrecipes[1]["f2f_url"]
-      # page = Nokogiri::HTML(open(html))
     else
       @recipes = Recipe.all
 
@@ -45,24 +36,31 @@ class RecipesController < ApplicationController
     string_obj = HTTParty.get(url2)
     object_obj = JSON.parse(string_obj)
     @searchrecipe = object_obj
+
     @s = 'ABCD'
     foodnetwork_url = 'http://www.foodnetwork.com/recipes/town-housereg-flatbread-crispsreg-crusted-mahi-mahi-with-curry-dill-aioli-recipe.print.html'
     if @s.eql?'ABCD'
     @s = foodNetwork_scrape(foodnetwork_url,@s)
   end
-    if @searchrecipe["recipe"]["source_url"] =~ /bbcgoodfood/
+    # taste_url = "http://www.taste.com.au/recipes/20860/spaghetti+with+garlic+butter+bacon+and+prawns?ref=collections,pasta-recipes"
+
+
+    if taste_url
+      recipeObj = {}
+      @searchrecipe = taste_scrape(taste_url,recipeObj)
+      binding.pry
+    elsif @searchrecipe["recipe"]["source_url"] =~ /bbcgoodfood/
       source_url = @searchrecipe["recipe"]["source_url"]
       recipeObj = @searchrecipe["recipe"]
       # binding.pry
       @searchrecipe  = bbc_scrape(source_url,recipeObj)
-    end
-    if @searchrecipe["recipe"]["source_url"] =~ /allrecipes/
+
+    elsif @searchrecipe["recipe"]["source_url"] =~ /allrecipes/
       source_url = @searchrecipe["recipe"]["source_url"]
       recipeObj = @searchrecipe["recipe"]
       @searchrecipe  = allrecipes_scrape(source_url,recipeObj)
     end
-
-
+    end
 
     @recipe = Recipe.find_by( :id => params[:id])
     @quantities = Quantity.where(:recipe_id => params[:id])
@@ -88,7 +86,6 @@ class RecipesController < ApplicationController
     prep_duration = convert_time_to_seconds((params[:recipe][:prep_duration_hour]).to_i ,(params[:recipe][:prep_duration_mins]).to_i)
     cook_duration = convert_time_to_seconds((params[:recipe][:cook_duration_hour]).to_i,(params[:recipe][:cook_duration_mins]).to_i)
 
-    # raise "bgjda"
     @recipe = Recipe.create recipe_params
     @recipe.prep_duration = prep_duration
     @recipe.cook_duration = cook_duration
@@ -140,11 +137,12 @@ class RecipesController < ApplicationController
   end
 
   def bbc_scrape(url,r)
+    # raise "hell"
     preparation_time=[]
     cooking_time =[]
     # (@searchrecipe["recipe"]).merge!( {'level' => 'Easy'})
     doc = Nokogiri::HTML(open(url))
-    ratings =  doc.css("meta[itemprop= 'ratingValue']").first['content']
+    ratings =  doc.css("meta[itemprop= 'ratingValue']").first['content'] if (doc.css("meta[itemprop= 'ratingValue']").first['content'])
 
     prep_time= doc.css('.recipe-details__cooking-time-prep > span').text
     if ((prep_time.split(/hrs?/)).size > 1)
@@ -169,25 +167,50 @@ class RecipesController < ApplicationController
 
   end
 
+  def taste_scrape(url,r)
+    doc = Nokogiri::HTML(open(url))
+    title = doc.css('.heading > h1').text
+    prep_time = [(doc.css('.prepTime').css('em').text.delete('0:').to_i)*60]
+    cook_time = [(doc.css('.cookTime').css('em').text.delete('0:').to_i)*60]
+    # binding.pry
+    level = doc.css('.difficultyTitle').css('em').text
+    servings = doc.css('.servings').css('em').text
+    ratings = doc.css('.rating').css('span.star-level').text
+    ingredients = []
+    doc.css('.ingredient-table > li > label').each do |i|
+      ingredients.push(i.text)
+    end
+    directions =[]
+    doc.css('.method-tab-content > ol > li > p.description').each do |d|
+      directions.push(d.text)
+    end
+    images = doc.css('.recipe-image-wrapper > img').attr('src').text
+
+    r.merge!( {'title' => title,'ratings' => ratings , 'prep_duration' => prep_time ,'cook_duration' => cook_time , 'level' => level , 'servings' => servings , 'directions' => directions, 'ingredients' =>  ingredients, 'image_url' => images})
+
+  end
+
   def allrecipes_scrape(url,r)
+    # scrapeurl = url+'/print'
 
     # (@searchrecipe["recipe"]).merge!( {'level' => 'Easy'})
     doc = Nokogiri::HTML(open(url))
-    # raise "hell"
+
     ratings =  doc.css("meta[itemprop= 'ratingValue']").first['content']
 
     prep_time= doc.css("time[itemprop='prepTime']").text
     cook_time = doc.css("time[itemprop='cookTime']").text
 
-    servings = doc.css("span[ng-bind='adjustedServings']").text.strip
+    servings = doc.css("#metaRecipeServings").first['content']
     directions = []
-    doc.css('#recipe-method').css('ol').each do |step|
-     directions.push(step.css('li').text.strip.gsub("\n", '<br>'))
-
+    doc.css('.recipe-directions__list').css('ol').css('li').each do |step|
+     directions.push(step.text.strip)
     end
+    # raise "hell"
     r.merge!( {'ratings' => ratings , 'prep_duration' => prep_time ,'cook_duration' => cook_time , 'servings' => servings , 'directions' => directions})
 
   end
+
 
   def foodNetwork_scrape(url,r)
     preparation_time=[]
@@ -222,4 +245,5 @@ class RecipesController < ApplicationController
     r.merge!( {'ratings' => ratings , 'prep_duration' => preparation_time ,'cook_duration' => cooking_time , 'level' => level , 'servings' => servings , 'directions' => directions})
 
   end
+
 end

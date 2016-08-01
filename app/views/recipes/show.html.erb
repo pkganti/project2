@@ -10,7 +10,7 @@
             <h1>
               <%= @searchrecipe["title"] %>
             </h1>
-            <%= image_tag @searchrecipe["image_url"]%>
+            <%= image_tag @searchrecipe["image_url"] %>
           <% end %>
             <%#= cl_image_tag @recipe.image, :width=>300, :height=>300, :gravity=>"auto", :class => 'thumbnail' %>
             <div>
@@ -83,7 +83,9 @@
                 <%= @recipe.directions %>
               <% else%>
                 <h2>Directions</h2>
-                <%== @searchrecipe['directions'][0] %>
+                <% @searchrecipe['directions'].each_index do |i| %>
+                  <%== @searchrecipe['directions'][i] %>
+                <% end %>
               <% end %>
             </div>
       </div>
