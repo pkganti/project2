@@ -45,7 +45,7 @@ rails generate model User name:string emailid:string password:string isAdmin:boo
 rails generate model Recipe title:string directions:text duration:integer ratings:decimal category:string cuisine:string images:text level:integer userId:integer
 
 rails generate model Ingredients name:string category:string
-rails generate model Favorites userId:integer recipeId:integer 
+rails generate model Favorites userId:integer recipeId:integer
 
 
 Routes:
@@ -279,17 +279,17 @@ food2fork:
   "image_url"=>"http://static.food2fork.com/chickenbiryani410x27351f3.jpg",
   "social_rank"=>34.80777735743579,
   "publisher_url"=>"http://tastykitchen.com"}]
-  
-  
-  
+
+
+
   [11] pry(#<RecipesController>)> @searchrecipes.each do |r|;
 [11] pry(#<RecipesController>)*   p r if r["source_url"].include?"http://www.bbcgoodfood.com"
 [11] pry(#<RecipesController>)* end
-  
-  
-  
+
+
+
   > doc = Nokogiri::HTML(open(@searchrecipes[0]["f2f_url"]))
-  
+
   [2] pry(#<RecipesController>)> doc.css('.recipe-title').each do |title|
 [2] pry(#<RecipesController>)*   p title.content
 [2] pry(#<RecipesController>)* end
@@ -372,22 +372,26 @@ INDEX
  @searchrecipes.each do |r|;
 p r if r["source_url"].include?"http://www.bbcgoodfood.com"
  end
- 
- 
- 
- 
+
+
+
+
 ======================
 NOKOGIRI SHOW PAGE - BBC FOOD
 ======================
 doc = Nokogiri::HTML(open(@searchrecipe["recipe"]["source_url"]))
  ratings =  doc.css("meta[itemprop= 'ratingValue']").first['content']
- 
+
  prep_time= doc.css('.recipe-details__cooking-time-prep > span').text
  cook_time = doc.css('.recipe-details__cooking-time-cook > span').text
  level = doc.css('.recipe-details__item--skill-level').css('span').text.strip
  yield = doc.css('.recipe-details__item--servings').css('span').text.strip
- directions = 
+ directions =
  doc.css('#recipe-method').css('ol').each do |step|
   p step.css('li').text.strip
  end
- 
+
+ ======================
+ Database search using LIKE in active Record
+ ======================
+ @recipes = Recipe.where('title ILIKE ?', '%' + params[:recipesearch] + '%')
