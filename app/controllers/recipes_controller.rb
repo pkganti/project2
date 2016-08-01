@@ -37,19 +37,20 @@ class RecipesController < ApplicationController
     object_obj = JSON.parse(string_obj)
     @searchrecipe = object_obj
 
-    @s = 'ABCD'
-    foodnetwork_url = 'http://www.foodnetwork.com/recipes/town-housereg-flatbread-crispsreg-crusted-mahi-mahi-with-curry-dill-aioli-recipe.print.html'
-    if @s.eql?'ABCD'
-    @s = foodNetwork_scrape(foodnetwork_url,@s)
-  end
-    # taste_url = "http://www.taste.com.au/recipes/20860/spaghetti+with+garlic+butter+bacon+and+prawns?ref=collections,pasta-recipes"
+  #   @s = 'ABCD'
+  #   foodnetwork_url = 'http://www.foodnetwork.com/recipes/town-housereg-flatbread-crispsreg-crusted-mahi-mahi-with-curry-dill-aioli-recipe.print.html'
+  #   if @s.eql?'ABCD'
+  #   @s = foodNetwork_scrape(foodnetwork_url,@s)
+  # end
+  #   # taste_url = "http://www.taste.com.au/recipes/20860/spaghetti+with+garlic+butter+bacon+and+prawns?ref=collections,pasta-recipes"
 
 
-    if taste_url
-      recipeObj = {}
-      @searchrecipe = taste_scrape(taste_url,recipeObj)
-      binding.pry
-    elsif @searchrecipe["recipe"]["source_url"] =~ /bbcgoodfood/
+    # if taste_url
+    #   recipeObj = {}
+    #   @searchrecipe = taste_scrape(taste_url,recipeObj)
+    #   # binding.pry
+
+    if @searchrecipe["recipe"]["source_url"] =~ /bbcgoodfood/
       source_url = @searchrecipe["recipe"]["source_url"]
       recipeObj = @searchrecipe["recipe"]
       # binding.pry
@@ -60,7 +61,7 @@ class RecipesController < ApplicationController
       recipeObj = @searchrecipe["recipe"]
       @searchrecipe  = allrecipes_scrape(source_url,recipeObj)
     end
-    end
+  # end
 
     @recipe = Recipe.find_by( :id => params[:id])
     @quantities = Quantity.where(:recipe_id => params[:id])
@@ -217,8 +218,8 @@ class RecipesController < ApplicationController
     cooking_time =[]
     # (@searchrecipe["recipe"]).merge!( {'level' => 'Easy'})
     doc = Nokogiri::HTML(open(url))
-    binding.pry
-    ratings =
+    # binding.pry
+    # ratings =
     #  $(".gig-rating-stars")[1].title first character
 
     prep_time= doc.css('.cooking-times > dl >dd:nth-child(4)').text
@@ -243,10 +244,7 @@ class RecipesController < ApplicationController
     doc.css(".recipe-directions-list > li > p").each do  |d|
       directions.push(d.text)
     end
-
-    end
     r.merge!( {'ratings' => ratings , 'prep_duration' => preparation_time ,'cook_duration' => cooking_time , 'level' => level , 'servings' => servings , 'directions' => directions})
-
   end
 
 end
