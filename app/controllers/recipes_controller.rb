@@ -222,24 +222,27 @@ class RecipesController < ApplicationController
     #  $(".gig-rating-stars")[1].title first character
 
     prep_time= doc.css('.cooking-times > dl >dd:nth-child(4)').text
-    # if ((prep_time.split(/hrs?/)).size > 1)
-    #  preparation_time = prep_time.split(/hrs?/)
-    # else
-    #  preparation_time.push(prep_time)
-    # end
+    if ((prep_time.split(/hrs?/)).size > 1)
+     preparation_time = prep_time.split(/hrs?/)
+    else
+     preparation_time.push(prep_time)
+    end
     cook_time = doc.css('.cooking-times > dl >dd:nth-child(6)').text
-    # if ((cook_time.split(/hrs?/)).size > 1)
-    #  cooking_time = cook_time.split(/hrs?/)
-    # else
-    #  cooking_time.push(cook_time)
-    # end
+    if ((cook_time.split(/hrs?/)).size > 1)
+     cooking_time = cook_time.split(/hrs?/)
+    else
+     cooking_time.push(cook_time)
+    end
     level = doc.css('.difficulty > dl:nth-child(2) >dd').text
     servings = doc.css('.difficulty > dl:nth-child(1) >dd').text
     ingredients = []
-    doc.css(".ingredients > ul").each do |i|
-      ingredients.push(i.css('li').text)
-      # what is the each function for doc.css(".ingredients > ul > li")[1].text
-    directions = doc.css(".recipe-directions-list > li > p").text
+    doc.css(".ingredients > ul > li").each do |i|
+      ingredients.push(i.text)
+    end
+    directions = []
+    doc.css(".recipe-directions-list > li > p").each do  |d|
+      directions.push(d.text)
+    end
 
     end
     r.merge!( {'ratings' => ratings , 'prep_duration' => preparation_time ,'cook_duration' => cooking_time , 'level' => level , 'servings' => servings , 'directions' => directions})
