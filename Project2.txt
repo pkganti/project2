@@ -282,6 +282,10 @@ food2fork:
   
   
   
+  [11] pry(#<RecipesController>)> @searchrecipes.each do |r|;
+[11] pry(#<RecipesController>)*   p r if r["source_url"].include?"http://www.bbcgoodfood.com"
+[11] pry(#<RecipesController>)* end
+  
   
   
   > doc = Nokogiri::HTML(open(@searchrecipes[0]["f2f_url"]))
@@ -293,7 +297,7 @@ food2fork:
 => 0
 
 
-5] pry(#<RecipesController>)> doc.css('h5 ,li').each do |i|
+doc.css('h5 ,li').each do |i|
 [5] pry(#<RecipesController>)*   p i.content
 [5] pry(#<RecipesController>)* end
 "BrowseRecipesPublishersAboutRecipe API"
@@ -359,3 +363,31 @@ from (pry):58:in `index'
 => "http://static.food2fork.com/4686_MEDIUM0e58.jpg"
 [26] pry(#<RecipesController>)>
 30] pry(#<RecipesController>)> doc.css('li')[7..(doc.css('li').length)]
+
+======
+INDEX
+=======
+
+
+ @searchrecipes.each do |r|;
+p r if r["source_url"].include?"http://www.bbcgoodfood.com"
+ end
+ 
+ 
+ 
+ 
+======================
+NOKOGIRI SHOW PAGE - BBC FOOD
+======================
+doc = Nokogiri::HTML(open(@searchrecipe["recipe"]["source_url"]))
+ ratings =  doc.css("meta[itemprop= 'ratingValue']").first['content']
+ 
+ prep_time= doc.css('.recipe-details__cooking-time-prep > span').text
+ cook_time = doc.css('.recipe-details__cooking-time-cook > span').text
+ level = doc.css('.recipe-details__item--skill-level').css('span').text.strip
+ yield = doc.css('.recipe-details__item--servings').css('span').text.strip
+ directions = 
+ doc.css('#recipe-method').css('ol').each do |step|
+  p step.css('li').text.strip
+ end
+ 

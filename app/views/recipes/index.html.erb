@@ -5,51 +5,37 @@
 <% end %>
 
 <div>
-  <!-- <% @recipes.each do |recipe| %>
-
-    <ul>
-      <li><img src="<%#= recipe.images %>" alt=""></li>
-      <li>Title: <%#= recipe.title %></li>
-      <li>Rating: <%#= recipe.ratings %></li>
-      <li>Difficulty Level: <%#= recipe.level %></li>
-      <li>Cooking Duration: <%#= Time.at(recipe.cook_duration ).utc.strftime("%H:%M")%> Hrs</li>
-      <li>Prep Duration: <%#= recipe.prep_duration %></li>
-    </ul>
-
-  <% end %> -->
-
   <% if (@searchrecipes != nil) %>
     <% @recipes.each do |recipe| %>
+      <a href="/recipes/<%= recipe.id %>"><img src="<%= recipe.images %>" alt=""></a>
       <ul>
-        <li><img src="<%= recipe.images %>" alt=""></li>
         <li>Title: <%= recipe.title %></li>
-        <li>Rating: <%= recipe.ratings %></li>
-        <li>Difficulty Level: <%= recipe.level %></li>
-        <li>Cooking Duration: <%= Time.at(recipe.cook_duration ).utc.strftime("%H:%M")%> Hrs</li>
-        <li>Prep Duration: <%= recipe.prep_duration %></li>
+        <!-- <li>Rating: <%#= recipe.ratings %></li> -->
+        <!-- <li>Difficulty Level: <%#= recipe.level %></li>
+        <li>Cooking Duration: <%#= Time.at(recipe.cook_duration ).utc.strftime("%H:%M")%> Hrs</li>
+        <li>Prep Duration: <%#= recipe.prep_duration %></li> -->
       </ul>
-
     <% end %>
       <% @searchrecipes.each_with_index do |x,i| %>
+        <!-- <img src="<%= @searchrecipes[i]["image_url"] %>" alt=""> -->
+        <!-- <%#= image_tag @searchrecipes[i]["image_url"]%> -->
+        <a href="/recipes/<%= @searchrecipes[i]["recipe_id"] %>"><img src="<%= @searchrecipes[i]["image_url"] %>" alt=""></a>
           <ul>
-            <li><img src="<%= @searchrecipes[i]["image_url"] %>" alt=""></li>
             <li>Title: <%= @searchrecipes[i]["title"] %></li>
-            <li><a href="<%= @searchrecipes[i]["source_url"] %>">Find about recipe</a></li>
-
+            <!-- <li><a href="<%#= @searchrecipes[i]["f2f_url"] %>">Ingredients</a></li> -->
           </ul>
-
       <% end %>
   <% else %>
-  <% @recipes.each do |recipe| %>
-
-    <ul>
-      <li><img src="<%= recipe.images %>" alt=""></li>
-      <li>Title: <%= recipe.title %></li>
-      <li>Rating: <%= recipe.ratings %></li>
-      <li>Difficulty Level: <%= recipe.level %></li>
-      <li>Cooking Duration: <%= Time.at(recipe.cook_duration ).utc.strftime("%H:%M")%> Hrs</li>
-      <li>Prep Duration: <%= recipe.prep_duration %></li>
-    </ul>
+    <% @recipes.each do |recipe| %>
+      <a href="/recipes/<%= recipe.id %>"><img src="<%= recipe.images %>" alt=""></a>
+      <ul>
+        
+        <li>Title: <%= recipe.title %></li>
+        <!-- <li>Rating: <%#= recipe.ratings %></li> -->
+        <!-- <li>Difficulty Level: <%#= recipe.level %></li>
+        <li>Cooking Duration: <%#= Time.at(recipe.cook_duration ).utc.strftime("%H:%M")%> Hrs</li>
+        <li>Prep Duration: <%#= recipe.prep_duration %></li> -->
+      </ul>
 
   <% end %>
   <% end %>

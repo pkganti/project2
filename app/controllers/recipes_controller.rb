@@ -1,6 +1,7 @@
-require 'open-uri'
-
 class RecipesController < ApplicationController
+
+  require 'open-uri'
+
 
   def index
     if params[:recipesearch].present?
@@ -9,8 +10,12 @@ class RecipesController < ApplicationController
       url1 = "http://food2fork.com/api/search?key=#{f2fkey}&q=#{params[:recipesearch]}"
       string_obj = HTTParty.get(url1)
       object_obj = JSON.parse(string_obj)
-      @searchrecipes = object_obj["recipes"]
-      binding.pry
+      # @searchrecipes = object_obj["recipes"] no more needed
+      @searchrecipes = []
+      (object_obj["recipes"]).each do |r|;
+        @searchrecipes.push(r) if r["source_url"].include?"http://www.bbcgoodfood.com"
+      end
+      # binding.pry
       # Commenting this part as unable to process https request
       # rId = object_obj["recipes"].first['recipe_id']
       # url1 = "http://food2fork.com/api/search?key=#{f2fkey}&q=#{params[:recipesearch]}"
@@ -19,13 +24,25 @@ class RecipesController < ApplicationController
       # string_obj2 = HTTParty.get(url2)
       # object_obj2 = JSON.parse(string_obj2)
 
+      # html = @searchrecipes[1]["f2f_url"]
+      # page = Nokogiri::HTML(open(html))
     else
       @recipes = Recipe.all
-      # raise "hell"
+
     end
   end
 
   def show
+    f2fkey="18eb516313da0e6e327844bf73c1c8e0"
+    url2 = "http://food2fork.com/api/get?key=#{f2fkey}&rId=#{params[:id]}"
+    string_obj = HTTParty.get(url2)
+    object_obj = JSON.parse(string_obj)
+    @searchrecipe = object_obj
+    source_url = @searchrecipe["recipe"]["source_url"]
+    recipeObj = @searchrecipe["recipe"]
+    # binding.pry
+    @searchrecipe  = bbc_scrape(source_url,recipeObj)
+binding.pry
     @recipe = Recipe.find_by( :id => params[:id])
     @quantities = Quantity.where(:recipe_id => params[:id])
 
@@ -92,6 +109,24 @@ class RecipesController < ApplicationController
     mins = 60 * (m).to_i
 
     duration = hour + mins
+  end
+
+  def bbc_scrape(url,r)
+
+    # (@searchrecipe["recipe"]).merge!( {'level' => 'Easy'})
+    doc = Nokogiri::HTML(open(url))
+    ratings =  doc.css("meta[itemprop= 'ratingValue']").first['content']
+
+    prep_time= doc.css('.recipe-details__cooking-time-prep > span').text
+    cook_time = doc.css('.recipe-details__cooking-time-cook > span').text
+    level = doc.css('.recipe-details__item--skill-level').css('span').text.strip
+    servings = doc.css('.recipe-details__item--servings').css('span').text.strip
+    directions = []
+    doc.css('#recipe-method').css('ol').each do |step|
+     directions.push(step.css('li').text.strip)
+    end
+    r.merge!( {'ratings' => ratings , 'prep_duration' => prep_time ,'cook_duration' => cook_time , 'level' => level , 'servings' => servings , 'directions' => directions})
+
   end
 
 end
