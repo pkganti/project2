@@ -120,11 +120,12 @@ class RecipesController < ApplicationController
   end
 
   def bbc_scrape(url,r)
+    # raise "hell"
     preparation_time=[]
     cooking_time =[]
     # (@searchrecipe["recipe"]).merge!( {'level' => 'Easy'})
     doc = Nokogiri::HTML(open(url))
-    ratings =  doc.css("meta[itemprop= 'ratingValue']").first['content']
+    ratings =  doc.css("meta[itemprop= 'ratingValue']").first['content'] if (doc.css("meta[itemprop= 'ratingValue']").first['content'])
 
     prep_time= doc.css('.recipe-details__cooking-time-prep > span').text
     if ((prep_time.split(/hrs?/)).size > 1)
