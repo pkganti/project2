@@ -45,7 +45,14 @@ class RecipesController < ApplicationController
     string_obj = HTTParty.get(url2)
     object_obj = JSON.parse(string_obj)
     @searchrecipe = object_obj
-    binding.pry
+    # taste_url = "http://www.taste.com.au/recipes/20860/spaghetti+with+garlic+butter+bacon+and+prawns?ref=collections,pasta-recipes"
+
+
+    if taste_url
+      recipeObj = {}
+      @searchrecipe = taste_scrape(taste_url,recipeObj)
+      binding.pry
+    else
     if @searchrecipe["recipe"]["source_url"] =~ /bbcgoodfood/
       source_url = @searchrecipe["recipe"]["source_url"]
       recipeObj = @searchrecipe["recipe"]
@@ -57,8 +64,7 @@ class RecipesController < ApplicationController
       recipeObj = @searchrecipe["recipe"]
       @searchrecipe  = allrecipes_scrape(source_url,recipeObj)
     end
-
-
+    end
 
     @recipe = Recipe.find_by( :id => params[:id])
     @quantities = Quantity.where(:recipe_id => params[:id])
@@ -84,7 +90,6 @@ class RecipesController < ApplicationController
     prep_duration = convert_time_to_seconds((params[:recipe][:prep_duration_hour]).to_i ,(params[:recipe][:prep_duration_mins]).to_i)
     cook_duration = convert_time_to_seconds((params[:recipe][:cook_duration_hour]).to_i,(params[:recipe][:cook_duration_mins]).to_i)
 
-    # raise "bgjda"
     @recipe = Recipe.create recipe_params
     @recipe.prep_duration = prep_duration
     @recipe.cook_duration = cook_duration
@@ -166,6 +171,29 @@ class RecipesController < ApplicationController
 
   end
 
+  def taste_scrape(url,r)
+    doc = Nokogiri::HTML(open(url))
+    title = doc.css('.heading > h1').text
+    prep_time = [(doc.css('.prepTime').css('em').text.delete('0:').to_i)*60]
+    cook_time = [(doc.css('.cookTime').css('em').text.delete('0:').to_i)*60]
+    # binding.pry
+    level = doc.css('.difficultyTitle').css('em').text
+    servings = doc.css('.servings').css('em').text
+    ratings = doc.css('.rating').css('span.star-level').text
+    ingredients = []
+    doc.css('.ingredient-table > li > label').each do |i|
+      ingredients.push(i.text)
+    end
+    directions =[]
+    doc.css('.method-tab-content > ol > li > p.description').each do |d|
+      directions.push(d.text)
+    end
+    images = doc.css('.recipe-image-wrapper > img').attr('src').text
+
+    r.merge!( {'title' => title,'ratings' => ratings , 'prep_duration' => prep_time ,'cook_duration' => cook_time , 'level' => level , 'servings' => servings , 'directions' => directions, 'ingredients' =>  ingredients, 'image_url' => images})
+
+  end
+
   def allrecipes_scrape(url,r)
     # scrapeurl = url+'/print'
 
@@ -186,5 +214,7 @@ class RecipesController < ApplicationController
     r.merge!( {'ratings' => ratings , 'prep_duration' => prep_time ,'cook_duration' => cook_time , 'servings' => servings , 'directions' => directions})
 
   end
+
+
 
 end
