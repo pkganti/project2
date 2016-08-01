@@ -166,21 +166,22 @@ class RecipesController < ApplicationController
   end
 
   def allrecipes_scrape(url,r)
+    # scrapeurl = url+'/print'
 
     # (@searchrecipe["recipe"]).merge!( {'level' => 'Easy'})
     doc = Nokogiri::HTML(open(url))
-    # raise "hell"
+
     ratings =  doc.css("meta[itemprop= 'ratingValue']").first['content']
 
     prep_time= doc.css("time[itemprop='prepTime']").text
     cook_time = doc.css("time[itemprop='cookTime']").text
 
-    servings = doc.css("span[ng-bind='adjustedServings']").text.strip
+    servings = doc.css("#metaRecipeServings").first['content']
     directions = []
-    doc.css('#recipe-method').css('ol').each do |step|
-     directions.push(step.css('li').text.strip.gsub("\n", '<br>'))
-
+    doc.css('.recipe-directions__list').css('ol').css('li').each do |step|
+     directions.push(step.text.strip)
     end
+    # raise "hell"
     r.merge!( {'ratings' => ratings , 'prep_duration' => prep_time ,'cook_duration' => cook_time , 'servings' => servings , 'directions' => directions})
 
   end
