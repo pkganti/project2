@@ -51,8 +51,8 @@ class RecipesController < ApplicationController
       recipeObj = @searchrecipe["recipe"]
       # binding.pry
       @searchrecipe  = bbc_scrape(source_url,recipeObj)
-    end
-    if @searchrecipe["recipe"]["source_url"] =~ /allrecipes/
+
+    elsif @searchrecipe["recipe"]["source_url"] =~ /allrecipes/
       source_url = @searchrecipe["recipe"]["source_url"]
       recipeObj = @searchrecipe["recipe"]
       @searchrecipe  = allrecipes_scrape(source_url,recipeObj)
