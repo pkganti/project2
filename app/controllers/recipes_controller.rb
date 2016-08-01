@@ -34,6 +34,7 @@ class RecipesController < ApplicationController
 
   def show
     f2fkey="18eb516313da0e6e327844bf73c1c8e0"
+    # binding.pry
     url2 = "http://food2fork.com/api/get?key=#{f2fkey}&rId=#{params[:id]}"
     string_obj = HTTParty.get(url2)
     object_obj = JSON.parse(string_obj)
@@ -42,7 +43,7 @@ class RecipesController < ApplicationController
     recipeObj = @searchrecipe["recipe"]
     # binding.pry
     @searchrecipe  = bbc_scrape(source_url,recipeObj)
-binding.pry
+# binding.pry
     @recipe = Recipe.find_by( :id => params[:id])
     @quantities = Quantity.where(:recipe_id => params[:id])
 
@@ -112,20 +113,31 @@ binding.pry
   end
 
   def bbc_scrape(url,r)
-
+    preparation_time=[]
+    cooking_time =[]
     # (@searchrecipe["recipe"]).merge!( {'level' => 'Easy'})
     doc = Nokogiri::HTML(open(url))
     ratings =  doc.css("meta[itemprop= 'ratingValue']").first['content']
 
     prep_time= doc.css('.recipe-details__cooking-time-prep > span').text
+    if ((prep_time.split(/hrs?/)).size > 1)
+     preparation_time = prep_time.split(/hrs?/)
+    else
+     preparation_time.push(prep_time)
+    end
     cook_time = doc.css('.recipe-details__cooking-time-cook > span').text
+    if ((cook_time.split(/hrs?/)).size > 1)
+     cooking_time = cook_time.split(/hrs?/)
+    else
+     cooking_time.push(cook_time)
+    end
     level = doc.css('.recipe-details__item--skill-level').css('span').text.strip
     servings = doc.css('.recipe-details__item--servings').css('span').text.strip
     directions = []
     doc.css('#recipe-method').css('ol').each do |step|
      directions.push(step.css('li').text.strip)
     end
-    r.merge!( {'ratings' => ratings , 'prep_duration' => prep_time ,'cook_duration' => cook_time , 'level' => level , 'servings' => servings , 'directions' => directions})
+    r.merge!( {'ratings' => ratings , 'prep_duration' => preparation_time ,'cook_duration' => cooking_time , 'level' => level , 'servings' => servings , 'directions' => directions})
 
   end
 
