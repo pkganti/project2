@@ -38,10 +38,9 @@ class RecipesController < ApplicationController
     @searchrecipe = object_obj
 
     @s = 'ABCD'
-    foodnetwork_url = 'http://www.foodnetwork.com/recipes/town-housereg-flatbread-crispsreg-crusted-mahi-mahi-with-curry-dill-aioli-recipe.print.html'
+    foodnetwork_url = 'http://www.foodnetwork.com/recipes/nancy-fuller/chicken-divan-casserole.print.html'
     if @s.eql?'ABCD'
     @s = foodNetwork_scrape(foodnetwork_url,@s)
-  end
     # taste_url = "http://www.taste.com.au/recipes/20860/spaghetti+with+garlic+butter+bacon+and+prawns?ref=collections,pasta-recipes"
 
 
@@ -217,7 +216,6 @@ class RecipesController < ApplicationController
     cooking_time =[]
     # (@searchrecipe["recipe"]).merge!( {'level' => 'Easy'})
     doc = Nokogiri::HTML(open(url))
-    binding.pry
     ratings =
     #  $(".gig-rating-stars")[1].title first character
 
@@ -240,11 +238,10 @@ class RecipesController < ApplicationController
       ingredients.push(i.text)
     end
     directions = []
-    doc.css(".recipe-directions-list > li > p").each do  |d|
+    doc.css(".recipe-directions-list > li > p").each do |d|
       directions.push(d.text)
     end
 
-    end
     r.merge!( {'ratings' => ratings , 'prep_duration' => preparation_time ,'cook_duration' => cooking_time , 'level' => level , 'servings' => servings , 'directions' => directions})
 
   end
