@@ -42,7 +42,7 @@ class RecipesController < ApplicationController
     recipeObj = @searchrecipe["recipe"]
     # binding.pry
     @searchrecipe  = bbc_scrape(source_url,recipeObj)
-binding.pry
+
     @recipe = Recipe.find_by( :id => params[:id])
     @quantities = Quantity.where(:recipe_id => params[:id])
 
@@ -123,7 +123,8 @@ binding.pry
     servings = doc.css('.recipe-details__item--servings').css('span').text.strip
     directions = []
     doc.css('#recipe-method').css('ol').each do |step|
-     directions.push(step.css('li').text.strip)
+     directions.push(step.css('li').text.strip.gsub("\n", '<br>'))
+
     end
     r.merge!( {'ratings' => ratings , 'prep_duration' => prep_time ,'cook_duration' => cook_time , 'level' => level , 'servings' => servings , 'directions' => directions})
 

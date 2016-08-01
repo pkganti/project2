@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'rails_12factor'
-gem 'nokogiri'
+# gem 'nokogiri'
 # gem 'open-uri'
 gem 'bootstrap-sass'
 gem 'cloudinary'
