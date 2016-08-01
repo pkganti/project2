@@ -11,10 +11,16 @@ class RecipesController < ApplicationController
       string_obj = HTTParty.get(url1)
       object_obj = JSON.parse(string_obj)
       # @searchrecipes = object_obj["recipes"] no more needed
+      # raise "hell"
       @searchrecipes = []
-      (object_obj["recipes"]).each do |r|;
-        @searchrecipes.push(r) if r["source_url"].include?"http://www.bbcgoodfood.com"
+      (object_obj["recipes"]).each do |r|
+        # if(r["source_url"].include?("http://www.bbcgoodfood.com" || "http://allrecipes.com"))
+        if r['source_url'] =~ /bbcgoodfood.com/ || r['source_url'] =~ /allrecipes/
+          #  (r["source_url"].include?"http://allrecipes.com/") )
+          @searchrecipes.push(r)
+        end
       end
+      # raise "hell"
       # binding.pry
       # Commenting this part as unable to process https request
       # rId = object_obj["recipes"].first['recipe_id']
@@ -38,10 +44,20 @@ class RecipesController < ApplicationController
     string_obj = HTTParty.get(url2)
     object_obj = JSON.parse(string_obj)
     @searchrecipe = object_obj
-    source_url = @searchrecipe["recipe"]["source_url"]
-    recipeObj = @searchrecipe["recipe"]
-    # binding.pry
-    @searchrecipe  = bbc_scrape(source_url,recipeObj)
+
+    if @searchrecipe["recipe"]["source_url"] =~ /bbcgoodfood/
+      source_url = @searchrecipe["recipe"]["source_url"]
+      recipeObj = @searchrecipe["recipe"]
+      # binding.pry
+      @searchrecipe  = bbc_scrape(source_url,recipeObj)
+    end
+    if @searchrecipe["recipe"]["source_url"] =~ /allrecipes/
+      source_url = @searchrecipe["recipe"]["source_url"]
+      recipeObj = @searchrecipe["recipe"]
+      @searchrecipe  = allrecipes_scrape(source_url,recipeObj)
+    end
+
+
 
     @recipe = Recipe.find_by( :id => params[:id])
     @quantities = Quantity.where(:recipe_id => params[:id])
@@ -127,6 +143,26 @@ class RecipesController < ApplicationController
 
     end
     r.merge!( {'ratings' => ratings , 'prep_duration' => prep_time ,'cook_duration' => cook_time , 'level' => level , 'servings' => servings , 'directions' => directions})
+
+  end
+
+  def allrecipes_scrape(url,r)
+
+    # (@searchrecipe["recipe"]).merge!( {'level' => 'Easy'})
+    doc = Nokogiri::HTML(open(url))
+    # raise "hell"
+    ratings =  doc.css("meta[itemprop= 'ratingValue']").first['content']
+
+    prep_time= doc.css("time[itemprop='prepTime']").text
+    cook_time = doc.css("time[itemprop='cookTime']").text
+
+    servings = doc.css("span[ng-bind='adjustedServings']").text.strip
+    directions = []
+    doc.css('#recipe-method').css('ol').each do |step|
+     directions.push(step.css('li').text.strip.gsub("\n", '<br>'))
+
+    end
+    r.merge!( {'ratings' => ratings , 'prep_duration' => prep_time ,'cook_duration' => cook_time , 'servings' => servings , 'directions' => directions})
 
   end
 
