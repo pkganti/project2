@@ -45,7 +45,11 @@ class RecipesController < ApplicationController
     string_obj = HTTParty.get(url2)
     object_obj = JSON.parse(string_obj)
     @searchrecipe = object_obj
-
+    @s = 'ABCD'
+    foodnetwork_url = 'http://www.foodnetwork.com/recipes/town-housereg-flatbread-crispsreg-crusted-mahi-mahi-with-curry-dill-aioli-recipe.print.html'
+    if @s.eql?'ABCD'
+    @s = foodNetwork_scrape(foodnetwork_url,@s)
+  end
     if @searchrecipe["recipe"]["source_url"] =~ /bbcgoodfood/
       source_url = @searchrecipe["recipe"]["source_url"]
       recipeObj = @searchrecipe["recipe"]
@@ -185,4 +189,37 @@ class RecipesController < ApplicationController
 
   end
 
+  def foodNetwork_scrape(url,r)
+    preparation_time=[]
+    cooking_time =[]
+    # (@searchrecipe["recipe"]).merge!( {'level' => 'Easy'})
+    doc = Nokogiri::HTML(open(url))
+    binding.pry
+    ratings =
+    #  $(".gig-rating-stars")[1].title first character
+
+    prep_time= doc.css('.cooking-times > dl >dd:nth-child(4)').text
+    # if ((prep_time.split(/hrs?/)).size > 1)
+    #  preparation_time = prep_time.split(/hrs?/)
+    # else
+    #  preparation_time.push(prep_time)
+    # end
+    cook_time = doc.css('.cooking-times > dl >dd:nth-child(6)').text
+    # if ((cook_time.split(/hrs?/)).size > 1)
+    #  cooking_time = cook_time.split(/hrs?/)
+    # else
+    #  cooking_time.push(cook_time)
+    # end
+    level = doc.css('.difficulty > dl:nth-child(2) >dd').text
+    servings = doc.css('.difficulty > dl:nth-child(1) >dd').text
+    ingredients = []
+    doc.css(".ingredients > ul").each do |i|
+      ingredients.push(i.css('li').text)
+      # what is the each function for doc.css(".ingredients > ul > li")[1].text
+    directions = doc.css(".recipe-directions-list > li > p").text
+
+    end
+    r.merge!( {'ratings' => ratings , 'prep_duration' => preparation_time ,'cook_duration' => cooking_time , 'level' => level , 'servings' => servings , 'directions' => directions})
+
+  end
 end
