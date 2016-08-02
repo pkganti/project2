@@ -77,9 +77,19 @@ class RecipesController < ApplicationController
   end
 
   def scrape
-    @url =  params.fetch(:url)
-    render json: "false",  :status => :ok
-    # head :ok
+    @chromeUrl =  params.fetch(:url)
+    render json: @chromeUrl,  :status => :ok
+
+    if @chromeUrl =~ /bbcgoodfood/
+      bbc_scrape(@chromeUrl,{},save=true)
+    elsif @chromeUrl =~ /taste.com.au/
+      taste_scrape(@chromeUrl.gsub(' ','+'),{},save=true)
+    elsif @chromeUrl =~ /foodnetwork/
+      foodNetwork_scrape(@chromeUrl,{},save=true)
+    else @chromeUrl =~ /allrecipes/
+      allrecipes_scrape(@chromeUrl,{}, save=true)
+      # no match, bookmark instead
+    end
 
   end
 
@@ -137,7 +147,7 @@ class RecipesController < ApplicationController
     duration = hour + mins
   end
 
-  def bbc_scrape(url,r)
+  def bbc_scrape(url,r,save=false)
     # raise "hell"
     preparation_time=[]
     cooking_time =[]
@@ -166,13 +176,28 @@ class RecipesController < ApplicationController
     end
     r.merge!( {'ratings' => ratings , 'prep_duration' => preparation_time ,'cook_duration' => cooking_time , 'level' => level , 'servings' => servings , 'directions' => directions})
 
+    if save
+      @recipe = Recipe.new
+      @recipe.title = title
+      @recipe.prep_duration = preparation_time
+      @recipe.cook_duration = cooking_time
+      @recipe.ratings = ratings
+      @recipe.level = level
+      @recipe.servings = servings
+      @recipe.directions = directions
+      @recipe.ingredients = ingredients
+      @recipe.save
+    end
+
   end
 
-  def taste_scrape(url,r)
+  def taste_scrape(url,r,save=false)
+    # raise "jhsbdj"
+    # url = /' '/'+'
     doc = Nokogiri::HTML(open(url))
     title = doc.css('.heading > h1').text
-    prep_time = [(doc.css('.prepTime').css('em').text.delete('0:').to_i)*60]
-    cook_time = [(doc.css('.cookTime').css('em').text.delete('0:').to_i)*60]
+    preparation_time = [(doc.css('.prepTime').css('em').text.delete('0:').to_i)*60]
+    cooking_time = [(doc.css('.cookTime').css('em').text.delete('0:').to_i)*60]
     # binding.pry
     level = doc.css('.difficultyTitle').css('em').text
     servings = doc.css('.servings').css('em').text
@@ -187,11 +212,26 @@ class RecipesController < ApplicationController
     end
     images = doc.css('.recipe-image-wrapper > img').attr('src').text
 
-    r.merge!( {'title' => title,'ratings' => ratings , 'prep_duration' => prep_time ,'cook_duration' => cook_time , 'level' => level , 'servings' => servings , 'directions' => directions, 'ingredients' =>  ingredients, 'image_url' => images})
+    if save
+        @recipe = Recipe.new
+        @recipe.title = title
+        @recipe.prep_duration = preparation_time
+        @recipe.cook_duration = cooking_time
+        @recipe.ratings = ratings
+        @recipe.level = level
+        @recipe.servings = servings
+        @recipe.directions = directions
+        @recipe.ingredients = ingredients
+        @recipe.save
+
+    else
+    r.merge!( {'title' => title,'ratings' => ratings , 'prep_duration' => preparation_time ,'cook_duration' => cooking_time , 'level' => level , 'servings' => servings , 'directions' => directions, 'ingredients' =>  ingredients, 'image_url' => images})
+    end
+
 
   end
 
-  def allrecipes_scrape(url,r)
+  def allrecipes_scrape(url,r, save=false)
     # scrapeurl = url+'/print'
 
     # (@searchrecipe["recipe"]).merge!( {'level' => 'Easy'})
@@ -207,8 +247,19 @@ class RecipesController < ApplicationController
     doc.css('.recipe-directions__list').css('ol').css('li').each do |step|
      directions.push(step.text.strip)
     end
-    # raise "hell"
-    r.merge!( {'ratings' => ratings , 'prep_duration' => prep_time ,'cook_duration' => cook_time , 'servings' => servings , 'directions' => directions})
+    if save
+        @recipe = Recipe.new
+        @recipe.title = title
+        @recipe.prep_duration = preparation_time
+        @recipe.cook_duration = cooking_time
+        @recipe.ratings = ratings
+        @recipe.level = level
+        @recipe.servings = servings
+        @recipe.ingredients = ingredients
+        @recipe.directions = directions
+        @recipe.save
+    else
+    r.merge!( {'ratings' => ratings , 'prep_duration' => preparation_time ,'cook_duration' => cooking_time , 'servings' => servings , 'directions' => directions})
 
   end
 
@@ -244,7 +295,19 @@ class RecipesController < ApplicationController
     doc.css(".recipe-directions-list > li > p").each do |d|
       directions.push(d.text)
     end
+  if save
+        @recipe = Recipe.new
+        @recipe.title = title
+        @recipe.prep_duration = preparation_time
+        @recipe.cook_duration = cooking_time
+        @recipe.ratings = ratings
+        @recipe.level = level
+        @recipe.servings = servings
+        @recipe.ingredients = ingredients
+        @recipe.directions = directions
+        @recipe.save
 
+  else
     r.merge!( {'ratings' => ratings , 'prep_duration' => preparation_time ,'cook_duration' => cooking_time , 'level' => level , 'servings' => servings , 'directions' => directions})
   end
 
