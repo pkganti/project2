@@ -8,11 +8,13 @@
     "scripts": ["background.js", "jquery.js"]
   },
   "browser_action": {
-    "default_icon": "icon.png"
+    "default_icon": "icon.png",
+    "default_title": "Add Recipe",
+    "default_popup": "popup.html"
 
   },
   "permissions": [
-    "activeTab",
-    "https://ajax.googleapis.com/"
+    "http://*/",
+    "https://*/"
   ]
 }
