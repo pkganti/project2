@@ -35,18 +35,6 @@ class RecipesController < ApplicationController
     object_obj = JSON.parse(string_obj)
     @searchrecipe = object_obj
 
-  #   @s = 'ABCD'
-  #   foodnetwork_url = 'http://www.foodnetwork.com/recipes/town-housereg-flatbread-crispsreg-crusted-mahi-mahi-with-curry-dill-aioli-recipe.print.html'
-  #   if @s.eql?'ABCD'
-  #   @s = foodNetwork_scrape(foodnetwork_url,@s)
-  # end
-  #   # taste_url = "http://www.taste.com.au/recipes/20860/spaghetti+with+garlic+butter+bacon+and+prawns?ref=collections,pasta-recipes"
-
-
-    # if taste_url
-    #   recipeObj = {}
-    #   @searchrecipe = taste_scrape(taste_url,recipeObj)
-      binding.pry
       if (@searchrecipe["recipe"]).present?
         if @searchrecipe["recipe"]["source_url"] =~ /bbcgoodfood/
           source_url = @searchrecipe["recipe"]["source_url"]
@@ -60,6 +48,7 @@ class RecipesController < ApplicationController
         end
       else
         @recipe = Recipe.find_by( :id => params[:id])
+        # raise "hell"
         @quantities = Quantity.where(:recipe_id => params[:id])
       end
 
@@ -173,6 +162,14 @@ class RecipesController < ApplicationController
     doc.css('#recipe-method').css('ol').each do |step|
      directions.push(step.css('li').text.strip.gsub("\n", '<br>'))
     end
+
+    ingredients = []
+    doc.css("[itemprop='ingredients']").each do |i|
+      ingredients.push(i.text.split("\n")[0])
+    end
+    ingredients.reject! {|i| i.empty? }
+
+
    images = doc.css("[itemprop = 'image']").attr('src').text
    if save
      @recipe = Recipe.new
@@ -245,10 +242,19 @@ class RecipesController < ApplicationController
 
     servings = doc.css("#metaRecipeServings").first['content']
 
+    ingredients = []
+    doc.css('.recipe-ingredients > ul > li > label').each do |i|
+      ingredients.push(i.text.strip)
+    end
+
+    ingredients.reject! { |i| i.empty? }
+
     directions = []
     doc.css('.recipe-directions__list').css('ol').css('li').each do |step|
      directions.push(step.text.strip)
     end
+
+    # raise "hell"
 
     images = doc.css(".rec-photo").attr('src').text
     if save
@@ -257,6 +263,7 @@ class RecipesController < ApplicationController
         @recipe.prep_duration = preparation_time
         @recipe.cook_duration = cooking_time
         @recipe.ratings = ratings
+        @recipes.images = images
         @recipe.level = level
         @recipe.servings = servings
         @recipe.ingredients = ingredients
