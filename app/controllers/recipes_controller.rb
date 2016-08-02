@@ -267,6 +267,7 @@ class RecipesController < ApplicationController
     else
     r.merge!( {'ratings' => ratings , 'prep_duration' => preparation_time ,'cook_duration' => cooking_time , 'servings' => servings , 'directions' => directions})
 
+    end
   end
 
 
@@ -303,7 +304,7 @@ class RecipesController < ApplicationController
     doc.css(".recipe-directions-list > li > p").each do |d|
       directions.push(d.text)
     end
-  if save
+    if save
         @recipe = Recipe.new
         @recipe.title = title
         @recipe.prep_duration = preparation_time
@@ -315,9 +316,9 @@ class RecipesController < ApplicationController
         @recipe.ingredients = ingredients
         @recipe.directions = directions
         @recipe.save
-
-  else
+    else
     r.merge!( {'ratings' => ratings , 'prep_duration' => preparation_time ,'cook_duration' => cooking_time , 'level' => level , 'servings' => servings , 'directions' => directions})
+    end
   end
 
 end
