@@ -2,7 +2,6 @@ class RecipesController < ApplicationController
 
   require 'open-uri'
 
-
   def index
     if params[:recipesearch].present?
       # @recipes = Recipe.all
@@ -47,23 +46,24 @@ class RecipesController < ApplicationController
     # if taste_url
     #   recipeObj = {}
     #   @searchrecipe = taste_scrape(taste_url,recipeObj)
-    #   # binding.pry
+      binding.pry
+      if (@searchrecipe["recipe"]).present?
+        if @searchrecipe["recipe"]["source_url"] =~ /bbcgoodfood/
+          source_url = @searchrecipe["recipe"]["source_url"]
+          recipeObj = @searchrecipe["recipe"]
+          @searchrecipe  = bbc_scrape(source_url,recipeObj)
 
-    if @searchrecipe["recipe"]["source_url"] =~ /bbcgoodfood/
-      source_url = @searchrecipe["recipe"]["source_url"]
-      recipeObj = @searchrecipe["recipe"]
-      # binding.pry
-      @searchrecipe  = bbc_scrape(source_url,recipeObj)
+        elsif @searchrecipe["recipe"]["source_url"] =~ /allrecipes/
+          source_url = @searchrecipe["recipe"]["source_url"]
+          recipeObj = @searchrecipe["recipe"]
+          @searchrecipe  = allrecipes_scrape(source_url,recipeObj)
+        end
+      else
+        @recipe = Recipe.find_by( :id => params[:id])
+        @quantities = Quantity.where(:recipe_id => params[:id])
+      end
 
-    elsif @searchrecipe["recipe"]["source_url"] =~ /allrecipes/
-      source_url = @searchrecipe["recipe"]["source_url"]
-      recipeObj = @searchrecipe["recipe"]
-      @searchrecipe  = allrecipes_scrape(source_url,recipeObj)
-    end
-  # end
 
-    @recipe = Recipe.find_by( :id => params[:id])
-    @quantities = Quantity.where(:recipe_id => params[:id])
 
   end
 
@@ -85,12 +85,9 @@ class RecipesController < ApplicationController
       taste_scrape(@chromeUrl.gsub(' ','+'),{},save=true)
     elsif @chromeUrl =~ /foodnetwork/
       foodNetwork_scrape(@chromeUrl,{},save=true)
-    elsif @chromeUrl =~ /allrecipes/
+    else @chromeUrl =~ /allrecipes/
       allrecipes_scrape(@chromeUrl,{}, save=true)
-    else  # no match, bookmark instead
-      r = Recipe.new
-      r.title =
-      r.source_url = @chromeUrl
+      # no match, bookmark instead
     end
 
   end
@@ -155,7 +152,7 @@ class RecipesController < ApplicationController
     cooking_time =[]
     # (@searchrecipe["recipe"]).merge!( {'level' => 'Easy'})
     doc = Nokogiri::HTML(open(url))
-    raise "hell"
+
     ratings =  doc.css("meta[itemprop= 'ratingValue']").first['content'] if (doc.css("meta[itemprop= 'ratingValue']").first['content'])
 
     prep_time= doc.css('.recipe-details__cooking-time-prep > span').text
@@ -175,23 +172,24 @@ class RecipesController < ApplicationController
     directions = []
     doc.css('#recipe-method').css('ol').each do |step|
      directions.push(step.css('li').text.strip.gsub("\n", '<br>'))
-
     end
+   images = doc.css("[itemprop = 'image']").attr('src').text
+   if save
+     @recipe = Recipe.new
+     @recipe.title = title
+     @recipe.prep_duration = preparation_time
+     @recipe.images = images
+     @recipe.cook_duration = cooking_time
+     @recipe.ratings = ratings
+     @recipe.level = level
+     @recipe.servings = servings
+     @recipe.directions = directions
+     @recipe.ingredients = ingredients
+     @recipe.save
+   else
     r.merge!( {'ratings' => ratings , 'prep_duration' => preparation_time ,'cook_duration' => cooking_time , 'level' => level , 'servings' => servings , 'directions' => directions})
 
-    if save
-      @recipe = Recipe.new
-      @recipe.title = title
-      @recipe.prep_duration = preparation_time
-      @recipe.cook_duration = cooking_time
-      @recipe.ratings = ratings
-      @recipe.level = level
-      @recipe.images = images
-      @recipe.servings = servings
-      @recipe.directions = directions
-      @recipe.ingredients = ingredients
-      @recipe.save
-    end
+  end
 
   end
 
@@ -221,8 +219,8 @@ class RecipesController < ApplicationController
         @recipe.title = title
         @recipe.prep_duration = preparation_time
         @recipe.cook_duration = cooking_time
-        @recipe.images = images
         @recipe.ratings = ratings
+        @recipe.images = images
         @recipe.level = level
         @recipe.servings = servings
         @recipe.directions = directions
@@ -232,8 +230,6 @@ class RecipesController < ApplicationController
     else
     r.merge!( {'title' => title,'ratings' => ratings , 'prep_duration' => preparation_time ,'cook_duration' => cooking_time , 'level' => level , 'servings' => servings , 'directions' => directions, 'ingredients' =>  ingredients, 'image_url' => images})
     end
-
-
   end
 
   def allrecipes_scrape(url,r, save=false)
@@ -241,17 +237,20 @@ class RecipesController < ApplicationController
 
     # (@searchrecipe["recipe"]).merge!( {'level' => 'Easy'})
     doc = Nokogiri::HTML(open(url))
-
+    # raise "hell"
     ratings =  doc.css("meta[itemprop= 'ratingValue']").first['content']
 
     preparation_time= doc.css("time[itemprop='prepTime']").text
     cooking_time = doc.css("time[itemprop='cookTime']").text
 
     servings = doc.css("#metaRecipeServings").first['content']
+
     directions = []
     doc.css('.recipe-directions__list').css('ol').css('li').each do |step|
      directions.push(step.text.strip)
     end
+
+    images = doc.css(".rec-photo").attr('src').text
     if save
         @recipe = Recipe.new
         @recipe.title = title
@@ -259,7 +258,6 @@ class RecipesController < ApplicationController
         @recipe.cook_duration = cooking_time
         @recipe.ratings = ratings
         @recipe.level = level
-        @recipe.images = images
         @recipe.servings = servings
         @recipe.ingredients = ingredients
         @recipe.directions = directions
@@ -274,14 +272,12 @@ class RecipesController < ApplicationController
   def foodNetwork_scrape(url,r)
     preparation_time=[]
     cooking_time =[]
-
     # (@searchrecipe["recipe"]).merge!( {'level' => 'Easy'})
     doc = Nokogiri::HTML(open(url))
     # ratings =
 
     #  $(".gig-rating-stars")[1].title first character
-    raise 'hej'
-    images = doc.css('img').attr('src').text
+
     prep_time= doc.css('.cooking-times > dl >dd:nth-child(4)').text
     if ((prep_time.split(/hrs?/)).size > 1)
      preparation_time = prep_time.split(/hrs?/)
@@ -310,7 +306,6 @@ class RecipesController < ApplicationController
         @recipe.prep_duration = preparation_time
         @recipe.cook_duration = cooking_time
         @recipe.ratings = ratings
-        @recipe.images = images
         @recipe.level = level
         @recipe.servings = servings
         @recipe.ingredients = ingredients
