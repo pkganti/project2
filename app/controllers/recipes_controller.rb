@@ -85,9 +85,12 @@ class RecipesController < ApplicationController
       taste_scrape(@chromeUrl.gsub(' ','+'),{},save=true)
     elsif @chromeUrl =~ /foodnetwork/
       foodNetwork_scrape(@chromeUrl,{},save=true)
-    else @chromeUrl =~ /allrecipes/
+    elsif @chromeUrl =~ /allrecipes/
       allrecipes_scrape(@chromeUrl,{}, save=true)
-      # no match, bookmark instead
+    else  # no match, bookmark instead
+      r = Recipe.new
+      r.title =
+      r.source_url = @chromeUrl
     end
 
   end
@@ -183,6 +186,7 @@ class RecipesController < ApplicationController
       @recipe.cook_duration = cooking_time
       @recipe.ratings = ratings
       @recipe.level = level
+      @recipe.images = images
       @recipe.servings = servings
       @recipe.directions = directions
       @recipe.ingredients = ingredients
@@ -217,6 +221,7 @@ class RecipesController < ApplicationController
         @recipe.title = title
         @recipe.prep_duration = preparation_time
         @recipe.cook_duration = cooking_time
+        @recipe.images = images
         @recipe.ratings = ratings
         @recipe.level = level
         @recipe.servings = servings
@@ -254,6 +259,7 @@ class RecipesController < ApplicationController
         @recipe.cook_duration = cooking_time
         @recipe.ratings = ratings
         @recipe.level = level
+        @recipe.images = images
         @recipe.servings = servings
         @recipe.ingredients = ingredients
         @recipe.directions = directions
@@ -268,12 +274,14 @@ class RecipesController < ApplicationController
   def foodNetwork_scrape(url,r)
     preparation_time=[]
     cooking_time =[]
+
     # (@searchrecipe["recipe"]).merge!( {'level' => 'Easy'})
     doc = Nokogiri::HTML(open(url))
     # ratings =
 
     #  $(".gig-rating-stars")[1].title first character
-
+    raise 'hej'
+    images = doc.css('img').attr('src').text
     prep_time= doc.css('.cooking-times > dl >dd:nth-child(4)').text
     if ((prep_time.split(/hrs?/)).size > 1)
      preparation_time = prep_time.split(/hrs?/)
@@ -302,6 +310,7 @@ class RecipesController < ApplicationController
         @recipe.prep_duration = preparation_time
         @recipe.cook_duration = cooking_time
         @recipe.ratings = ratings
+        @recipe.images = images
         @recipe.level = level
         @recipe.servings = servings
         @recipe.ingredients = ingredients
