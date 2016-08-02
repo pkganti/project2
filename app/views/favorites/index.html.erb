@@ -2,8 +2,12 @@
 <%= form_tag(favorite_index_path, method: "get") do %>
 <input type="text" name="recipesearch" id="search" placeholder="eg. italian chicken"></input>
 <%= submit_tag("Search") %>
+  <% if (params[:recipesearch]).present? %>
+    <div class="search_display">
+      <sub>Search results for <%= params[:recipesearch] %></sub>
+    </div>
+  <% end %>
 <% end %>
-<%# raise "help" %>
 <% @recipes.each do |recipe| %>
   <div class="row">
     <div class="col-xs-6">
