@@ -1,0 +1,16 @@
+<h1>My Recipes </h1>
+<%= form_tag(favorite_index_path, method: "get") do %>
+<input type="text" name="recipesearch" id="search" placeholder="eg. italian chicken"></input>
+<%= submit_tag("Search") %>
+<% end %>
+<%# raise "help" %>
+<% @recipes.each do |recipe| %>
+  <div class="row">
+    <div class="col-xs-6">
+      <a href="/recipes/<%= recipe.id %>"><img src="<%= recipe.images %>" alt=""></a>
+      <ul>
+        <li>Title: <%= recipe.title %></li>
+      </ul>
+    </div>
+  </div>
+<% end %>

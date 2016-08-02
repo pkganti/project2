@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   get '/extension' => 'recipes#scrape'
   get '/extensionbookmark' => 'recipes#bookmark'
 
+  get 'favorites/index' => 'favorites#index' , :as => 'favorite_index'
   get '/login' => 'session#new'
   post '/login' => 'session#create'
   delete '/logout' => 'session#destroy'

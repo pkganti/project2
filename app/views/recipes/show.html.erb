@@ -83,9 +83,13 @@
                 <%= @recipe.directions %>
               <% else%>
                 <h2>Directions</h2>
-                <% @searchrecipe['directions'].each_index do |i| %>
-                  <%== @searchrecipe['directions'][i] %>
-                <% end %>
+                <ul>
+                  <% @searchrecipe['directions'].each_index do |i| %>
+                    <li>
+                      <%= @searchrecipe['directions'][i] %>
+                    </li>
+                  <% end %>
+                </ul>
               <% end %>
             </div>
       </div>
