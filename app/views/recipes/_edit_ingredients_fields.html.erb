@@ -1,0 +1,18 @@
+<div class="form-group">
+  <% f.object.quantities.each do |q| %>
+    <li>
+      <%= f.fields_for q do |ff| %>
+        <%= ff.fields_for q.ingredient do |fff| %>
+          <%= fff.label :name %>
+          <%= fff.text_field :name %>
+          <%= fff.label :category %>
+          <%= fff.text_field :category %>
+        <% end %>
+        <%= ff.label :unit %>
+        <%= ff.text_field :unit %>
+        <%= ff.label :size %>
+        <%= ff.text_field :size %>
+      <% end %>
+    </li>
+  <% end %>
+</div>

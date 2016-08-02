@@ -2,43 +2,33 @@
 <%= form_tag(recipes_path, method: "get") do %>
 <input type="text" name="recipesearch" id="search" placeholder="eg. italian chicken"></input>
 <%= submit_tag("Search") %>
+  <% if (params[:recipesearch]).present? %>
+    <div class="search_display">
+      <sub>Search results for <%= params[:recipesearch] %></sub>
+    </div>
+  <% end %>
 <% end %>
 
 <div>
- <% if (@searchrecipes != nil) %>
+  <% if (@searchrecipes != nil) %>
    <% @recipes.each do |recipe| %>
      <a href="/recipes/<%= recipe.id %>"><img src="<%= recipe.images %>" alt=""></a>
      <ul>
        <li>Title: <%= recipe.title %></li>
-       <!-- <li>Rating: <%#= recipe.ratings %></li> -->
-       <!-- <li>Difficulty Level: <%#= recipe.level %></li>
-       <li>Cooking Duration: <%#= Time.at(recipe.cook_duration ).utc.strftime("%H:%M")%> Hrs</li>
-       <li>Prep Duration: <%#= recipe.prep_duration %></li> -->
      </ul>
    <% end %>
-     <% @searchrecipes.each_with_index do |x,i| %>
-       <!-- <img src="<%= @searchrecipes[i]["image_url"] %>" alt=""> -->
-       <!-- <%#= image_tag @searchrecipes[i]["image_url"]%> -->
-       <a href="/recipes/<%= @searchrecipes[i]["recipe_id"] %>"><img src="<%= @searchrecipes[i]["image_url"] %>" alt=""></a>
-         <ul>
-           <li>Title: <%= @searchrecipes[i]["title"] %></li>
-           <!-- <li><a href="<%#= @searchrecipes[i]["f2f_url"] %>">Ingredients</a></li> -->
-         </ul>
-     <% end %>
- <% else %>
+   <% @searchrecipes.each_with_index do |x,i| %>
+     <a href="/recipes/<%= @searchrecipes[i]["recipe_id"] %>"><img src="<%= @searchrecipes[i]["image_url"] %>" alt=""></a>
+       <ul>
+         <li>Title: <%= @searchrecipes[i]["title"] %></li>
+       </ul>
+   <% end %>
+  <% else %>
    <% @recipes.each do |recipe| %>
      <a href="/recipes/<%= recipe.id %>"><img src="<%= recipe.images %>" alt=""></a>
      <ul>
-
-       <li>Title: <%= recipe.title %></li>
-       <!-- <li>Rating: <%#= recipe.ratings %></li> -->
-       <!-- <li>Difficulty Level: <%#= recipe.level %></li>
-       <li>Cooking Duration: <%#= Time.at(recipe.cook_duration ).utc.strftime("%H:%M")%> Hrs</li>
-       <li>Prep Duration: <%#= recipe.prep_duration %></li> -->
+      <li>Title: <%= recipe.title %></li>
      </ul>
-
- <% end %>
- <% end %>
-
-
+   <% end %>
+  <% end %>
 </div>

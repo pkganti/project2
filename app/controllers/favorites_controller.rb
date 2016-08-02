@@ -21,4 +21,22 @@ class FavoritesController < ApplicationController
       end
   end
 
+  def add
+    f1 = Favorite.new
+    user = @current_user
+    id = params[:id]
+    recipe = Recipe.find(id)
+    # raise 'help'
+    added_to_fav = Favorite.where(:user_id => user.id , :recipe_id => id)
+    added_by_me = Recipe.where(:user_id => user.id, :id => id)
+
+    if (added_to_fav.empty? && added_by_me.empty?)
+      user.favorites << f1
+      recipe.favorites << f1
+      f1.save
+    end
+    
+    redirect_to favorite_index_path
+  end
+
 end
