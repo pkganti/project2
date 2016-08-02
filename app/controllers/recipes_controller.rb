@@ -22,7 +22,7 @@ class RecipesController < ApplicationController
           @searchrecipes.push(r)
         end
       end
-    
+
     else
       @recipes = Recipe.all
 
@@ -36,13 +36,15 @@ class RecipesController < ApplicationController
     string_obj = HTTParty.get(url2)
     object_obj = JSON.parse(string_obj)
     @searchrecipe = object_obj
-    # taste_url = "http://www.taste.com.au/recipes/20860/spaghetti+with+garlic+butter+bacon+and+prawns?ref=collections,pasta-recipes"
+    taste_url =''
+    #= "http://www.taste.com.au/recipes/42756/spicy+garlic+prawn+pasta"
+    #  "http://www.taste.com.au/recipes/20860/spaghetti+with+garlic+butter+bacon+and+prawns?ref=collections,pasta-recipes"
 
 
-    if taste_url
+    if taste_url!= ''
       recipeObj = {}
       @searchrecipe = taste_scrape(taste_url,recipeObj)
-      binding.pry
+      # binding.pry
     else
     if @searchrecipe["recipe"]["source_url"] =~ /bbcgoodfood/
       source_url = @searchrecipe["recipe"]["source_url"]
@@ -165,9 +167,9 @@ class RecipesController < ApplicationController
   def taste_scrape(url,r)
     doc = Nokogiri::HTML(open(url))
     title = doc.css('.heading > h1').text
-    prep_time = [(doc.css('.prepTime').css('em').text.delete('0:').to_i)*60]
-    cook_time = [(doc.css('.cookTime').css('em').text.delete('0:').to_i)*60]
-    # binding.pry
+    prep_time = (doc.css('.prepTime').css('em').text.split(':'))
+    cook_time = (doc.css('.cookTime').css('em').text.split(':'))
+    binding.pry
     level = doc.css('.difficultyTitle').css('em').text
     servings = doc.css('.servings').css('em').text
     ratings = doc.css('.rating').css('span.star-level').text
@@ -175,6 +177,7 @@ class RecipesController < ApplicationController
     doc.css('.ingredient-table > li > label').each do |i|
       ingredients.push(i.text)
     end
+    # File.write('../../taste_scrape_log.txt')
     directions =[]
     doc.css('.method-tab-content > ol > li > p.description').each do |d|
       directions.push(d.text)
