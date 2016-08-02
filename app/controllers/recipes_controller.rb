@@ -31,7 +31,6 @@ class RecipesController < ApplicationController
 
   def show
     f2fkey="18eb516313da0e6e327844bf73c1c8e0"
-    # binding.pry
     url2 = "http://food2fork.com/api/get?key=#{f2fkey}&rId=#{params[:id]}"
     string_obj = HTTParty.get(url2)
     object_obj = JSON.parse(string_obj)
@@ -153,6 +152,7 @@ class RecipesController < ApplicationController
     cooking_time =[]
     # (@searchrecipe["recipe"]).merge!( {'level' => 'Easy'})
     doc = Nokogiri::HTML(open(url))
+    raise "hell"
     ratings =  doc.css("meta[itemprop= 'ratingValue']").first['content'] if (doc.css("meta[itemprop= 'ratingValue']").first['content'])
 
     prep_time= doc.css('.recipe-details__cooking-time-prep > span').text
@@ -239,8 +239,8 @@ class RecipesController < ApplicationController
 
     ratings =  doc.css("meta[itemprop= 'ratingValue']").first['content']
 
-    prep_time= doc.css("time[itemprop='prepTime']").text
-    cook_time = doc.css("time[itemprop='cookTime']").text
+    preparation_time= doc.css("time[itemprop='prepTime']").text
+    cooking_time = doc.css("time[itemprop='cookTime']").text
 
     servings = doc.css("#metaRecipeServings").first['content']
     directions = []
