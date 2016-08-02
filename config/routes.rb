@@ -6,8 +6,8 @@ Rails.application.routes.draw do
   get '/users/edit' => 'users#edit'
   resources :users, :except => [:edit]
 
-  get '/extension' => 'recipes#scrape' 
-
+  get '/extension' => 'recipes#scrape'
+  get 'favorites/index' => 'favorites#index' , :as => 'favorite_index'
   get '/login' => 'session#new'
   post '/login' => 'session#create'
   delete '/logout' => 'session#destroy'

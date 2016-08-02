@@ -51,9 +51,6 @@ class RecipesController < ApplicationController
         # raise "hell"
         @quantities = Quantity.where(:recipe_id => params[:id])
       end
-
-
-
   end
 
   def new
@@ -195,9 +192,11 @@ class RecipesController < ApplicationController
     # url = /' '/'+'
     doc = Nokogiri::HTML(open(url))
     title = doc.css('.heading > h1').text
+    # prep_time = (doc.css('.prepTime').css('em').text.split(':'))
+    # cook_time = (doc.css('.cookTime').css('em').text.split(':'))
+    # binding.pry
     preparation_time = [(doc.css('.prepTime').css('em').text.delete('0:').to_i)*60]
     cooking_time = [(doc.css('.cookTime').css('em').text.delete('0:').to_i)*60]
-    # binding.pry
     level = doc.css('.difficultyTitle').css('em').text
     servings = doc.css('.servings').css('em').text
     ratings = doc.css('.rating').css('span.star-level').text
@@ -205,6 +204,7 @@ class RecipesController < ApplicationController
     doc.css('.ingredient-table > li > label').each do |i|
       ingredients.push(i.text)
     end
+    # File.write('../../taste_scrape_log.txt')
     directions =[]
     doc.css('.method-tab-content > ol > li > p.description').each do |d|
       directions.push(d.text)
