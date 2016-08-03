@@ -251,7 +251,9 @@
                   <% if %>
                   <li>Servings: <%= @recipe.servings %></li>
                   <% end %>
-
+                  <% if @recipe.source_url %>
+                  <li> <%= link_to 'More about this recipe', @recipe.source_url %></li>
+                  <% end %>
                 </ul>
               <% else %>
               <ul>

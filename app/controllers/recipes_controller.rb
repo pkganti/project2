@@ -64,27 +64,45 @@ class RecipesController < ApplicationController
   end
 
   def bookmark
-    @recipe = Recipe.new
-    @recipe.source_url = params.fetch(:url)
-    @recipe.title = params.fetch(:title)
-    @recipe.cuisine = params.fetch(:cuisine)
-    @recipe.category = params.fetch(:category)
-    @recipe.prep_duration = convert_time_to_seconds(params.fetch(:prep_duration_hour), params.fetch(:prep_duration_mins))
-    @recipe.cook_duration = convert_time_to_seconds(params.fetch(:cook_duration_hour), params.fetch(:cook_duration_mins))
-    @recipe.user = @current_user
-    @recipe.images = params.fetch(:images)
-    @recipe.save
-    #how to get user session
-    render json: recipe_url(@recipe.id),  :status => status
+
+    existing_recipe = Recipe.where(:source_url => params.fetch(:url), :user_id => @current_user.id).last #where is returning an array. Using last to get into the recipe
+    if existing_recipe.present?
+
+      existing_recipe.cuisine = params.fetch(:cuisine)
+      existing_recipe.category = params.fetch(:category)
+      existing_recipe.save
+      render json: recipe_url(existing_recipe.id),  :status => status
+
+    else
+      recipe = Recipe.new
+      recipe.source_url = params.fetch(:url)
+      recipe.title = params.fetch(:title)
+      recipe.cuisine = params.fetch(:cuisine)
+      recipe.category = params.fetch(:category)
+      recipe.prep_duration = convert_time_to_seconds(params.fetch(:prep_duration_hour), params.fetch(:prep_duration_mins))
+      recipe.cook_duration = convert_time_to_seconds(params.fetch(:cook_duration_hour), params.fetch(:cook_duration_mins))
+      recipe.user = @current_user
+      recipe.images = params.fetch(:images)
+      recipe.save
+      render json: recipe_url(recipe.id),  :status => status
+    end
   end
 
   def scrape
     if @current_user.present?
-      @chromeUrl =  params.fetch(:url)
+      existing_recipe = Recipe.where(:source_url => params.fetch(:url), :user_id => @current_user.id)
 
+      if existing_recipe.present?
+        render json: 'alreadyExists', :status => status
+        return
+      end
+
+      @chromeUrl =  params.fetch(:url)
       if @chromeUrl =~ /bbcgoodfood\.com/
         new_id = bbc_scrape(@chromeUrl,{},save=true)
-          status = recipe_url(new_id)
+        # @recipe = Recipe.find_by :id => new_id
+        # @recipe.cuisine = params.fetch(:)
+        status = recipe_url(new_id)
       elsif @chromeUrl =~ /taste\.com\.au/
         new_id = taste_scrape(@chromeUrl.gsub(' ','+'),{},save=true)
         status = recipe_url(new_id)
@@ -96,14 +114,14 @@ class RecipesController < ApplicationController
         status = recipe_url(new_id)
       else
         status = 'notok'
-
       end
 
-      render json: status,  :status => status
+      render json: status,  :status => 'ok'
     else
       render json: 'needtologin',  :status => status
 
     end
+
   end
 
   def create
@@ -218,7 +236,8 @@ class RecipesController < ApplicationController
      @recipe.servings = servings
      @recipe.directions = directions
      @recipe.ingredients = ingredients
-     @recipe.user_id = @current_user
+     @recipe.user_id = @current_user.id
+     @recipe.source_url = url
      @recipe.save
      @recipe.id
    else
@@ -269,10 +288,11 @@ class RecipesController < ApplicationController
         @recipe.level = level
         @recipe.servings = servings
         @recipe.directions = directions
+        @recipe.source_url = url
         if ingredients.length > 0
           @recipe.ingredients << ingredients
         end
-         @recipe.user_id = @current_user
+         @recipe.user_id = @current_user.id
         @recipe.save
         @recipe.id
     else
@@ -333,6 +353,8 @@ class RecipesController < ApplicationController
         @recipe.servings = servings
         @recipe.ingredients = ingredients
         @recipe.directions = directions
+        @recipe.source_url = url
+        @recipe.user_id = @current_user.id
         @recipe.save
         @recipe.id
     else
@@ -383,6 +405,8 @@ class RecipesController < ApplicationController
         @recipe.servings = servings
         @recipe.ingredients = ingredients
         @recipe.directions = directions
+        @recipe.source_url = url
+        @recipe.user_id = @current_user.id
         @recipe.save
         @recipe.id
     else
