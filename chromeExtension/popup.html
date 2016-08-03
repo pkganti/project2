@@ -12,13 +12,14 @@
     <script src="popup.js"></script>
   </head>
   <body>
+  <div class="wrapper">
     <div id="message">
     <h1>Loading...</h1>
   </div>
     <div id="bookmark">
     <h1>Add this recipe</h1>
   <label >Recipe Title</label>
-      <input type="text" id="title"> </input>
+      <input type="text" id="title" placeholder=""> </input>
   <br>
   <label >Cuisine</label>
       <select name="Cuisine" id="cuisine">
@@ -99,9 +100,11 @@
     <option value="60">60</option>
   </select>mins
   <br>
+    <div id="image-results"> </div>
+  <br>
     <button id='submit'>Add this recipe</button>
       <div id="status"></div>
-      <img id="image-result" hidden>
     </div>
+  </div>
   </body>
 </html>

@@ -1,16 +1,178 @@
-<div class="container">
+<script type="text/javascript">
+	// TOUCH-EVENTS SINGLE-FINGER SWIPE-SENSING JAVASCRIPT
+	// Courtesy of PADILICIOUS.COM and MACOSXAUTOMATION.COM
+
+	// this script can be used with one or more page elements to perform actions based on them being swiped with a single finger
+
+	var triggerElementID = null; // this variable is used to identity the triggering element
+	var fingerCount = 0;
+	var startX = 0;
+	var startY = 0;
+	var curX = 0;
+	var curY = 0;
+	var deltaX = 0;
+	var deltaY = 0;
+	var horzDiff = 0;
+	var vertDiff = 0;
+	var minLength = 72; // the shortest distance the user may swipe
+	var swipeLength = 0;
+	var swipeAngle = null;
+	var swipeDirection = null;
+
+	// The 4 Touch Event Handlers
+
+	// NOTE: the touchStart handler should also receive the ID of the triggering element
+	// make sure its ID is passed in the event call placed in the element declaration, like:
+	// <div id="picture-frame" ontouchstart="touchStart(event,'picture-frame');"  ontouchend="touchEnd(event);" ontouchmove="touchMove(event);" ontouchcancel="touchCancel(event);">
+
+	function touchStart(event,passedName) {
+		// disable the standard ability to select the touched object
+		event.preventDefault();
+		// get the total number of fingers touching the screen
+		fingerCount = event.touches.length;
+		// since we're looking for a swipe (single finger) and not a gesture (multiple fingers),
+		// check that only one finger was used
+		if ( fingerCount == 1 ) {
+			// get the coordinates of the touch
+			startX = event.touches[0].pageX;
+			startY = event.touches[0].pageY;
+			// store the triggering element ID
+			triggerElementID = passedName;
+		} else {
+			// more than one finger touched so cancel
+			touchCancel(event);
+		}
+	}
+
+	function touchMove(event) {
+		event.preventDefault();
+		if ( event.touches.length == 1 ) {
+			curX = event.touches[0].pageX;
+			curY = event.touches[0].pageY;
+		} else {
+			touchCancel(event);
+		}
+	}
+
+	function touchEnd(event) {
+		event.preventDefault();
+		// check to see if more than one finger was used and that there is an ending coordinate
+		if ( fingerCount == 1 && curX != 0 ) {
+			// use the Distance Formula to determine the length of the swipe
+			swipeLength = Math.round(Math.sqrt(Math.pow(curX - startX,2) + Math.pow(curY - startY,2)));
+			// if the user swiped more than the minimum length, perform the appropriate action
+			if ( swipeLength >= minLength ) {
+				caluculateAngle();
+				determineSwipeDirection();
+				processingRoutine();
+				touchCancel(event); // reset the variables
+			} else {
+				touchCancel(event);
+			}
+		} else {
+			touchCancel(event);
+		}
+	}
+
+	function touchCancel(event) {
+		// reset the variables back to default values
+		fingerCount = 0;
+		startX = 0;
+		startY = 0;
+		curX = 0;
+		curY = 0;
+		deltaX = 0;
+		deltaY = 0;
+		horzDiff = 0;
+		vertDiff = 0;
+		swipeLength = 0;
+		swipeAngle = null;
+		swipeDirection = null;
+		triggerElementID = null;
+	}
+
+	function caluculateAngle() {
+		var X = startX-curX;
+		var Y = curY-startY;
+		var Z = Math.round(Math.sqrt(Math.pow(X,2)+Math.pow(Y,2))); //the distance - rounded - in pixels
+		var r = Math.atan2(Y,X); //angle in radians (Cartesian system)
+		swipeAngle = Math.round(r*180/Math.PI); //angle in degrees
+		if ( swipeAngle < 0 ) { swipeAngle =  360 - Math.abs(swipeAngle); }
+	}
+
+	function determineSwipeDirection() {
+		if ( (swipeAngle <= 45) && (swipeAngle >= 0) ) {
+			swipeDirection = 'left';
+		} else if ( (swipeAngle <= 360) && (swipeAngle >= 315) ) {
+			swipeDirection = 'left';
+		} else if ( (swipeAngle >= 135) && (swipeAngle <= 225) ) {
+			swipeDirection = 'right';
+		} else if ( (swipeAngle > 45) && (swipeAngle < 135) ) {
+			swipeDirection = 'down';
+		} else {
+			swipeDirection = 'up';
+		}
+	}
+
+	function processingRoutine() {
+		var swipedElement = document.getElementById(triggerElementID);
+		if ( swipeDirection == 'left' ) {
+			// REPLACE WITH YOUR ROUTINES
+			swipedElement.style.backgroundColor = 'orange';
+		} else if ( swipeDirection == 'right' ) {
+      // swipedElement.style.backgroundColor = 'green';
+      var id = window.location.href.split('/').pop();
+
+      $.ajax({
+        type: 'GET',
+        url:'/favorites/add/'+id,
+        // data:{ id: val },
+        success:function(){
+
+          $(".bookmark-add").fadeIn();
+          setTimeout(function(){
+            $(".bookmark-add").fadeOut();
+          }, 2000);
+
+      }
+    });
+
+		} else if ( swipeDirection == 'up' ) {
+			// REPLACE WITH YOUR ROUTINES
+			swipedElement.style.backgroundColor = 'maroon';
+		} else if ( swipeDirection == 'down' ) {
+			// REPLACE WITH YOUR ROUTINES
+			swipedElement.style.backgroundColor = 'purple';
+		}
+	}
+
+</script>
+
+<div class="container" id="swipeBox" ontouchstart="touchStart(event,'swipeBox');" ontouchend="touchEnd(event);" ontouchmove="touchMove(event);" ontouchcancel="touchCancel(event);">
     <div class="row col-xs-12 col-md-6 col-md-offset-3" id="showContainer">
+      <% if flash[:notice] %>
+        <div class="alert alert-success bookmark-add" role="alert">
+
+            <%= flash[:notice] %>
+             <script type="text/javascript">
+               setTimeout(function(){
+                 $(".bookmark-add").fadeOut();
+               }, 2000);
+             </script>
+
+        </div>
+      <% end %>
       <div class="showHeader">
           <% if @recipe != nil%>
             <h1>
-              <%= @recipe.title  %>
+              <%= @recipe.title if (@recipe.title).present? %>
             </h1>
-            <%= image_tag @recipe.images%>
+            <%= image_tag @recipe.images if @recipe.images.present?%>
           <% else %>
             <h1>
-              <%= @searchrecipe["title"] %>
+              <%= @searchrecipe["title"] if (@searchrecipe["title"]).present? %>
             </h1>
-            <%= image_tag @searchrecipe["image_url"] %>
+            <%= image_tag @searchrecipe["image_url"] if (@searchrecipe["image_url"]).present? %>
           <% end %>
             <%#= cl_image_tag @recipe.image, :width=>300, :height=>300, :gravity=>"auto", :class => 'thumbnail' %>
             <div>
@@ -19,9 +181,8 @@
                   <li>
                     <div class="row ratings col-xs-12 col-md-6 col-md-offset-3">
                       <%= form_tag(rate_path(@recipe), method: "post") do %>
-                      <%# raise "help" %>
                       <% if current_user %>
-                        <% if @ratings.size.eql?0 %>
+                        <% if @recipe_rating.nil? %>
                           I rate:<%= rating_for @recipe, "useful" %>
                           <script type="text/javascript">
                             $(document).ready(function() {
@@ -73,46 +234,62 @@
                     $('#rating').width(width);
                     </script>
                   </li>
-                  <% recipe_levels = {0=>'Easy',1=>'Medium',2=>'Complex'} %>
-                  <li>Level: <%= recipe_levels[@recipe.level] %></li>
+                  <% if (@recipe.level).present? %>
+                    <% recipe_levels = {0=>'Easy',1=>'Medium',2=>'Complex'} %>
+                    <li>Level: <%= recipe_levels[@recipe.level] %></li>
+                  <% end %>
                   <% if @recipe.prep_duration %>
-                  <li>Prep Time:<%= Time.at(@recipe.prep_duration).utc.strftime("%H:%M") %> Hrs.</li>
+                    <li>Prep Time:<%= Time.at(@recipe.prep_duration).utc.strftime("%H:%M") %> Hrs.</li>
                   <% end %>
                   <% if @recipe.cook_duration %>
-                  <li>Cook Time: <%= Time.at(@recipe.cook_duration).utc.strftime("%H:%M") %> Hrs.</li>
+                    <li>Cook Time: <%= Time.at(@recipe.cook_duration).utc.strftime("%H:%M") %> Hrs.</li>
                   <% end %>
-                  <li>Category: <%= @recipe.category %></li>
-                  <li>Cuisine: <%= @recipe.cuisine %></li>
-                  <li>Servines: <%= @recipe.servings %></li>
+                  <% if @recipe.category %>
+                    <li>Category: <%= @recipe.category %></li>
+                  <% end %>
+                  <% if %>
+                    <li>Cuisine: <%= @recipe.cuisine %></li>
+                  <% end %>
+                  <% if %>
+                  <li>Servings: <%= @recipe.servings %></li>
+                  <% end %>
+
                 </ul>
               <% else %>
               <ul>
-                <li>Ratings: <% (@searchrecipe['ratings']).to_i.times do |i| %>
-                  <span style="font-size:150%;color:gold;">&#9733;</span>
-                <% end %></li>
-                <li>Level: <%= @searchrecipe['level'] %></li>
+                <% if @searchrecipe['ratings'] %>
+                  <li>Ratings:
+                    <% (@searchrecipe['ratings']).to_i.times do |i| %>
+                    <span style="font-size:150%;color:gold;">&#9733;</span>
+                    <% end %>
+                  </li>
+                <% end %>
+                <% if @searchrecipe['level']%>
+                  <li>Level: <%= @searchrecipe['level'] %></li>
+                <% end %>
                 <% if ((@searchrecipe['prep_duration'][0]).to_i != 0) %>
-                <li>Prep Time:<%= Time.at((@searchrecipe['prep_duration'][0]).to_i*60).utc.strftime("%H:%M")%> Hrs
-                  <% if @searchrecipe['prep_duration'][1] %>  - <%=   Time.at((@searchrecipe['prep_duration'][1]).to_i*60).utc.strftime("%H:%M") %> Hrs.
-                  <% end %>
-                </li>
+                  <li>Prep Time:<%= Time.at((@searchrecipe['prep_duration'][0]).to_i*60).utc.strftime("%H:%M")%> Hrs
+                    <% if @searchrecipe['prep_duration'][1] %>  - <%=   Time.at((@searchrecipe['prep_duration'][1]).to_i*60).utc.strftime("%H:%M") %> Hrs.
+                    <% end %>
+                  </li>
                 <% end %>
                 <% if (@searchrecipe['cook_duration']) %>
-                <li>Cook Time: <%= Time.at((@searchrecipe['cook_duration'][0]).to_i*60).utc.strftime("%H:%M") %> Hrs.
-                  <% if @searchrecipe['cook_duration'][1] %> - <%=   Time.at((@searchrecipe['cook_duration'][1]).to_i*60).utc.strftime("%H:%M") %> Hrs.
-                  <% end %>
-                </li>
+                  <li>Cook Time: <%= Time.at((@searchrecipe['cook_duration'][0]).to_i*60).utc.strftime("%H:%M") %> Hrs.
+                    <% if @searchrecipe['cook_duration'][1] %> - <%=   Time.at((@searchrecipe['cook_duration'][1]).to_i*60).utc.strftime("%H:%M") %> Hrs.
+                    <% end %>
+                  </li>
                 <% end %>
-                <li>Servings: <%= @searchrecipe['servings'] %></li>
+                <% if @searchrecipe['servings'] %>
+                  <li>Servings: <%= @searchrecipe['servings'] %></li>
+                <% end %>
               </ul>
               <% end %>
 
             </div>
-
             <div id="ingredients">
-              <h2>Ingredients</h2>
-              <ul>
-                <% if @recipe!=nil %>
+              <% if @recipe!=nil %>
+                <h2>Ingredients</h2>
+                <ul>
                   <% @quantities.each do |q| %>
                     <li>
                       <%= q.size %>
@@ -120,22 +297,24 @@
                       <%= q.ingredient.name %>
                     </li>
                   <% end %>
-                <% else %>
-                    <% @searchrecipe["ingredients"].each do |i| %>
+                </ul>
+              <% end %>
+              <% if @searchrecipe["ingredients"]%>
+                <h2>Ingredients</h2>
+                <ul>
+                  <% @searchrecipe["ingredients"].each do |i| %>
                     <li>
                       <%= i %>
                     </li>
-                    <% end %>
-                <% end %>
-              </ul>
-
+                  <% end %>
+                </ul>
+              <% end %>
             </div>
-            <!-- Nested ingredients -->
             <div id="directions">
-              <% if @recipe != nil%>
+              <% if @recipe.directions %>
                 <h2>Directions</h2>
                 <%= @recipe.directions %>
-              <% else%>
+              <% elsif @searchrecipe['directions']%>
                 <h2>Directions</h2>
                 <ul>
                   <% @searchrecipe['directions'].each_index do |i| %>

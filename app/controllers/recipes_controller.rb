@@ -48,58 +48,60 @@ class RecipesController < ApplicationController
         end
       else
         @recipe = Recipe.find_by( :id => params[:id])
-        # raise "hell"
         @quantities = Quantity.where(:recipe_id => params[:id])
       end
+      @all_ratings = Rate.where(:rateable_id => @recipe.id).pluck(:stars)
       @recipe_avg_rating = ratings_avg(@recipe.id)
       @recipe_rating = (Rate.where(:rateable_id => @recipe.id , :rater_id => @current_user.id)).pluck(:stars)[0]
-      # binding.pry
   end
 
   def new
     @recipe = Recipe.new
-    # 4.times { @recipe.ingredients.build}
-    #  @recipe.quantities.build
 
      3.times { @recipe.ingredients.build }
   end
 
   def bookmark
     @recipe = Recipe.new
-    @recipe.url = params.fetch(:url)
+    @recipe.source_url = params.fetch(:url)
     @recipe.title = params.fetch(:title)
     @recipe.cuisine = params.fetch(:cuisine)
     @recipe.category = params.fetch(:category)
-    @recipe.prep_duration_hour = params.fetch(:prep_duration_hour)
-    @recipe.prep_duration_mins = params.fetch(:prep_duration_mins)
-    @recipe.cook_duration_hour = params.fetch(:cook_duration_hour)
-    @recipe.cook_duration_mins = params.fetch(:cook_duration_mins)
-    @recipe.user_id = @current_user
+    @recipe.prep_duration = convert_time_to_seconds(params.fetch(:prep_duration_hour), params.fetch(:prep_duration_mins))
+    @recipe.cook_duration = convert_time_to_seconds(params.fetch(:cook_duration_hour), params.fetch(:cook_duration_mins))
+    @recipe.user = @current_user
+    @recipe.images = params.fetch(:images)
+    @recipe.save
     #how to get user session
-
-    render json: 'ok',  :status => status
+    render json: recipe_url(@recipe.id),  :status => status
   end
 
   def scrape
-    @chromeUrl =  params.fetch(:url)
-    status = 'ok'
+    if @current_user.present?
+      @chromeUrl =  params.fetch(:url)
 
-    if @chromeUrl =~ /bbcgoodfood/
-      bbc_scrape(@chromeUrl,{},save=true)
-    elsif @chromeUrl =~ /taste.com.au/
-      taste_scrape(@chromeUrl.gsub(' ','+'),{},save=true)
-    elsif @chromeUrl =~ /foodnetwork/
-      foodNetwork_scrape(@chromeUrl,{},save=true)
-    elsif @chromeUrl =~ /allrecipes/
-      allrecipes_scrape(@chromeUrl,{}, save=true)
-      # no match, bookmark instead
+      if @chromeUrl =~ /bbcgoodfood\.com/
+        new_id = bbc_scrape(@chromeUrl,{},save=true)
+          status = recipe_url(new_id)
+      elsif @chromeUrl =~ /taste\.com\.au/
+        new_id = taste_scrape(@chromeUrl.gsub(' ','+'),{},save=true)
+        status = recipe_url(new_id)
+      elsif @chromeUrl =~ /foodnetwork\.com/
+        new_id = foodNetwork_scrape(@chromeUrl,{},save=true)
+        status = recipe_url(new_id)
+      elsif @chromeUrl =~ /allrecipes\.com/
+        new_id = allrecipes_scrape(@chromeUrl,{}, save=true)
+        status = recipe_url(new_id)
+      else
+        status = 'notok'
+
+      end
+
+      render json: status,  :status => status
     else
-      status = :notok
+      render json: 'needtologin',  :status => status
 
     end
-
-    render json: status,  :status => status
-
   end
 
   def create
@@ -107,6 +109,10 @@ class RecipesController < ApplicationController
     cook_duration = convert_time_to_seconds((params[:recipe][:cook_duration_hour]).to_i,(params[:recipe][:cook_duration_mins]).to_i)
 
     @recipe = Recipe.create recipe_params
+    if (params[:file]).present?
+      req = Cloudinary::Uploader.upload(params[:file])
+      @recipe.images = req["url"]
+    end
     @recipe.prep_duration = prep_duration
     @recipe.cook_duration = cook_duration
     @recipe.save
@@ -131,6 +137,11 @@ class RecipesController < ApplicationController
 
   def update
     @recipe = Recipe.find_by :id => params[:id]
+
+    if (params[:file]).present?
+      req = Cloudinary::Uploader.upload(params[:file])
+      @recipe.images = req["url"]
+    end
     @recipe.update recipe_params
 
     redirect_to @recipe
@@ -206,6 +217,7 @@ class RecipesController < ApplicationController
      @recipe.ingredients = ingredients
      @recipe.user_id = @current_user
      @recipe.save
+     @recipe.id
    else
     r.merge!( {'ratings' => ratings , 'prep_duration' => preparation_time ,'cook_duration' => cooking_time , 'level' => level , 'servings' => servings , 'directions' => directions})
 
@@ -259,7 +271,7 @@ class RecipesController < ApplicationController
         end
          @recipe.user_id = @current_user
         @recipe.save
-
+        @recipe.id
     else
     r.merge!( {'title' => title,'ratings' => ratings , 'prep_duration' => preparation_time ,'cook_duration' => cooking_time , 'level' => level , 'servings' => servings , 'directions' => directions, 'ingredients' =>  ingredients, 'image_url' => images})
     end
@@ -305,6 +317,7 @@ class RecipesController < ApplicationController
         @recipe.ingredients = ingredients
         @recipe.directions = directions
         @recipe.save
+        @recipe.id
     else
     r.merge!( {'ratings' => ratings , 'prep_duration' => preparation_time ,'cook_duration' => cooking_time , 'servings' => servings , 'directions' => directions})
 
@@ -354,16 +367,17 @@ class RecipesController < ApplicationController
         @recipe.ingredients = ingredients
         @recipe.directions = directions
         @recipe.save
+        @recipe.id
     else
     r.merge!( {'ratings' => ratings , 'prep_duration' => preparation_time ,'cook_duration' => cooking_time , 'level' => level , 'servings' => servings , 'directions' => directions})
     end
   end
 
   def ratings_avg(recipe_id)
-    @ratings = Rate.where(:rateable_id => recipe_id).pluck(:stars)
+    ratings = Rate.where(:rateable_id => recipe_id).pluck(:stars)
     # binding.pry
-    if (@ratings.size > 0)
-      avg = (@ratings.sum)/(@ratings.size)
+    if (ratings.size > 0)
+      avg = (ratings.sum)/(ratings.size)
     end
   end
 

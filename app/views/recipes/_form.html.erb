@@ -6,7 +6,7 @@
 
   <div class="form-group">
     <%= f.label :images, 'Image of Dish' %>
-    <%= f.url_field :images, :class => 'form-control' %>
+    <%= cl_image_upload_tag( :images, :class => 'form-control' )%>
   </div>
 
   <div class="form-group">
