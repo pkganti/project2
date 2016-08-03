@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  post '/rate/:id' => 'rater#create', :as => 'rate'
   root :to => 'pages#home'
   resources :pages
   resources :recipes

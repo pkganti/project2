@@ -47,7 +47,9 @@ class UsersController < ApplicationController
 
   def destroy
     user = User.find params[:id]
-    user.destroy
+    user.isActive = false
+    user.save
+    
     redirect_to root_path
   end
 

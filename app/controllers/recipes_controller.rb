@@ -48,15 +48,15 @@ class RecipesController < ApplicationController
         end
       else
         @recipe = Recipe.find_by( :id => params[:id])
-        # raise "hell"
         @quantities = Quantity.where(:recipe_id => params[:id])
       end
+      @all_ratings = Rate.where(:rateable_id => @recipe.id).pluck(:stars)
+      @recipe_avg_rating = ratings_avg(@recipe.id)
+      @recipe_rating = (Rate.where(:rateable_id => @recipe.id , :rater_id => @current_user.id)).pluck(:stars)[0]
   end
 
   def new
     @recipe = Recipe.new
-    # 4.times { @recipe.ingredients.build}
-    #  @recipe.quantities.build
 
      3.times { @recipe.ingredients.build }
   end
@@ -127,6 +127,10 @@ class RecipesController < ApplicationController
     cook_duration = convert_time_to_seconds((params[:recipe][:cook_duration_hour]).to_i,(params[:recipe][:cook_duration_mins]).to_i)
 
     @recipe = Recipe.create recipe_params
+    if (params[:file]).present?
+      req = Cloudinary::Uploader.upload(params[:file])
+      @recipe.images = req["url"]
+    end
     @recipe.prep_duration = prep_duration
     @recipe.cook_duration = cook_duration
     @recipe.save
@@ -151,14 +155,20 @@ class RecipesController < ApplicationController
 
   def update
     @recipe = Recipe.find_by :id => params[:id]
+
+    if (params[:file]).present?
+      req = Cloudinary::Uploader.upload(params[:file])
+      @recipe.images = req["url"]
+    end
     @recipe.update recipe_params
 
     redirect_to @recipe
   end
 
   def destroy
-    @recipe = Recipe.find_by(:id => params[:id])
-    @recipe.destroy
+    recipe = Recipe.find_by(:id => params[:id])
+    recipe.isActive = false
+    recipe.save
 
     redirect_to recipes_path
   end
@@ -384,6 +394,14 @@ class RecipesController < ApplicationController
         @recipe.id
     else
     r.merge!( {'ratings' => ratings , 'prep_duration' => preparation_time ,'cook_duration' => cooking_time , 'level' => level , 'servings' => servings , 'directions' => directions})
+    end
+  end
+
+  def ratings_avg(recipe_id)
+    ratings = Rate.where(:rateable_id => recipe_id).pluck(:stars)
+    # binding.pry
+    if (ratings.size > 0)
+      avg = (ratings.sum)/(ratings.size)
     end
   end
 
