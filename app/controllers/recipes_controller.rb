@@ -46,13 +46,15 @@ class RecipesController < ApplicationController
           recipeObj = @searchrecipe["recipe"]
           @searchrecipe  = allrecipes_scrape(source_url,recipeObj)
         end
+        # binding.pry
       else
         @recipe = Recipe.find_by( :id => params[:id])
         @quantities = Quantity.where(:recipe_id => params[:id])
+        @all_ratings = Rate.where(:rateable_id => @recipe.id).pluck(:stars)
+        @recipe_avg_rating = ratings_avg(@recipe.id)
+        @recipe_rating = (Rate.where(:rateable_id => @recipe.id , :rater_id => @current_user.id)).pluck(:stars)[0]
       end
-      @all_ratings = Rate.where(:rateable_id => @recipe.id).pluck(:stars)
-      @recipe_avg_rating = ratings_avg(@recipe.id)
-      @recipe_rating = (Rate.where(:rateable_id => @recipe.id , :rater_id => @current_user.id)).pluck(:stars)[0]
+
   end
 
   def new
@@ -169,14 +171,15 @@ class RecipesController < ApplicationController
   end
 
   def bbc_scrape(url,r,save=false)
+    # binding.pry
     # raise "hell"
     preparation_time=[]
     cooking_time =[]
     # (@searchrecipe["recipe"]).merge!( {'level' => 'Easy'})
     doc = Nokogiri::HTML(open(url))
-
+    if (doc.css("meta[itemprop= 'ratingValue']")).present?
     ratings =  doc.css("meta[itemprop= 'ratingValue']").first['content'] if (doc.css("meta[itemprop= 'ratingValue']").first['content'])
-
+  end
     prep_time= doc.css('.recipe-details__cooking-time-prep > span').text
     if ((prep_time.split(/hrs?/)).size > 1)
      preparation_time = prep_time.split(/hrs?/)
@@ -285,9 +288,23 @@ class RecipesController < ApplicationController
     # raise "hell"
     ratings =  doc.css("meta[itemprop= 'ratingValue']").first['content']
 
-    preparation_time= doc.css("time[itemprop='prepTime']").text
-    cooking_time = doc.css("time[itemprop='cookTime']").text
+    preparation_time_raw= (doc.css("time[itemprop='prepTime']").text).split(' ')
+    preparation_time = [(preparation_time_raw[0]).to_i * 60] if (preparation_time_raw.last).eql?'m'
+    preparation_time = [((preparation_time_raw[0]).to_i * 60 *60)] if (preparation_time_raw.last).eql?'h'
+    cooking_time_raw = (doc.css("time[itemprop='cookTime']").text).split(' ')
+    # cooking_time = [(cooking_time_raw[0]).to_i * 60] if (cooking_time_raw.last).eql?'m'
+    # cooking_time = [((cooking_time_raw[0]).to_i * 60 * 60)] if (cooking_time_raw.last).eql?'h'
+    if (cooking_time_raw.join(',').include?'h') && (cooking_time_raw.join(',').include?'m')
 
+      cooking_time = [(cooking_time_raw[0]).to_i * 60 * 60 + ((cooking_time_raw[2]).to_i * 60 )]
+    elsif ((cooking_time_raw.last).eql?'m')
+      cooking_time = [(cooking_time_raw[0]).to_i * 60]
+    elsif ((cooking_time_raw.last).eql?'h')
+      cooking_time = [((cooking_time_raw[0]).to_i * 60 * 60)]
+    end
+
+
+    binding.pry
     servings = doc.css("#metaRecipeServings").first['content']
 
     ingredients = []
