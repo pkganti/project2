@@ -5,106 +5,117 @@
  value "popup.html".
  -->
 <html>
-  <head>
+
+<head>
     <title>Getting Started Extension's Popup</title>
     <link rel="stylesheet" href="popup.css" charset="utf-8">
     <script src="jquery.js"></script>
     <script src="popup.js"></script>
-  </head>
-  <body>
-  <div class="wrapper">
-    <div id="message">
-    <h1>Loading...</h1>
-  </div>
-    <div id="bookmark">
-    <h1>Add this recipe</h1>
-  <label >Recipe Title</label>
-      <input type="text" id="title" placeholder=""> </input>
-  <br>
-  <label >Cuisine</label>
-      <select name="Cuisine" id="cuisine">
-          <option value="American">American</option>
-          <option value="Asian">Asian</option>
-          <option value="British">British</option>
-          <option value="Chinese">Chinese</option>
-          <option value="French">French</option>
-          <option value="Greek">Greek</option>
-          <option value="Indian">Indian</option>
-          <option value="Italian">Italian</option>
-          <option value="Japanese">Japanese</option>
-          <option value="Malaysian">Malaysian</option>
-          <option value="Mexican">Mexican</option>
-          <option value="Spanish">Spanish</option>
-          <option value="Thai">Thai</option>
-          <option value="Turkish">Turkish</option>
-          <option value="Vietnamese">Vietnamese</option>
-      </select>
-  <br>
-  <label>Category</label>
-      <select name="Category" id="category">
-        <option value="Breakfast">Breakfast</option>
-        <option value="Brunch">Brunch</option>
-        <option value="Lunch">Lunch</option>
-        <option value="Salad">Salad</option>
-        <option value="Dessert">Dessert</option>
-        <!-- BreakfastBrunchDrinkLeftoversLunchLunch boxMain recipesMorning & afternoon teaSaladSide dishesSoupStartersDesserts -->
-      </select>
-  <br>
-  <label>Preparation Time </label>
-    <select name="prep_duration_hour" id="prep_duration_hour">
-      <option value="0">0</option>
-      <option value="1">1</option>
-      <option value="2">2</option>
-      <option value="3">3</option>
-      <option value="4">4</option>
-      <option value="5">5</option>
-    </select>hrs
-    <select name="prep_duration_mins" id="prep_duration_mins">
-      <option value="0">0</option>
-      <option value="5">5</option>
-      <option value="10">10</option>
-      <option value="15">15</option>
-      <option value="20">20</option>
-      <option value="25">25</option>
-      <option value="30">30</option>
-      <option value="35">35</option>
-      <option value="40">40</option>
-      <option value="45">45</option>
-      <option value="50">50</option>
-      <option value="55">55</option>
-      <option value="60">60</option>
-    </select>mins
-  <br>
-  <label>Cook Time</label>
-  <select name="cook_duration_hour" id="cook_duration_hour">
-    <option value="0">0</option>
-    <option value="1">1</option>
-    <option value="2">2</option>
-    <option value="3">3</option>
-    <option value="4">4</option>
-    <option value="5">5</option>
-  </select>hrs
-  <select name="cook_duration_mins" id="cook_duration_mins">
-    <option value="0">0</option>
-    <option value="5">5</option>
-    <option value="10">10</option>
-    <option value="15">15</option>
-    <option value="20">20</option>
-    <option value="25">25</option>
-    <option value="30">30</option>
-    <option value="35">35</option>
-    <option value="40">40</option>
-    <option value="45">45</option>
-    <option value="50">50</option>
-    <option value="55">55</option>
-    <option value="60">60</option>
-  </select>mins
-  <br>
-    <div id="image-results"> </div>
-  <br>
-    <button id='submit'>Add this recipe</button>
-      <div id="status"></div>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div id="message">
+            <h1>Loading...</h1>
+        </div>
+        <div id="bookmark">
+            <h2>Add this recipe</h2>
+            <label>Recipe Title</label>
+            <input type="text" id="title" placeholder=""> </input>
+            <br>
+            <label>Cuisine</label>
+            <select name="Cuisine" id="cuisine">
+                <option value="American">American</option>
+                <option value="Asian">Asian</option>
+                <option value="British">British</option>
+                <option value="Chinese">Chinese</option>
+                <option value="French">French</option>
+                <option value="Greek">Greek</option>
+                <option value="Indian">Indian</option>
+                <option value="Italian">Italian</option>
+                <option value="Japanese">Japanese</option>
+                <option value="Malaysian">Malaysian</option>
+                <option value="Mexican">Mexican</option>
+                <option value="Spanish">Spanish</option>
+                <option value="Thai">Thai</option>
+                <option value="Turkish">Turkish</option>
+                <option value="Vietnamese">Vietnamese</option>
+            </select>
+            <br>
+            <label>Category</label>
+            <select name="Category" id="category">
+                <option value="Breakfast">Breakfast</option>
+                <option value="Brunch">Brunch</option>
+                <option value="Lunch">Lunch</option>
+                <option value="Lunch">Soup</option>
+                <option value="Salad">Salad</option>
+                <option value="Salad">Side</option>
+                <option value="Snack">Snack</option>
+                <option value="Dinner">Dinner</option>
+                <option value="Dessert">Dessert</option>
+            </select>
+            <br>
+            <div id="bookmark2">
+            <label>Preparation Time </label>
+            <select name="prep_duration_hour" id="prep_duration_hour">
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>hrs
+            <select name="prep_duration_mins" id="prep_duration_mins">
+                <option value="0">0</option>
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="15">15</option>
+                <option value="20">20</option>
+                <option value="25">25</option>
+                <option value="30">30</option>
+                <option value="35">35</option>
+                <option value="40">40</option>
+                <option value="45">45</option>
+                <option value="50">50</option>
+                <option value="55">55</option>
+                <option value="60">60</option>
+            </select>mins
+            <br>
+            <label>Cook Time</label>
+            <select name="cook_duration_hour" id="cook_duration_hour">
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>hrs
+            <select name="cook_duration_mins" id="cook_duration_mins">
+                <option value="0">0</option>
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="15">15</option>
+                <option value="20">20</option>
+                <option value="25">25</option>
+                <option value="30">30</option>
+                <option value="35">35</option>
+                <option value="40">40</option>
+                <option value="45">45</option>
+                <option value="50">50</option>
+                <option value="55">55</option>
+                <option value="60">60</option>
+            </select>mins
+            <br>
+            <label>Choose a photo: </label>
+            <div id="image-results"> </div>
+            </div>
+            <br>
+            <button id='submit'>Add this recipe</button>
+            </div>
+
+            <div id="status"></div>
+        </div>
     </div>
-  </div>
-  </body>
+</body>
+
 </html>

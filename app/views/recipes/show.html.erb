@@ -29,7 +29,8 @@
                   <% end %>
                   <li>Category: <%= @recipe.category %></li>
                   <li>Cuisine: <%= @recipe.cuisine %></li>
-                  <li>Servines: <%= @recipe.servings %></li>
+                  <li>Servings: <%= @recipe.servings %></li>
+                  <li> <%= link_to 'More about this recipe', @recipe.source_url %></li>
                 </ul>
               <% else %>
               <ul>

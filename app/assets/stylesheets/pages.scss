@@ -1,8 +1,10 @@
 // Place all the styles related to the Pages controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
-
-
+@import url(https://fonts.googleapis.com/css?family=PT+Sans+Narrow);
+body {
+    font-family:'PT Sans Narrow', sans-serif;
+}
  input {
    width : 100px;
    height:60px;
