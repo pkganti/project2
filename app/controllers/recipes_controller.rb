@@ -61,9 +61,25 @@ class RecipesController < ApplicationController
      3.times { @recipe.ingredients.build }
   end
 
+  def bookmark
+    @recipe = Recipe.new
+    @recipe.url = params.fetch(:url)
+    @recipe.title = params.fetch(:title)
+    @recipe.cuisine = params.fetch(:cuisine)
+    @recipe.category = params.fetch(:category)
+    @recipe.prep_duration_hour = params.fetch(:prep_duration_hour)
+    @recipe.prep_duration_mins = params.fetch(:prep_duration_mins)
+    @recipe.cook_duration_hour = params.fetch(:cook_duration_hour)
+    @recipe.cook_duration_mins = params.fetch(:cook_duration_mins)
+    @recipe.user_id = @current_user
+    #how to get user session
+
+    render json: 'ok',  :status => status
+  end
+
   def scrape
     @chromeUrl =  params.fetch(:url)
-    render json: @chromeUrl,  :status => :ok
+    status = 'ok'
 
     if @chromeUrl =~ /bbcgoodfood/
       bbc_scrape(@chromeUrl,{},save=true)
@@ -71,10 +87,15 @@ class RecipesController < ApplicationController
       taste_scrape(@chromeUrl.gsub(' ','+'),{},save=true)
     elsif @chromeUrl =~ /foodnetwork/
       foodNetwork_scrape(@chromeUrl,{},save=true)
-    else @chromeUrl =~ /allrecipes/
+    elsif @chromeUrl =~ /allrecipes/
       allrecipes_scrape(@chromeUrl,{}, save=true)
       # no match, bookmark instead
+    else
+      status = :notok
+
     end
+
+    render json: status,  :status => status
 
   end
 
@@ -107,7 +128,7 @@ class RecipesController < ApplicationController
 
   def update
     @recipe = Recipe.find_by :id => params[:id]
-    @recipe.update recipe
+    @recipe.update recipe_params
 
     redirect_to @recipe
   end
@@ -179,6 +200,7 @@ class RecipesController < ApplicationController
      @recipe.servings = servings
      @recipe.directions = directions
      @recipe.ingredients = ingredients
+     @recipe.user_id = @current_user
      @recipe.save
    else
     r.merge!( {'ratings' => ratings , 'prep_duration' => preparation_time ,'cook_duration' => cooking_time , 'level' => level , 'servings' => servings , 'directions' => directions})
@@ -191,6 +213,7 @@ class RecipesController < ApplicationController
     # raise "jhsbdj"
     # url = /' '/'+'
     doc = Nokogiri::HTML(open(url))
+    # raise 'hell'
     title = doc.css('.heading > h1').text
     # prep_time = (doc.css('.prepTime').css('em').text.split(':'))
     # cook_time = (doc.css('.cookTime').css('em').text.split(':'))
@@ -202,7 +225,14 @@ class RecipesController < ApplicationController
     ratings = doc.css('.rating').css('span.star-level').text
     ingredients = []
     doc.css('.ingredient-table > li > label').each do |i|
-      ingredients.push(i.text)
+      if save
+        ingr = Ingredient.new
+        ingr.name = i.text
+        ingr.save
+        ingredients.push(ingr)
+      else
+        ingredients.push(i.text)
+      end
     end
     # File.write('../../taste_scrape_log.txt')
     directions =[]
@@ -210,7 +240,6 @@ class RecipesController < ApplicationController
       directions.push(d.text)
     end
     images = doc.css('.recipe-image-wrapper > img').attr('src').text
-
     if save
         @recipe = Recipe.new
         @recipe.title = title
@@ -221,7 +250,10 @@ class RecipesController < ApplicationController
         @recipe.level = level
         @recipe.servings = servings
         @recipe.directions = directions
-        @recipe.ingredients = ingredients
+        if ingredients.length > 0
+          @recipe.ingredients << ingredients
+        end
+         @recipe.user_id = @current_user
         @recipe.save
 
     else

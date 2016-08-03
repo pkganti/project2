@@ -78,9 +78,8 @@
   <div class="form-group">
     Ingredients:
     <div class="form-group">
-      <%= f.fields_for :ingredients do |builder| %>
-          <%= render 'ingredients_fields', :f => builder %>
-        <% end %>
+        <%= render 'edit_ingredients_fields', :f => f %>
+
         <%=  '<span class="glyphicon glyphicon-plus add_ingredients" aria-hidden="true"></span>'.html_safe %>
     </div>
   </div>
