@@ -120,18 +120,23 @@
 			// REPLACE WITH YOUR ROUTINES
 			swipedElement.style.backgroundColor = 'orange';
 		} else if ( swipeDirection == 'right' ) {
+      // swipedElement.style.backgroundColor = 'green';
+      var id = window.location.href.split('/').pop();
 
-      new Ajax.Request('/favorites/add', {
-          method: 'post',
-          parameters: {
-            
-          }
-        });
+      $.ajax({
+        type: 'GET',
+        url:'/favorites/add/'+id,
+        // data:{ id: val },
+        success:function(){
 
-      window.location.replace("<%= recipes_path %>");
-			// REPLACE WITH YOUR ROUTINES
+          $(".bookmark-add").fadeIn();
+          setTimeout(function(){
+            $(".bookmark-add").fadeOut();
+          }, 2000);
 
-			swipedElement.style.backgroundColor = 'green';
+      }
+    });
+
 		} else if ( swipeDirection == 'up' ) {
 			// REPLACE WITH YOUR ROUTINES
 			swipedElement.style.backgroundColor = 'maroon';
@@ -145,7 +150,21 @@
 
 <div class="container" id="swipeBox" ontouchstart="touchStart(event,'swipeBox');" ontouchend="touchEnd(event);" ontouchmove="touchMove(event);" ontouchcancel="touchCancel(event);">
     <div class="row col-xs-12 col-md-6 col-md-offset-3" id="showContainer">
-        <div class="showHeader">
+
+      <% if flash[:notice] %>
+        <div class="alert alert-success bookmark-add" role="alert">
+
+            <%= flash[:notice] %>
+             <script type="text/javascript">
+               setTimeout(function(){
+                 $(".bookmark-add").fadeOut();
+               }, 2000);
+             </script>
+
+        </div>
+      <% end %>
+
+      <div class="showHeader">
           <% if @recipe != nil%>
             <h1>
               <%= @recipe.title  %>

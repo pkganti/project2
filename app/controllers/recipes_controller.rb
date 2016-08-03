@@ -104,6 +104,10 @@ class RecipesController < ApplicationController
     cook_duration = convert_time_to_seconds((params[:recipe][:cook_duration_hour]).to_i,(params[:recipe][:cook_duration_mins]).to_i)
 
     @recipe = Recipe.create recipe_params
+    if (params[:file]).present?
+      req = Cloudinary::Uploader.upload(params[:file])
+      @recipe.images = req["url"]
+    end
     @recipe.prep_duration = prep_duration
     @recipe.cook_duration = cook_duration
     @recipe.save
@@ -128,6 +132,11 @@ class RecipesController < ApplicationController
 
   def update
     @recipe = Recipe.find_by :id => params[:id]
+
+    if (params[:file]).present?
+      req = Cloudinary::Uploader.upload(params[:file])
+      @recipe.images = req["url"]
+    end
     @recipe.update recipe_params
 
     redirect_to @recipe

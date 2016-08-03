@@ -23,10 +23,12 @@ class FavoritesController < ApplicationController
 
   def add
     f1 = Favorite.new
+    # binding.pry
     user = @current_user
     id = params[:id]
     recipe = Recipe.find(id)
     # raise 'help'
+
     added_to_fav = Favorite.where(:user_id => user.id , :recipe_id => id)
     added_by_me = Recipe.where(:user_id => user.id, :id => id)
 
@@ -34,9 +36,17 @@ class FavoritesController < ApplicationController
       user.favorites << f1
       recipe.favorites << f1
       f1.save
+      if (f1.save)
+        flash[:notice] = "Successfully bookmarked your recipe !!"
+      end
+
     end
-    
-    redirect_to favorite_index_path
+
+    redirect_to :back
+
+
+
+
   end
 
 end
