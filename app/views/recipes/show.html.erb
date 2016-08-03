@@ -1,6 +1,6 @@
 <div class="container">
     <div class="row col-xs-12 col-md-6 col-md-offset-3" id="showContainer">
-        <div class="showHeader">
+      <div class="showHeader">
           <% if @recipe != nil%>
             <h1>
               <%= @recipe.title  %>
@@ -16,9 +16,63 @@
             <div>
               <% if @recipe !=nil %>
                 <ul>
-                  <li>Ratings: <% (@recipe.ratings).to_i.times do |i| %>
-                    <span style="font-size:150%;color:gold;">&#9733;</span>
-                  <% end %></li>
+                  <li>
+                    <div class="row ratings col-xs-12 col-md-6 col-md-offset-3">
+                      <%= form_tag(rate_path(@recipe), method: "post") do %>
+                      <%# raise "help" %>
+                      <% if current_user %>
+                        <% if @ratings.size.eql?0 %>
+                          I rate:<%= rating_for @recipe, "useful" %>
+                          <script type="text/javascript">
+                            $(document).ready(function() {
+                              $('.raty-cancel').addClass('hidden');
+                            });
+                          </script>
+                          <%= submit_tag("Rate") %>
+                        <% else %>
+                            My Rating:
+                            <li id="recipe_rating">
+                                <div class="wrapper">
+                                 <div class="box" style="font-size:150%;color:gold;">&#9733</div>
+                                 <div class="box" style="font-size:150%;color:gold;">&#9733</div>
+                                 <div class="box" style="font-size:150%;color:gold;">&#9733</div>
+                                 <div class="box" style="font-size:150%;color:gold;">&#9733</div>
+                                 <div class="box" style="font-size:150%;color:gold;">&#9733</div>
+                                </div>
+
+                              <script  type="text/javascript">
+                              var rating = ("<%= @recipe_rating %>") /5 ;
+
+                              var width = 102 * rating;
+
+                              $('#recipe_rating').width(width);
+                              </script>
+                            </li>
+                        <% end %>
+                      <% end %>
+                      <% end %>
+                    </div>
+                    <div class="add_favorites">
+                      <%= link_to '<span class="glyphicon glyphicon-bookmark" aria-hidden="true"></span>'.html_safe ,add_favorite_path %>
+                    </div>
+                  </li>
+                  <li id="rating">Palate Rating:
+                      <div class="wrapper">
+                       <div class="box" style="font-size:150%;color:gold;">&#9733</div>
+                       <div class="box" style="font-size:150%;color:gold;">&#9733</div>
+                       <div class="box" style="font-size:150%;color:gold;">&#9733</div>
+                       <div class="box" style="font-size:150%;color:gold;">&#9733</div>
+                       <div class="box" style="font-size:150%;color:gold;">&#9733</div>
+                      </div>
+
+                    <script  type="text/javascript">
+                    var rating = "<%= @recipe_avg_rating %>" / 5;
+
+                    var width = 102 * rating;
+
+                    $('#rating').width(width);
+                    </script>
+                  </li>
                   <% recipe_levels = {0=>'Easy',1=>'Medium',2=>'Complex'} %>
                   <li>Level: <%= recipe_levels[@recipe.level] %></li>
                   <% if @recipe.prep_duration %>
@@ -93,8 +147,6 @@
               <% end %>
             </div>
       </div>
-      <div class="add_favorites">
-        <%= link_to '<span class="glyphicon glyphicon-bookmark" aria-hidden="true"></span>'.html_safe ,add_favorite_path %>
-      </div>
+      <%= button_to 'Delete' , recipe_path, :method=> 'delete',:data => {:confirm => "Are you sure"}%>
   </div>
 </div>

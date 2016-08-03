@@ -35,8 +35,8 @@ class FavoritesController < ApplicationController
       recipe.favorites << f1
       f1.save
     end
-    
-    redirect_to favorite_index_path
+
+    redirect_to recipes_path
   end
 
 end

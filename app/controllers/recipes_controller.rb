@@ -51,6 +51,9 @@ class RecipesController < ApplicationController
         # raise "hell"
         @quantities = Quantity.where(:recipe_id => params[:id])
       end
+      @recipe_avg_rating = ratings_avg(@recipe.id)
+      @recipe_rating = (Rate.where(:rateable_id => @recipe.id , :rater_id => @current_user.id)).pluck(:stars)[0]
+      # binding.pry
   end
 
   def new
@@ -134,8 +137,9 @@ class RecipesController < ApplicationController
   end
 
   def destroy
-    @recipe = Recipe.find_by(:id => params[:id])
-    @recipe.destroy
+    recipe = Recipe.find_by(:id => params[:id])
+    recipe.isActive = false
+    recipe.save
 
     redirect_to recipes_path
   end
@@ -352,6 +356,14 @@ class RecipesController < ApplicationController
         @recipe.save
     else
     r.merge!( {'ratings' => ratings , 'prep_duration' => preparation_time ,'cook_duration' => cooking_time , 'level' => level , 'servings' => servings , 'directions' => directions})
+    end
+  end
+
+  def ratings_avg(recipe_id)
+    @ratings = Rate.where(:rateable_id => recipe_id).pluck(:stars)
+    # binding.pry
+    if (@ratings.size > 0)
+      avg = (@ratings.sum)/(@ratings.size)
     end
   end
 

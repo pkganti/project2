@@ -11,7 +11,7 @@ class ApplicationController < ActionController::Base
     if session[:user_id].present?
       @current_user = User.find_by :id => session[:user_id]
       session[:user_id] = nil unless @current_user
-      
+
     end
   end
 end
