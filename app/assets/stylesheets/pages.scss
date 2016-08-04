@@ -5,6 +5,7 @@
 @import url(https://fonts.googleapis.com/css?family=Pacifico);
 body {
     font-family:'PT Sans Narrow', sans-serif;
+    margin-top: 70px;
     // background-image: url(coverPhoto.jpg);
     // background-size: cover;
     // height: 100vh;
@@ -20,16 +21,11 @@ body {
 .wrapper {
  width: 102px;
 }
- input {
-   width : 100px;
-   height:60px;
-   margin: 0 auto;
- }
 #search{
-  width: 68%;
+  width: 70%;
   border: 1px solid black;
   border-radius: 5px;
-  height: 40px;
+  height: 50px;
 }
 img {
   width: 300px;

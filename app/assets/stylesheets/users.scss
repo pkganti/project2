@@ -24,6 +24,7 @@
 nav{
   background-color: none;
   border: none;
+
 }
 
 
@@ -40,11 +41,22 @@ nav{
 
 .navbar-header {
  	float:none;
-    width:100%;
+    width:100vw;
     padding:10px;
+    background: #7890cd;
+
 }
+
+
+
+.navbar-default .navbar-brand {
+    color: white;
+    margin-top: 0px !important;
+    display: block;
+}
+
 .navbar-brand {
-    font-size:20pt;
+    font-size:30pt;
     float:none;
 }
 #bottomNav {
