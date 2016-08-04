@@ -1,7 +1,6 @@
 $(document).ready(function() {
-  var baseUrl = 'http://localhost:3000';
-  // var baseUrl = 'http://wdi15project2.herokuapp.com';
-  // var baseUrl = 'http://wdi15project2.herokuapp.com';
+  // var baseUrl = 'http://localhost:3000';
+  var baseUrl = 'http://wdi15project2.herokuapp.com';
 
 var scrapedCategorySubmit = function(event){
   console.log('scrapeCategorySubmit()', event.data.tabURL);
