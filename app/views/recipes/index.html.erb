@@ -1,7 +1,7 @@
 <div class='container'>
   <div class='row col-xs-8 discoveryhead'>
-  <h1>I'm hungry for... </h1>
-  </div>
+  <h1 class='discovery'>I'm hungry for... </h1>
+</div>
   <%= form_tag(recipes_path, method: "get") do %>
   <input type="text" name="recipesearch" id="search" placeholder="  eg. Mac n Cheese"></input>
   <%= submit_tag "Search", class: "searchButton" %>
@@ -22,10 +22,12 @@
        </ul>
      <% end %>
      <% @searchrecipes.each_with_index do |x,i| %>
+     <div class='row col-xs-12 col-md-3'>
        <a href="/recipes/<%= @searchrecipes[i]["recipe_id"] %>"><img src="<%= @searchrecipes[i]["image_url"] %>" alt=""></a>
          <ul>
            <li>Title: <%= @searchrecipes[i]["title"] %></li>
          </ul>
+      </div>
      <% end %>
     <% else %>
      <!-- <% @recipes.each do |recipe| %>
