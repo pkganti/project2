@@ -72,7 +72,7 @@ class RecipesController < ApplicationController
       existing_recipe.cuisine = params.fetch(:cuisine)
       existing_recipe.category = params.fetch(:category)
       existing_recipe.save
-      render json: recipe_url(existing_recipe.id),  :status => status
+      render json: recipe_url(existing_recipe.id),  :status => 200
 
     else
       recipe = Recipe.new
@@ -85,7 +85,7 @@ class RecipesController < ApplicationController
       recipe.user = @current_user
       recipe.images = params.fetch(:images)
       recipe.save
-      render json: recipe_url(recipe.id),  :status => status
+      render json: recipe_url(recipe.id),  :status => 200
     end
   end
 
@@ -94,7 +94,8 @@ class RecipesController < ApplicationController
       existing_recipe = Recipe.where(:source_url => params.fetch(:url), :user_id => @current_user.id)
 
       if existing_recipe.present?
-        render json: 'alreadyExists', :status => status
+        render json: 'alreadyExists', :status => 200
+
         return
       end
 
@@ -117,9 +118,9 @@ class RecipesController < ApplicationController
         status = 'notok'
       end
 
-      render json: status,  :status => 'ok'
+      render json: status,  :status => 200
     else
-      render json: 'needtologin',  :status => status
+      render json: 'needtologin',  :status => 200
 
     end
 

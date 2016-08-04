@@ -18,8 +18,8 @@
     </div>
   </div>
 <% end %>
-<% @recipes.each do |recipe| %>
-  <% if (recipe.cuisine).eql?'American' %>
+<!-- <%# @recipes.each do |recipe| %>
+  <%# if (recipe.cuisine).eql?'American' %>
   <h1>American</h1>
   <div class="row">
     <div class="col-xs-6">
@@ -30,12 +30,12 @@
       </a>
     </div>
   </div>
-  <% elsif (recipe.cuisine).eql?'Asian'  %>
+  <%# elsif (recipe.cuisine).eql?'Asian'  %>
   <h1>Asian</h1>
   <div class="row">
     <div class="col-xs-6">
       <a href="/recipes/<%= recipe.id %>"><img src="<%= recipe.images %>" alt=""><%= recipe.title %></a>
     </div>
   </div>
-  <% end %>
-<% end %>
+  <%# end %>
+<%# end %> -->
