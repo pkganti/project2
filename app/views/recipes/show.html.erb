@@ -168,7 +168,7 @@
             <h1>
               <%= @recipe.title if (@recipe.title).present? %>
             </h1>
-            <%= image_tag @recipe.images if @recipe.images.present?%>
+            <%= image_tag @recipe.images, class: 'showImage' if @recipe.images.present?%>
           <% else %>
             <h1>
               <%= @searchrecipe["title"] if (@searchrecipe["title"]).present? %>
