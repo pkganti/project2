@@ -5,19 +5,55 @@
   text-align: center;
 }
 
-h1 .discoveryhead{
+.discoveryhead{
   margin-top: -20px !important;
 }
 
+h1.discovery{
+  margin-top: 30px;
+}
+form{
+  margin-top: 10px;
+}
+
+input.searchButton{
+  padding-top: 4px;
+  font-size: 150%;
+}
+.results{
+  padding: 15px;
+}
+
+.recipe-card{
+  border: 1px solid black;
+  height: 420px;
+  text-align: center;
+
+}
+
+.recipe-card img{
+  width: 100%;
+  height: 100%;
+}
 .searchButton{
   color: white;
   background-color: #7890cd;
-  height:60px;
+  height:50px;
   width: 100px;
   text-align: center;
-  border-radius: 10px;
+  border-radius: 5px;
 }
 
+#search{
+  width: 70%;
+  border: 1px solid black;
+  border-radius: 5px;
+  height: 50px;
+  font-size: 150%;
+}
+.card-wrapper{
+
+}
 //
 // #showContainer{
 //   text-align: center;
