@@ -11,7 +11,7 @@
 
   <div class="form-group">
     <%= f.label :servings, 'Yield' %>
-    <%= f.text_field :servings, :class => 'form-control' %>
+    <%= f.select :servings,((1..10).to_a), :class => 'form-control',:include_blank => true %>
   </div>
 
   <div class="form-group">
@@ -58,12 +58,12 @@
 
   <div class="form-group">
     <%= f.label :category %>
-    <%= f.text_field :category, :class => 'form-control' %>
+    <%= f.select :category,['Brunch','Lunch','Soup','Salad','Side','Snack','Dinner','Dessert'], :class => 'form-control',:include_blank => true %>
   </div>
 
   <div class="form-group">
     <%= f.label :cuisine %>
-    <%= f.text_field :cuisine, :class => 'form-control' %>
+    <%= f.select :cuisine,['American','Asian','British','Chinese',' French','Greek','Indian','Italian','Japanese','Malaysian','Mexican','Spanish','Thai','Turkish','Vietnamese'],:include_blank => true, :class => 'form-control' %>
   </div>
 
   <div class="form-group">

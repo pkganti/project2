@@ -131,6 +131,7 @@
 
           $(".bookmark-add").fadeIn();
           setTimeout(function(){
+						console.log('Here');
             $(".bookmark-add").fadeOut();
           }, 2000);
 
@@ -236,19 +237,23 @@
                     <% recipe_levels = {0=>'Easy',1=>'Medium',2=>'Complex'} %>
                     <li>Level: <%= recipe_levels[@recipe.level] %></li>
                   <% end %>
-                  <% if @recipe.prep_duration %>
-                    <li>Prep Time:<%= Time.at(@recipe.prep_duration).utc.strftime("%H:%M") %> hrs.</li>
+                  <% if (@recipe.prep_duration.size) != 0 %>
+										<% if  @recipe.prep_duration%>
+                    	<li>Prep Time:<%= Time.at(@recipe.prep_duration).utc.strftime("%H:%M") %> hrs.</li>
+										<% end %>
                   <% end %>
-                  <% if @recipe.cook_duration %>
-                    <li>Cook Time: <%= Time.at(@recipe.cook_duration).utc.strftime("%H:%M") %> hrs.</li>
+                  <% if (@recipe.cook_duration.size) != 0  %>
+										<% if  @recipe.cook_duration%>
+                    	<li>Cook Time: <%= Time.at(@recipe.cook_duration).utc.strftime("%H:%M") %> hrs.</li>
+										<% end %>
                   <% end %>
-                  <% if @recipe.category %>
+                  <% if (@recipe.category).present? %>
                     <li>Category: <%= @recipe.category %></li>
                   <% end %>
-                  <% if @recipe.cuisine%>
+                  <% if (@recipe.cuisine).present?%>
                     <li>Cuisine: <%= @recipe.cuisine %></li>
                   <% end %>
-                  <% if @recipe.servings %>
+                  <% if 	@recipe.servings %>
                   <li>Servings: <%= @recipe.servings %></li>
                   <% end %>
                   <% if @recipe.source_url %>
@@ -289,7 +294,8 @@
             </div>
             <div id="ingredients">
               <% if @recipe!=nil %>
-							<% if @quantities %>
+							<%# raise "help" %>
+								<% if (@recipe.ingredients).present? %>
                 <h2>Ingredients</h2>
                 <ul>
                   <% @quantities.each do |q| %>
@@ -334,7 +340,7 @@
       <%= button_to 'Delete' , recipe_path, :method=> 'delete',:data => {:confirm => "Are you sure"}%>
   </div>
 </div>
-<div class="row col-xs-10 col-md-6 col-md-offset-3" id="comments">
+<div class="row col-xs-8 col-md-6 col-xs-offset-2 col-md-offset-3" id="comments">
 	<div id="disqus_thread"></div>
 	<script>
 	(function() { // DON'T EDIT BELOW THIS LINE
