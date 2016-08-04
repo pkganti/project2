@@ -237,12 +237,12 @@
                     <% recipe_levels = {0=>'Easy',1=>'Medium',2=>'Complex'} %>
                     <li>Level: <%= recipe_levels[@recipe.level] %></li>
                   <% end %>
-                  <% if (@recipe.prep_duration.size) != 0 %>
+                  <% if @recipe.prep_duration %>
 										<% if  @recipe.prep_duration%>
                     	<li>Prep Time:<%= Time.at(@recipe.prep_duration).utc.strftime("%H:%M") %> hrs.</li>
 										<% end %>
                   <% end %>
-                  <% if (@recipe.cook_duration.size) != 0  %>
+                  <% if @recipe.cook_duration  %>
 										<% if  @recipe.cook_duration%>
                     	<li>Cook Time: <%= Time.at(@recipe.cook_duration).utc.strftime("%H:%M") %> hrs.</li>
 										<% end %>
