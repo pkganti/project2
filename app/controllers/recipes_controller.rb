@@ -53,7 +53,7 @@ class RecipesController < ApplicationController
         @quantities = Quantity.where(:recipe_id => params[:id])
         @all_ratings = Rate.where(:rateable_id => @recipe.id).pluck(:stars)
         @recipe_avg_rating = ratings_avg(@recipe.id)
-        @recipe_rating = (Rate.where(:rateable_id => @recipe.id , :rater_id => @current_user.id)).pluck(:stars)[0]
+        @recipe_rating = (Rate.where(:rateable_id => @recipe.id , :rater_id => @recipe.user_id)).pluck(:stars)[0]
       end
 
   end
@@ -299,7 +299,7 @@ class RecipesController < ApplicationController
         @recipe.images = images
         @recipe.level = level
         @recipe.servings = servings
-        @recipe.directions = directions
+        @recipe.directions = directions[0]
         @recipe.source_url = url
         if ingredients.length > 0
           @recipe.ingredients << ingredients
