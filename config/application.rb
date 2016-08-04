@@ -34,5 +34,7 @@ module Project2
     config.action_dispatch.default_headers = {
       'Access-Control-Allow-Origin' => '*'
     }
+
+    config.serve_static_assets = true
   end
 end
