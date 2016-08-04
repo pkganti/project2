@@ -2,8 +2,6 @@ Project 2: Recipies
 
 DURATION:
 
-CSS:
-Typography based on viewport https://www.google.com.au/url?sa=t&rct=j&q=&esrc=s&source=web&cd=3&cad=rja&uact=8&ved=0ahUKEwj-n_T9yabOAhVHNpQKHfFaDFsQFggpMAI&url=https%3A%2F%2Fcss-tricks.com%2Fviewport-sized-typography%2F&usg=AFQjCNGpBrX146PLfSU1OKv0bebGzulXtA
 
 
 assuming that total_seconds = 3600
@@ -47,7 +45,7 @@ rails generate model User name:string emailid:string password:string isAdmin:boo
 rails generate model Recipe title:string directions:text duration:integer ratings:decimal category:string cuisine:string images:text level:integer userId:integer
 
 rails generate model Ingredients name:string category:string
-rails generate model Favorites userId:integer recipeId:integer
+rails generate model Favorites userId:integer recipeId:integer 
 
 
 Routes:
@@ -281,17 +279,17 @@ food2fork:
   "image_url"=>"http://static.food2fork.com/chickenbiryani410x27351f3.jpg",
   "social_rank"=>34.80777735743579,
   "publisher_url"=>"http://tastykitchen.com"}]
-
-
-
+  
+  
+  
   [11] pry(#<RecipesController>)> @searchrecipes.each do |r|;
 [11] pry(#<RecipesController>)*   p r if r["source_url"].include?"http://www.bbcgoodfood.com"
 [11] pry(#<RecipesController>)* end
-
-
-
+  
+  
+  
   > doc = Nokogiri::HTML(open(@searchrecipes[0]["f2f_url"]))
-
+  
   [2] pry(#<RecipesController>)> doc.css('.recipe-title').each do |title|
 [2] pry(#<RecipesController>)*   p title.content
 [2] pry(#<RecipesController>)* end
@@ -374,31 +372,79 @@ INDEX
  @searchrecipes.each do |r|;
 p r if r["source_url"].include?"http://www.bbcgoodfood.com"
  end
-
-
-
-
+ 
+ 
+ 
+ 
 ======================
 NOKOGIRI SHOW PAGE - BBC FOOD
 ======================
 doc = Nokogiri::HTML(open(@searchrecipe["recipe"]["source_url"]))
  ratings =  doc.css("meta[itemprop= 'ratingValue']").first['content']
-
+ 
  prep_time= doc.css('.recipe-details__cooking-time-prep > span').text
  cook_time = doc.css('.recipe-details__cooking-time-cook > span').text
  level = doc.css('.recipe-details__item--skill-level').css('span').text.strip
  yield = doc.css('.recipe-details__item--servings').css('span').text.strip
- directions =
+ directions = 
  doc.css('#recipe-method').css('ol').each do |step|
   p step.css('li').text.strip
  end
-
-
- bbcffod - http://www.bbcgoodfood.com/recipes/2538/beef-wellington
+ 
+ 
+ bbcffod - http://www.bbcgoodfood.com/recipes/2538/beef-wellington 
  taste.com -
  allrecipes - Zesty Slow Cooker Chicken Barbeque
  foodnetwork -
-
-
-
+ 
+ 
+ 
  American,Asian,British,Chinese, French,Greek,Indian,Italian,Japanese,Malaysian,Mexican,Spanish,Thai,Turkish,Vietnamese
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ http://wdi15project2.herokuapp.com
+ 
+ 
+ chromeExtension/background.js:   var encURL = 'http://localhost:3000/extension?url=' + encodeURIComponent(tab.url);
+chromeExtension/background.js:  //  chrome.tabs.create({ url: 'http://localhost:3000/extension?url=' + encURL });
+ 
+ 
+ 6:  var url = 'http://localhost:3000/extensionbookmark?url=' + encodeURIComponent(event.data.tabURL) + '&title=' + $('#title').val() + '&cuisine=' + $('#cuisine').val() + '&category=' + $('#category').val();
+42:        var encURL = 'http://localhost:3000/extension?url=' + encodeURIComponent(currentTab.url);
+43:        //  chrome.tabs.create({ url: 'http://localhost:3000/extension?url=' + encURL });
+52:                        url: 'http://localhost:3000/'
+57:                      url: 'http://localhost:3000/favorites/index'
+90:                      var bookmark_url = 'http://localhost:3000/extensionbookmark?url=' + encodeURIComponent(currentTab.url)+ '&title=' + $('#title').val() + '&cuisine=' + $('#cuisine').val() + '&category=' + $('#category').val() + '&prep_duration_hour=' + $('#prep_duration_hour').val() + '&prep_duration_mins=' + $('#prep_duration_mins').val() + '&cook_duration_hour=' + $('#cook_duration_hour').val() + '&cook_duration_mins=' + $('#cook_duration_mins').val() + '&images=' + $('.chosen').attr('src');
+
+
+ 
+ 
+ chromeExtension/popup.js:  var url = 'http://localhost:3000/extensionbookmark?url=' + encodeURIComponent(event.data.tabURL) + '&title=' + $('#title').val() + '&cuisine=' + $('#cuisine').val() + '&category=' + $('#category').val();
+chromeExtension/popup.js:        var encURL = 'http://localhost:3000/extension?url=' + encodeURIComponent(currentTab.url);
+chromeExtension/popup.js:        //  chrome.tabs.create({ url: 'http://localhost:3000/extension?url=' + encURL });
+chromeExtension/popup.js:                        url: 'http://localhost:3000/'
+chromeExtension/popup.js:                      url: 'http://localhost:3000/favorites/index'
+chromeExtension/popup.js:                      var bookmark_url = 'http://localhost:3000/extensionbookmark?url=' + encodeURIComponent(currentTab.url)+ '&title=' + $('#title').val() + '&cuisine=' + $('#cuisine').val() + '&category=' + $('#category').val() + '&prep_duration_hour=' + $('#prep_duration_hour').val() + '&prep_duration_mins=' + $('#prep_duration_mins').val() + '&cook_duration_hour=' + $('#cook_duration_hour').val() + '&cook_duration_mins=' + $('#cook_duration_mins').val() + '&images=' + $('.chosen').attr('src');
+
+var baseUrl = 'http://wdi15project2.herokuapp.com'
+var baseUrl = 'http://localhost:3000'
+
+chromeExtension/popup.js:  var url = baseUrl + '/extensionbookmark?url=' + encodeURIComponent(event.data.tabURL) + '&title=' + $('#title').val() + '&cuisine=' + $('#cuisine').val() + '&category=' + $('#category').val();
+chromeExtension/popup.js:        var encURL = baseUrl + '/extension?url=' + encodeURIComponent(currentTab.url);
+chromeExtension/popup.js:        //  chrome.tabs.create({ url: 'http://localhost:3000/extension?url=' + encURL });
+chromeExtension/popup.js:                        url: baseUrl
+chromeExtension/popup.js:                      url: baseUrl + '/favorites/index'
+chromeExtension/popup.js:                      var bookmark_url = baseUrl + '/extensionbookmark?url=' + encodeURIComponent(currentTab.url)+ '&title=' + $('#title').val() + '&cuisine=' + $('#cuisine').val() + '&category=' + $('#category').val() + '&prep_duration_hour=' + $('#prep_duration_hour').val() + '&prep_duration_mins=' + $('#prep_duration_mins').val() + '&cook_duration_hour=' + $('#cook_duration_hour').val() + '&cook_duration_mins=' + $('#cook_duration_mins').val() + '&images=' + $('.chosen').attr('src');
+
+
+
+
+
+
+ 
+ 

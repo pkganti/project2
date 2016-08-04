@@ -1,8 +1,9 @@
 $(document).ready(function() {
+  var baseUrl = 'http://localhost:3000';
 
 var scrapedCategorySubmit = function(event){
   console.log('scrapeCategorySubmit()', event.data.tabURL);
-  var url = 'http://localhost:3000/extensionbookmark?url=' + encodeURIComponent(event.data.tabURL) + '&title=' + $('#title').val() + '&cuisine=' + $('#cuisine').val() + '&category=' + $('#category').val();
+  var url = baseUrl + '/extensionbookmark?url=' + encodeURIComponent(event.data.tabURL) + '&title=' + $('#title').val() + '&cuisine=' + $('#cuisine').val() + '&category=' + $('#category').val();
     console.log(url);
     $('#message').html(url);
     var xhr = new XMLHttpRequest();
@@ -38,8 +39,8 @@ var scrapedCategorySubmit = function(event){
         var currentTab = tabs[0];
         console.log(currentTab);
 
-        var encURL = 'http://localhost:3000/extension?url=' + encodeURIComponent(currentTab.url);
-        //  chrome.tabs.create({ url: 'http://localhost:3000/extension?url=' + encURL });
+        var encURL = baseUrl + '/extension?url=' + encodeURIComponent(currentTab.url);
+        //  chrome.tabs.create({ url: baseUrl + '/extension?url=' + encURL });
         console.log('scrape', encURL);
         var xhr = new XMLHttpRequest();
         xhr.open("GET", encURL, true);
@@ -48,12 +49,12 @@ var scrapedCategorySubmit = function(event){
                 if (xhr.responseText === 'needtologin') {
                     $('#message').html('');
                     chrome.tabs.create({
-                        url: 'http://localhost:3000/'
+                        url: baseUrl
                     });
                 } else if (xhr.responseText === 'alreadyExists'){
                     $('#message').html('This recipe is already in your favorites library!');
                     chrome.tabs.create({
-                      url: 'http://localhost:3000/favorites/index'
+                      url: baseUrl + '/favorites/index'
                     });
                 } else if (xhr.responseText.indexOf('http')=== 0) {
                   // the scrape worked! so show a small form for setting category & cuisine
@@ -86,7 +87,7 @@ var scrapedCategorySubmit = function(event){
                     });
 
                     $('#submit').on('click', function() {
-                      var bookmark_url = 'http://localhost:3000/extensionbookmark?url=' + encodeURIComponent(currentTab.url)+ '&title=' + $('#title').val() + '&cuisine=' + $('#cuisine').val() + '&category=' + $('#category').val() + '&prep_duration_hour=' + $('#prep_duration_hour').val() + '&prep_duration_mins=' + $('#prep_duration_mins').val() + '&cook_duration_hour=' + $('#cook_duration_hour').val() + '&cook_duration_mins=' + $('#cook_duration_mins').val() + '&images=' + $('.chosen').attr('src');
+                      var bookmark_url = baseUrl + '/extensionbookmark?url=' + encodeURIComponent(currentTab.url)+ '&title=' + $('#title').val() + '&cuisine=' + $('#cuisine').val() + '&category=' + $('#category').val() + '&prep_duration_hour=' + $('#prep_duration_hour').val() + '&prep_duration_mins=' + $('#prep_duration_mins').val() + '&cook_duration_hour=' + $('#cook_duration_hour').val() + '&cook_duration_mins=' + $('#cook_duration_mins').val() + '&images=' + $('.chosen').attr('src');
                         console.log(bookmark_url);
                         $('#message').html(bookmark_url);
                         var xhr = new XMLHttpRequest();

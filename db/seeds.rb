@@ -3,19 +3,19 @@ u1 = User.create(:name => "Tripti", :password => "chicken", :password_confirmati
 u2 = User.create(:name => "Phani", :password => "chicken", :password_confirmation => 'chicken', :email => "ganti.phani@gmail.com", :isAdmin =>false, :image =>"http://res.cloudinary.com/sydjs/image/upload/c_thumb,f_auto,g_faces,h_360,w_360/v1465866066/gc0esgwzwcog58px8xfz.jpg")
 u3 = User.create(:name => "Katrina", :password => "chicken", :password_confirmation => 'chicken', :email => "katrinamarielee@gmail.com", :isAdmin =>false, :image =>"http://www.checkmate.io/wordpress/wp-content/uploads/2015/05/Katrina_Marie_Lee.png")
 Recipe.destroy_all
-r1 = Recipe.create(:title => "Honey-soy chicken", :ratings => 5, :category => "poultry", :cuisine => "Asian", :cook_duration => 3600, :level => "easy", :images => "http://www.taste.com.au/images/recipes/sfi/2011/04/honeysoy-chicken-21995_l.jpeg", :directions => "Step 1
+r1 = Recipe.create(:title => "Honey-soy chicken", :ratings => 5, :category => "poultry", :cuisine => "Asian", :prep_duration => 600,:cook_duration => 3600, :level => "easy", :images => "http://www.taste.com.au/images/recipes/sfi/2011/04/honeysoy-chicken-21995_l.jpeg", :directions => "Step 1
 Combine soy sauce, honey, ginger and garlic in a large dish. Add chicken. Turn to coat. Cover with plastic wrap. Refrigerate for 2 hours, turning occasionally.
 Step 2
 Preheat oven to 200°C/180°C fan-forced. Line a baking tray with baking paper.
 Step 3
 Remove chicken from marinade. Place, in a single layer, on prepared tray. Sprinkle with sesame seeds. Bake for 35 minutes or until golden and cooked through. Serve with Fried rice (see related recipe).")
-r2 = Recipe.create(:title => "Mac And Four Cheeses", :ratings => 4, :category => "pasta", :cuisine => "American", :cook_duration => 1800, :level => "easy", :images => "http://foodnetwork.sndimg.com/content/dam/images/food/fullset/2003/11/12/0/ee2c04_macaroni_4_cheese.jpg.rend.sni18col.jpeg", :directions => "Cook the macaroni according to the package directions in lightly salted water, leaning toward the al dente side. Do not overcook!
+r2 = Recipe.create(:title => "Mac And Four Cheeses", :ratings => 4, :category => "pasta", :cuisine => "American", :prep_duration => 1200,:cook_duration => 1800, :level => "easy", :images => "http://foodnetwork.sndimg.com/content/dam/images/food/fullset/2003/11/12/0/ee2c04_macaroni_4_cheese.jpg.rend.sni18col.jpeg", :directions => "Cook the macaroni according to the package directions in lightly salted water, leaning toward the al dente side. Do not overcook!
 Put the cream, butter and garlic clove into a Dutch oven and heat on the stove over low heat. When the cream is hot, add the fontina, goat cheese, Parmesan and Romano.
 Drain the macaroni (reserving some of the cooking water if needed) and add it to the pot. Stir gently to combine, adding hot macaroni water as needed for consistency. Don't overmix; if there are little clumps of cheese here and there, it's fine! Taste and add about 1/2 teaspoon salt if needed. Add some pepper and minced parsley and stir. Serve immediately.
 If you are eating it later, turn the mixture into a large, buttered ovenproof dish. Sprinkle over some extra grated fontina and bake at 350 degrees F until bubbly and golden on top, 20 to 25 minutes. Sprinkle with parsley and serve.
 Recipe courtesy of Ree Drummond
 ")
-r3 = Recipe.create(:title => "Potato and leek soup", :ratings => 4.3, :category => "soup", :cook_duration => 6600, :level => "easy", :images => "http://www.taste.com.au/images/recipes/agt/2004/04/potato-and-leek-soup-5910_l.jpeg", :directions => "Step 1
+r3 = Recipe.create(:title => "Potato and leek soup", :ratings => 4.3, :category => "soup",:prep_duration => 600, :cook_duration => 6600, :level => "easy", :images => "http://www.taste.com.au/images/recipes/agt/2004/04/potato-and-leek-soup-5910_l.jpeg", :directions => "Step 1
 Heat 1 tablespoon of the oil in a large saucepan over medium-high heat. Add the onion and garlic and cook, stirring, for 3 minutes or until the onion softens. Add the potato and leek and cook, stirring, for 5 minutes or until leek softens.
 Step 2
 Add the stock and bring to the boil. Reduce heat to medium and gently boil, uncovered, for 20 minutes or until potato is soft. Remove from heat and set aside for 10 minutes to cool.
