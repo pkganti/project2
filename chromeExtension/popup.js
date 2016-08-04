@@ -50,6 +50,11 @@ var scrapedCategorySubmit = function(event){
                     chrome.tabs.create({
                         url: 'http://localhost:3000/'
                     });
+                } else if (xhr.responseText === 'alreadyExists'){
+                    $('#message').html('This recipe is already in your favorites library!');
+                    chrome.tabs.create({
+                      url: 'http://localhost:3000/favorites/index'
+                    });
                 } else if (xhr.responseText.indexOf('http')=== 0) {
                   // the scrape worked! so show a small form for setting category & cuisine
                     $('#message').html('');
