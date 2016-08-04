@@ -19,7 +19,14 @@ h1.discovery{
 form{
   margin-top: 10px;
 }
-
+input{
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+select{
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
 input.searchButton{
   padding-top: 4px;
   font-size: 150%;

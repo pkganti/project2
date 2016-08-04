@@ -269,9 +269,11 @@
                     <% end %>
                   </li>
                 <% end %>
+
                 <% if @searchrecipe['level']%>
                   <li>Level: <%= @searchrecipe['level'] %></li>
                 <% end %>
+
                 <% if ((@searchrecipe['prep_duration'][0]).to_i != 0) %>
                   <li>Prep Time:<%= Time.at(@searchrecipe['prep_duration'][0]).utc.strftime("%H:%M")%> hrs.
                     <% if (@searchrecipe['prep_duration'][1]) %>  - <%=   Time.at(@searchrecipe['prep_duration'][1]).utc.strftime("%H:%M") %> hrs.
