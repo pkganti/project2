@@ -2,8 +2,23 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 @import url(https://fonts.googleapis.com/css?family=PT+Sans+Narrow);
+@import url(https://fonts.googleapis.com/css?family=Pacifico);
 body {
     font-family:'PT Sans Narrow', sans-serif;
+    // background-image: url(coverPhoto.jpg);
+    // background-size: cover;
+    // height: 100vh;
+}
+.navbar-brand{
+
+}
+
+.brand_font{
+  font-family: 'Pacifico', cursive !important;
+  vertical-align: middle;
+}
+.wrapper {
+ width: 102px;
 }
  input {
    width : 100px;
@@ -36,9 +51,7 @@ img {
  overflow-x: hidden;
 }
 
-.wrapper {
- width: 102px;
-}
+
 
 .box {
  display: inline-block;
@@ -49,4 +62,26 @@ img {
 }
 .hidden {
   display: none;
+}
+
+.homepage{
+
+  // background-image: url(coverPhoto.jpg);
+  // position: cover;
+}
+
+#logo{
+  font-family: 'Pacifico', cursive;
+  font-size: 20vw;
+  color: #7890cd;
+  text-align: center;
+}
+.navbar-default {
+    background-color: rgba(255, 0, 0, 0);
+    border-color: rgba(255, 0, 0, 0);
+}
+.btn-primary {
+    color: #fff;
+    background-color: #7890cd;
+    border-color: #7890cd;
 }

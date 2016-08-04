@@ -11,7 +11,7 @@
 </head>
 <body>
   <div class="container">
-    <nav class="navbar navbar-default .navbar-inverse">
+    <nav class="navbar navbar-default">
     <div class="container-fluid">
       <!-- Brand and toggle get grouped for better mobile display -->
       <div class="navbar-header">
@@ -23,8 +23,8 @@
         </button>
         <a class="navbar-brand brand_font" href="/">Palate</a>
       </div>
-      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-        <ul class="nav navbar-nav">
+      <div class="collapse navbar-collapse " id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav navbar-right">
         <% if @current_user.present? %>
         <!-- <%# if @current_user.admin? %>
           <%#= link_to "Users", users_path %>
@@ -35,6 +35,7 @@
           <li><%= link_to 'Sign up', new_user_path %></li>
         <% end %>
         </ul>
+        </div>
       </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
   </nav>
@@ -42,6 +43,13 @@
 
 
 <%= yield %>
-
+<div id="footer">
+  <div class="col-xs-12 navbar-inverse navbar-fixed-bottom">
+  <div class="row" id="bottomNav">
+    <div class="col-xs-4 text-center"><a href="/recipes"><i class="glyphicon glyphicon-search"></i><br>Search</a></div>
+    <div class="col-xs-4 text-center"><a href="/favorites/index"><i class="glyphicon glyphicon-heart"></i><br>Favorites</a></div>
+    <div class="col-xs-4 text-center"><a href="/recipes/new"><i class="glyphicon glyphicon-plus"></i><br>Add</a></div>
+  </div>
+  </div>
 </body>
 </html>
