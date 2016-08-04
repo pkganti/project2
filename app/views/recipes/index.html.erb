@@ -1,39 +1,44 @@
-<h1>All Recipes </h1>
-<%= form_tag(recipes_path, method: "get") do %>
-<input type="text" name="recipesearch" id="search" placeholder="eg. italian chicken"></input>
-<%= submit_tag("Search") %>
-  <% if (params[:recipesearch]).present? %>
-    <div class="search_display">
-      <sub>Search results for <%= params[:recipesearch] %></sub>
-    </div>
-  <% end %>
-<% end %>
+<div class='container'>
+  <div class='row col-xs-8 discoveryhead'>
+  <h1>I'm hungry for... </h1>
+  </div>
+  <%= form_tag(recipes_path, method: "get") do %>
+  <input type="text" name="recipesearch" id="search" placeholder="  eg. Mac n Cheese"></input>
+  <%= submit_tag "Search", class: "searchButton" %>
 
-<div>
-  <% if (@searchrecipes != nil) %>
-   <% @recipes.each do |recipe| %>
-     <a href="/recipes/<%= recipe.id %>"><img src="<%= recipe.images %>" alt=""></a>
-     <ul>
-       <li>Title: <%= recipe.title %></li>
-     </ul>
-   <% end %>
-   <% @searchrecipes.each_with_index do |x,i| %>
-     <a href="/recipes/<%= @searchrecipes[i]["recipe_id"] %>"><img src="<%= @searchrecipes[i]["image_url"] %>" alt=""></a>
-       <ul>
-         <li>Title: <%= @searchrecipes[i]["title"] %></li>
-       </ul>
-   <% end %>
-  <% else %>
-   <!-- <% @recipes.each do |recipe| %>
-     <a href="/recipes/<%= recipe.id %>"><img src="<%= recipe.images %>" alt=""></a>
-     <ul>
-      <li>Title: <%= recipe.title %></li>
-     </ul>
-   <% end %> -->
-   <div class="rolling-images">
-   <% @list_recipes.each_with_index do |x,i| %>
-     <%= link_to image_tag(@list_recipes[i]["images"]), "/recipes/#{@list_recipes[i]["id"]}"%>
-   <% end %>
-   </div>
+    <!-- <% if (params[:recipesearch]).present? %>
+      <div class="search_display">
+        <sub>Search results for <%= params[:recipesearch] %></sub>
+      </div>
+    <% end %> -->
   <% end %>
+
+  <div>
+    <% if (@searchrecipes != nil) %>
+     <% @recipes.each do |recipe| %>
+       <a href="/recipes/<%= recipe.id %>"><img src="<%= recipe.images %>" alt=""></a>
+       <ul>
+         <li>Title: <%= recipe.title %></li>
+       </ul>
+     <% end %>
+     <% @searchrecipes.each_with_index do |x,i| %>
+       <a href="/recipes/<%= @searchrecipes[i]["recipe_id"] %>"><img src="<%= @searchrecipes[i]["image_url"] %>" alt=""></a>
+         <ul>
+           <li>Title: <%= @searchrecipes[i]["title"] %></li>
+         </ul>
+     <% end %>
+    <% else %>
+     <!-- <% @recipes.each do |recipe| %>
+       <a href="/recipes/<%= recipe.id %>"><img src="<%= recipe.images %>" alt=""></a>
+       <ul>
+        <li>Title: <%= recipe.title %></li>
+       </ul>
+     <% end %> -->
+     <div class="rolling-images">
+     <% @list_recipes.each_with_index do |x,i| %>
+       <%= link_to image_tag(@list_recipes[i]["images"]), "/recipes/#{@list_recipes[i]["id"]}"%>
+     <% end %>
+     </div>
+    <% end %>
+  </div>
 </div>
