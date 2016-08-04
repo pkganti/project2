@@ -244,7 +244,7 @@ class RecipesController < ApplicationController
      @recipe.ratings = ratings
      @recipe.level = level
      @recipe.servings = servings
-     @recipe.directions = directions
+     @recipe.directions = directions.join(',')
      if ingredients.length > 0
        @recipe.ingredients << ingredients
      end
@@ -287,8 +287,10 @@ class RecipesController < ApplicationController
     # File.write('../../taste_scrape_log.txt')
     directions =[]
     doc.css('.method-tab-content > ol > li > p.description').each do |d|
-      directions.push(d.text)
+      # binding.pry
+      directions.push(d.text.remove('[').remove(']'))
     end
+    # binding.pry
     images = doc.css('.recipe-image-wrapper > img').attr('src').text
     if save
         @recipe = Recipe.new
@@ -299,7 +301,7 @@ class RecipesController < ApplicationController
         @recipe.images = images
         @recipe.level = level
         @recipe.servings = servings
-        @recipe.directions = directions[0]
+        @recipe.directions = directions.join(',')
         @recipe.source_url = url
         if ingredients.length > 0
           @recipe.ingredients << ingredients
@@ -375,7 +377,7 @@ class RecipesController < ApplicationController
         if ingredients.length > 0
           @recipe.ingredients << ingredients
         end
-        @recipe.directions = directions
+        @recipe.directions = directions.join(',')
         @recipe.source_url = url
         @recipe.user_id = @current_user.id
         @recipe.save
@@ -424,6 +426,7 @@ class RecipesController < ApplicationController
     doc.css(".recipe-directions-list > li > p").each do |d|
       directions.push(d.text)
     end
+    # binding.pry
     if save
         @recipe = Recipe.new
         @recipe.images = images
@@ -435,7 +438,7 @@ class RecipesController < ApplicationController
         if ingredients.length > 0
           @recipe.ingredients << ingredients
         end
-        @recipe.directions = directions
+        @recipe.directions = directions.join(',')
         @recipe.source_url = url
         @recipe.user_id = @current_user.id
         @recipe.save
