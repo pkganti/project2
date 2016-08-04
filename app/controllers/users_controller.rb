@@ -43,13 +43,18 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find params[:id]
+    recipes = Recipe.all
+    
+    @list_recipes = recipes.sample(2)
+
+
   end
 
   def destroy
     user = User.find params[:id]
     user.isActive = false
     user.save
-    
+
     redirect_to root_path
   end
 

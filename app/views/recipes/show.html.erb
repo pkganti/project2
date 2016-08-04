@@ -116,10 +116,11 @@
 
 	function processingRoutine() {
 		var swipedElement = document.getElementById(triggerElementID);
-		if ( swipeDirection == 'left' ) {
-			// REPLACE WITH YOUR ROUTINES
-			swipedElement.style.backgroundColor = 'orange';
-		} else if ( swipeDirection == 'right' ) {
+		// if ( swipeDirection == 'left' ) {
+		// 	// REPLACE WITH YOUR ROUTINES
+		// 	swipedElement.style.backgroundColor = 'orange';
+		// } else
+		if ( swipeDirection == 'right' ) {
       // swipedElement.style.backgroundColor = 'green';
       var id = window.location.href.split('/').pop();
 
@@ -128,31 +129,30 @@
         url:'/favorites/add/'+id,
         // data:{ id: val },
         success:function(){
+					$(".bookmark-add").fadeIn();
+	          setTimeout(function(){
+	            $(".bookmark-add").fadeOut();
+	          }, 2000);
+					}
+				});
 
-          $(".bookmark-add").fadeIn();
-          setTimeout(function(){
-						console.log('Here');
-            $(".bookmark-add").fadeOut();
-          }, 2000);
+    }
 
-      }
-    });
-
-		} else if ( swipeDirection == 'up' ) {
-			// REPLACE WITH YOUR ROUTINES
-			swipedElement.style.backgroundColor = 'maroon';
-		} else if ( swipeDirection == 'down' ) {
-			// REPLACE WITH YOUR ROUTINES
-			swipedElement.style.backgroundColor = 'purple';
-		}
+		// } else if ( swipeDirection == 'up' ) {
+		// 	// REPLACE WITH YOUR ROUTINES
+		// 	swipedElement.style.backgroundColor = 'maroon';
+		// } else if ( swipeDirection == 'down' ) {
+		// 	// REPLACE WITH YOUR ROUTINES
+		// 	swipedElement.style.backgroundColor = 'purple';
+		// }
 	}
 
 </script>
 
 <div class="container" id="swipeBox" ontouchstart="touchStart(event,'swipeBox');" ontouchend="touchEnd(event);" ontouchmove="touchMove(event);" ontouchcancel="touchCancel(event);">
     <div class="row col-xs-12 col-md-6 col-md-offset-3" id="showContainer">
-      <% if flash[:notice] %>
-        <div class="alert alert-success bookmark-add" role="alert">
+		<!-- <% if flash[:notice] %> -->
+        <div class="alert alert-success" role="alert">
 
             <%= flash[:notice] %>
              <script type="text/javascript">
@@ -162,7 +162,7 @@
              </script>
 
         </div>
-      <% end %>
+      <!-- <% end %> -->
       <div class="showHeader">
           <% if @recipe != nil%>
             <h1>

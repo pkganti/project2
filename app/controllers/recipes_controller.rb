@@ -24,6 +24,7 @@ class RecipesController < ApplicationController
 
     else
       @recipes = Recipe.all
+      @list_recipes = @recipes.sample(5)
 
     end
   end
@@ -195,6 +196,7 @@ class RecipesController < ApplicationController
     cooking_time =[]
     # (@searchrecipe["recipe"]).merge!( {'level' => 'Easy'})
     doc = Nokogiri::HTML(open(url))
+    title = doc.css('.recipe-header__title').text
     if (doc.css("meta[itemprop= 'ratingValue']")).present?
     ratings =  doc.css("meta[itemprop= 'ratingValue']").first['content'] if (doc.css("meta[itemprop= 'ratingValue']").first['content'])
   end
@@ -219,9 +221,17 @@ class RecipesController < ApplicationController
 
     ingredients = []
     doc.css("[itemprop='ingredients']").each do |i|
-      ingredients.push(i.text.split("\n")[0])
+      if save
+        ingr = Ingredient.new
+        ingr.name = i.text
+        ingr.save
+        ingredients.push(ingr)
+      else
+        ingredients.push(i.text)
+      end
+
     end
-    ingredients.reject! {|i| i.empty? }
+
 
 
    images = doc.css("[itemprop = 'image']").attr('src').text
@@ -235,7 +245,9 @@ class RecipesController < ApplicationController
      @recipe.level = level
      @recipe.servings = servings
      @recipe.directions = directions
-     @recipe.ingredients = ingredients
+     if ingredients.length > 0
+       @recipe.ingredients << ingredients
+     end
      @recipe.user_id = @current_user.id
      @recipe.source_url = url
      @recipe.save
@@ -307,6 +319,8 @@ class RecipesController < ApplicationController
     doc = Nokogiri::HTML(open(url))
     # raise "hell"
     ratings =  doc.css("meta[itemprop= 'ratingValue']").first['content']
+    title = doc.css('.recipe-summary__h1').text
+    images = doc.css('.rec-photo').attr('src').text
 
     preparation_time_raw= (doc.css("time[itemprop='prepTime']").text).split(' ')
     preparation_time = [(preparation_time_raw[0]).to_i * 60] if (preparation_time_raw.last).eql?'m'
@@ -329,10 +343,17 @@ class RecipesController < ApplicationController
 
     ingredients = []
     doc.css('.recipe-ingredients > ul > li > label').each do |i|
-      ingredients.push(i.text.strip)
+      if save
+        ingr = Ingredient.new
+        ingr.name = i.text
+        ingr.save
+        ingredients.push(ingr)
+      else
+        ingredients.push(i.text)
+      end
     end
-
-    ingredients.reject! { |i| i.empty? }
+    #
+    # ingredients.reject! { |i| i.empty? }
 
     directions = []
     doc.css('.recipe-directions__list').css('ol').css('li').each do |step|
@@ -348,10 +369,12 @@ class RecipesController < ApplicationController
         @recipe.prep_duration = preparation_time
         @recipe.cook_duration = cooking_time
         @recipe.ratings = ratings
-        @recipes.images = images
-        @recipe.level = level
+        @recipe.images = images
+        # @recipe.level = level
         @recipe.servings = servings
-        @recipe.ingredients = ingredients
+        if ingredients.length > 0
+          @recipe.ingredients << ingredients
+        end
         @recipe.directions = directions
         @recipe.source_url = url
         @recipe.user_id = @current_user.id
@@ -364,15 +387,13 @@ class RecipesController < ApplicationController
   end
 
 
-  def foodNetwork_scrape(url,r)
+  def foodNetwork_scrape(url,r, save=true)
     preparation_time=[]
     cooking_time =[]
     # (@searchrecipe["recipe"]).merge!( {'level' => 'Easy'})
     doc = Nokogiri::HTML(open(url))
-    # ratings =
-
-    #  $(".gig-rating-stars")[1].title first character
-
+    title= doc.css('div.title > h1').text
+    # ($(".gig-rating-stars")[1].title).split(' ')[0]
     prep_time= doc.css('.cooking-times > dl >dd:nth-child(4)').text
     if ((prep_time.split(/hrs?/)).size > 1)
      preparation_time = prep_time.split(/hrs?/)
@@ -387,9 +408,17 @@ class RecipesController < ApplicationController
     end
     level = doc.css('.difficulty > dl:nth-child(2) >dd').text
     servings = doc.css('.difficulty > dl:nth-child(1) >dd').text
+    images = doc.css('div .photo-video figure div a div img').attr('src').text
     ingredients = []
     doc.css(".ingredients > ul > li").each do |i|
-      ingredients.push(i.text)
+      if save
+        ingr = Ingredient.new
+        ingr.name = i.text
+        ingr.save
+        ingredients.push(ingr)
+      else
+        ingredients.push(i.text)
+      end
     end
     directions = []
     doc.css(".recipe-directions-list > li > p").each do |d|
@@ -397,13 +426,15 @@ class RecipesController < ApplicationController
     end
     if save
         @recipe = Recipe.new
+        @recipe.images = images
         @recipe.title = title
         @recipe.prep_duration = preparation_time
         @recipe.cook_duration = cooking_time
-        @recipe.ratings = ratings
         @recipe.level = level
         @recipe.servings = servings
-        @recipe.ingredients = ingredients
+        if ingredients.length > 0
+          @recipe.ingredients << ingredients
+        end
         @recipe.directions = directions
         @recipe.source_url = url
         @recipe.user_id = @current_user.id
