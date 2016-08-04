@@ -8,11 +8,11 @@
        <%= ingredients_form.text_field :category %>
 
        <%= f.fields_for :quantities do |quantities_form| %>
-         <%= quantities_form.label :unit %>
-         <%= quantities_form.text_field :unit %>
-
          <%= quantities_form.label :size %>
          <%= quantities_form.text_field :size %>
+
+         <%= quantities_form.label :unit %>
+         <%= quantities_form.text_field :unit %>
        <% end %>
      </li>
     <% end %>

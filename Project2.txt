@@ -398,3 +398,7 @@ doc = Nokogiri::HTML(open(@searchrecipe["recipe"]["source_url"]))
  taste.com -
  allrecipes - Zesty Slow Cooker Chicken Barbeque
  foodnetwork -
+
+
+
+ American,Asian,British,Chinese, French,Greek,Indian,Italian,Japanese,Malaysian,Mexican,Spanish,Thai,Turkish,Vietnamese
