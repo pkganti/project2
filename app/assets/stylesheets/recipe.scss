@@ -12,7 +12,29 @@
 h1.discovery{
   margin-top: 30px;
 }
+form{
+  margin-top: 10px;
+}
 
+input.searchButton{
+  padding-top: 4px;
+  font-size: 150%;
+}
+.results{
+  padding: 15px;
+}
+
+.recipe-card{
+  border: 1px solid black;
+  height: 420px;
+  text-align: center;
+
+}
+
+.recipe-card img{
+  width: 100%;
+  height: 100%;
+}
 .searchButton{
   color: white;
   background-color: #7890cd;
@@ -29,9 +51,8 @@ h1.discovery{
   height: 50px;
   font-size: 150%;
 }
+.card-wrapper{
 
-form{
-margin-bottom: 10px;
 }
 //
 // #showContainer{

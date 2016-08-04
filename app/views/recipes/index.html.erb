@@ -1,7 +1,7 @@
 <div class='container'>
-  <div class='row col-xs-8 discoveryhead'>
+  <!-- <div class='row col-xs-8 discoveryhead'>
   <h1 class='discovery'>I'm hungry for... </h1>
-</div>
+</div> -->
   <%= form_tag(recipes_path, method: "get") do %>
   <input type="text" name="recipesearch" id="search" placeholder="  eg. Mac n Cheese"></input>
   <%= submit_tag "Search", class: "searchButton" %>
@@ -13,20 +13,24 @@
     <% end %> -->
   <% end %>
 
-  <div>
+  <div class= 'row'>
     <% if (@searchrecipes != nil) %>
      <% @recipes.each do |recipe| %>
+     <div class='row col-xs-12 col-md-4 results'>
        <a href="/recipes/<%= recipe.id %>"><img src="<%= recipe.images %>" alt=""></a>
        <ul>
          <li>Title: <%= recipe.title %></li>
        </ul>
+     </div>
      <% end %>
      <% @searchrecipes.each_with_index do |x,i| %>
-     <div class='row col-xs-12 col-md-3'>
-       <a href="/recipes/<%= @searchrecipes[i]["recipe_id"] %>"><img src="<%= @searchrecipes[i]["image_url"] %>" alt=""></a>
-         <ul>
-           <li>Title: <%= @searchrecipes[i]["title"] %></li>
-         </ul>
+     <div class='col-xs-12 col-md-4 results'>
+        <div class="recipe-card">
+          <div class="card-wrapper">
+          <a href="/recipes/<%= @searchrecipes[i]["recipe_id"] %>"><img src="<%= @searchrecipes[i]["image_url"] %>"></a>
+          <!-- Title: <%#= @searchrecipes[i]["title"] %> -->
+          </div>
+        </div>
       </div>
      <% end %>
     <% else %>
