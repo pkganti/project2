@@ -364,15 +364,13 @@ class RecipesController < ApplicationController
   end
 
 
-  def foodNetwork_scrape(url,r)
+  def foodNetwork_scrape(url,r, save=true)
     preparation_time=[]
     cooking_time =[]
     # (@searchrecipe["recipe"]).merge!( {'level' => 'Easy'})
     doc = Nokogiri::HTML(open(url))
-    # ratings =
-
-    #  $(".gig-rating-stars")[1].title first character
-
+    title= doc.css('div.title > h1').text
+    # ($(".gig-rating-stars")[1].title).split(' ')[0]
     prep_time= doc.css('.cooking-times > dl >dd:nth-child(4)').text
     if ((prep_time.split(/hrs?/)).size > 1)
      preparation_time = prep_time.split(/hrs?/)
@@ -387,9 +385,17 @@ class RecipesController < ApplicationController
     end
     level = doc.css('.difficulty > dl:nth-child(2) >dd').text
     servings = doc.css('.difficulty > dl:nth-child(1) >dd').text
+    images = doc.css('div .photo-video figure div a div img').attr('src').text
     ingredients = []
     doc.css(".ingredients > ul > li").each do |i|
-      ingredients.push(i.text)
+      if save
+        ingr = Ingredient.new
+        ingr.name = i.text
+        ingr.save
+        ingredients.push(ingr)
+      else
+        ingredients.push(i.text)
+      end
     end
     directions = []
     doc.css(".recipe-directions-list > li > p").each do |d|
@@ -397,13 +403,15 @@ class RecipesController < ApplicationController
     end
     if save
         @recipe = Recipe.new
+        @recipe.images = images
         @recipe.title = title
         @recipe.prep_duration = preparation_time
         @recipe.cook_duration = cooking_time
-        @recipe.ratings = ratings
         @recipe.level = level
         @recipe.servings = servings
-        @recipe.ingredients = ingredients
+        if ingredients.length > 0
+          @recipe.ingredients << ingredients
+        end
         @recipe.directions = directions
         @recipe.source_url = url
         @recipe.user_id = @current_user.id
