@@ -35,14 +35,16 @@ class FavoritesController < ApplicationController
     if (added_to_fav.empty? && added_by_me.empty?)
       user.favorites << f1
       recipe.favorites << f1
+
       f1.save
       if (f1.save)
         flash[:notice] = "Successfully bookmarked your recipe !!"
+
       end
 
     end
-
     redirect_to :back
+
   end
 
 end
