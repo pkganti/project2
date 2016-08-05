@@ -1,6 +1,23 @@
 ##Palate
 Palate is the project 2 of the web developer program. The main idea behind developing this application is to help people find their favorite dishes.
 
+##Technologies used
+1. Ruby
+2. Rails 4.2.6
+3. Bootstrap
+4. jQuery
+5. CSS
+6. HTML 5
+7. Javascript
+8. Nokogiri(Gem)
+9. Chrome dev tools extension for bookmarking
+9. Heroku for cloud deployment
+10. Cloudinary for the image upload.
+11. ratyrate
+12. Disqus
+13. bcrypt
+14. httparty
+
 ###Current features:
 The following are the things that the user can do with the application currently:
 
@@ -21,20 +38,6 @@ The following are the nice to have features that will be implemented shortly:
 ###Known issues:
 
 1. Implementing DRY
-
-##Technologies used
-1. Ruby
-2. Rails 4.2.6
-3. Bootstrap
-4. jQuery
-5. CSS
-6. HTML 5
-7. Javascript
-8. Nokogiri for webscraping
-9. Chrome dev tools extension for bookmarking
-9. Heroku for cloud deployment
-10. Cloudinary for the image upload.
-
 
 Click here to access the application: [Palate](
 https://wdi15project2.herokuapp.com/)
