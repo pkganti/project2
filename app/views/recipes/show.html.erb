@@ -160,7 +160,7 @@
 </script>
 
 <div class="container" id="swipeBox" ontouchstart="touchStart(event,'swipeBox');" ontouchend="touchEnd(event);" ontouchmove="touchMove(event);" ontouchcancel="touchCancel(event);">
-    <div class="col-xs-12 col-md-6 col-md-offset-3" id="showContainer">
+    <div class="col-xs-12" id="showContainer">
 			 <div class="alert alert-success bookmark-add" role="alert" style="display:none">
 				Bookmarked Successfully !
 			</div>
@@ -182,9 +182,9 @@
             <%#= cl_image_tag @recipe.image, :width=>300, :height=>300, :gravity=>"auto", :class => 'thumbnail' %>
             <div>
               <% if @recipe !=nil %>
-                <ul>
+
 									<!-- <div class="col-xs-12"> -->
-                  <li>
+
                     <!-- <div class="ratings col-xs-12 col-md-6 col-md-offset-3"> -->
 										<div class="ratings col-xs-6 col-md-6 col-md-offset-3">
                       <% if current_user %>
@@ -197,7 +197,7 @@
                           </script>
 
                         <% else %>
-                            <li id="recipe_rating">
+                          My Rating:
                                 <div class="wrapper">
                                  <div class="box" style="font-size:150%;color:gold;">&#9733</div>
                                  <div class="box" style="font-size:150%;color:gold;">&#9733</div>
@@ -213,7 +213,7 @@
 
                               $('#recipe_rating').width(width);
                               </script>
-                            </li>
+
                         <% end %>
                       <% end %>
                     </div>
@@ -275,7 +275,7 @@
 									</div>
                   </li>
 									<div class="add_favorites">
-										<%= link_to '<span class="glyphicon glyphicon-bookmark" aria-hidden="true"></span>'.html_safe ,add_favorite_path %>
+										<%= link_to '<span class="glyphicon glyphicon-bookmark" aria-hidden="true"></span>'.html_safe, add_favorite_path %>
 									</div>
                   <% if (@recipe.level).present? %>
                     <% recipe_levels = {0=>'Easy',1=>'Medium',2=>'Complex'} %>
