@@ -22,7 +22,12 @@
            <a href="/recipes/<%= recipe.id %>"><img src="<%= recipe.images %>" alt=""></a>
          </div>
          <div id="card-title"><%= recipe.title %> </div>
-         <div id="card-level"><%= recipe.level %> </div>
+         <div id="card-level">
+           <% if (recipe.level).present? %>
+             <% recipe_levels = {0=>'Easy',1=>'Medium',2=>'Complex'} %>
+             <li>Level: <%= recipe_levels[recipe.level] %></li>
+           <% end %>
+         </div>
          <div id="card-rating"><%= recipe.ratings %> </div>
     <!-- <div id="card-cooktime"><%#= recipe.cook_duration+ recipe.prep_duration %> </div> -->
         </div>
@@ -35,7 +40,12 @@
             <a href="/recipes/<%= @searchrecipes[i]["recipe_id"] %>"><img src="<%= @searchrecipes[i]["image_url"] %>"></a>
           </div>
           <div id="card-title"><%= @searchrecipes[i]["title"] %> </div>
-          <div id="card-level"><%= @searchrecipes[i]["level"] %> </div>
+          <div id="card-level">
+            <% if (@searchrecipes[i]["level"]).present? %>
+              <% recipe_levels = {0=>'Easy',1=>'Medium',2=>'Complex'} %>
+              <li>Level: <%= recipe_levels[@searchrecipes[i]["level"]] %></li>
+            <% end %>
+          </div>
           <div id="card-rating"><%= @searchrecipes[i]["ratings"] %> </div>
           <!-- <div id="card-cooktime"><%#S= @searchrecipes[i]["cook_duration"]+ @searchrecipes[i]["prep_duration"] %> </div> -->
         </div>
