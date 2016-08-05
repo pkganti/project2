@@ -172,7 +172,7 @@
             <h1>
               <%= @recipe.title if (@recipe.title).present? %>
             </h1>
-            <%= image_tag @recipe.images if @recipe.images.present?%>
+            <%= image_tag @recipe.images, class: 'showImage' if @recipe.images.present?%>
           <% else %>
             <h1>
               <%= @searchrecipe["title"] if (@searchrecipe["title"]).present? %>
@@ -273,14 +273,10 @@
                     <li>Level: <%= recipe_levels[@recipe.level] %></li>
                   <% end %>
                   <% if @recipe.prep_duration %>
-										<% if  @recipe.prep_duration%>
                     	<li>Prep Time:<%= Time.at(@recipe.prep_duration).utc.strftime("%H:%M") %> hrs.</li>
-										<% end %>
                   <% end %>
                   <% if @recipe.cook_duration  %>
-										<% if  @recipe.cook_duration%>
                     	<li>Cook Time: <%= Time.at(@recipe.cook_duration).utc.strftime("%H:%M") %> hrs.</li>
-										<% end %>
                   <% end %>
                   <% if (@recipe.category).present? %>
                     <li>Category: <%= @recipe.category %></li>
@@ -304,6 +300,7 @@
                     <% end %>
                   </li>
                 <% end %>
+
                 <% if @searchrecipe['level']%>
                   <li>Level: <%= @searchrecipe['level'] %></li>
                 <% end %>

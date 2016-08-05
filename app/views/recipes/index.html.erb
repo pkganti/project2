@@ -16,20 +16,38 @@
   <div class= 'row'>
     <% if (@searchrecipes != nil) %>
      <% @recipes.each do |recipe| %>
-       <div class='row col-xs-12 col-md-4 results'>
-         <a href="/recipes/<%= recipe.id %>"><img src="<%= recipe.images %>" alt=""></a>
-         <ul>
-           <li>Title: <%= recipe.title %></li>
-         </ul>
-       </div>
-     <% end %>
-     <% @searchrecipes.each_with_index do |x,i| %>
-     <div class='col-xs-12 col-md-4 results'>
+     <div class='row col-xs-12 col-md-4 results'>
+       <div class="recipe-card">
+         <div class="card-wrapper">
+           <a href="/recipes/<%= recipe.id %>"><img src="<%= recipe.images %>" alt=""></a>
+         </div>
+         <div id="card-title"><%= recipe.title %> </div>
+         <div id="card-level">
+           <% if (recipe.level).present? %>
+             <% recipe_levels = {0=>'Easy',1=>'Medium',2=>'Complex'} %>
+             <li>Level: <%= recipe_levels[recipe.level] %></li>
+           <% end %>
+         </div>
+         <div id="card-rating"><%= recipe.ratings %> </div>
+    <!-- <div id="card-cooktime"><%#= recipe.cook_duration+ recipe.prep_duration %> </div> -->
+        </div>
+      </div>
+      <% end %>
+      <% @searchrecipes.each_with_index do |x,i| %>
+       <div class='col-xs-12 col-md-4 results'>
         <div class="recipe-card">
           <div class="card-wrapper">
-          <a href="/recipes/<%= @searchrecipes[i]["recipe_id"] %>"><img src="<%= @searchrecipes[i]["image_url"] %>"></a>
-          <!-- Title: <%#= @searchrecipes[i]["title"] %> -->
+            <a href="/recipes/<%= @searchrecipes[i]["recipe_id"] %>"><img src="<%= @searchrecipes[i]["image_url"] %>"></a>
           </div>
+          <div id="card-title"><%= @searchrecipes[i]["title"] %> </div>
+          <div id="card-level">
+            <% if (@searchrecipes[i]["level"]).present? %>
+              <% recipe_levels = {0=>'Easy',1=>'Medium',2=>'Complex'} %>
+              <li>Level: <%= recipe_levels[@searchrecipes[i]["level"]] %></li>
+            <% end %>
+          </div>
+          <div id="card-rating"><%= @searchrecipes[i]["ratings"] %> </div>
+          <!-- <div id="card-cooktime"><%#S= @searchrecipes[i]["cook_duration"]+ @searchrecipes[i]["prep_duration"] %> </div> -->
         </div>
       </div>
      <% end %>
