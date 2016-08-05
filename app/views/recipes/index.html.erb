@@ -16,7 +16,7 @@
   <div class= 'row'>
     <% if (@searchrecipes != nil) %>
      <% @recipes.each do |recipe| %>
-     <div class='row col-xs-12 col-md-4 results'>
+     <div class='col-xs-12 col-md-4 results'>
        <div class="recipe-card">
          <div class="card-wrapper">
            <a href="/recipes/<%= recipe.id %>"><img src="<%= recipe.images %>" alt=""></a>

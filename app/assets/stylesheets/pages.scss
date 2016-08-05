@@ -6,12 +6,24 @@
 body {
     font-family:'PT Sans Narrow', sans-serif;
     margin-top: 70px;
+    margin-bottom: 80px;
     // background-image: url(coverPhoto.jpg);
     // background-size: cover;
     // height: 100vh;
 }
-.navbar-brand{
-
+@media (min-width: 769px) {
+  body{
+    margin-top: 130px;
+    margin-bottom: 50px;
+  }
+}
+.container-fluid{
+  padding-left: 0px;
+  padding-right: 0px;
+}
+.navbar-default .navbar-nav > li > a {
+    color: #777;
+    font-size: 22px;
 }
 
 .brand_font{

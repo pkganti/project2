@@ -150,7 +150,7 @@
 </script>
 
 <div class="container" id="swipeBox" ontouchstart="touchStart(event,'swipeBox');" ontouchend="touchEnd(event);" ontouchmove="touchMove(event);" ontouchcancel="touchCancel(event);">
-    <div class="row col-xs-12 col-md-6 col-md-offset-3" id="showContainer">
+    <div class="col-xs-12 col-md-6 col-md-offset-3" id="showContainer">
 		<!-- <% if flash[:notice] %> -->
         <div class="alert alert-success" role="alert">
 
@@ -179,11 +179,13 @@
             <div>
               <% if @recipe !=nil %>
                 <ul>
+									<!-- <div class="col-xs-12"> -->
                   <li>
-                    <div class="row ratings col-xs-12 col-md-6 col-md-offset-3">
+                    <!-- <div class="ratings col-xs-12 col-md-6 col-md-offset-3"> -->
+										<div class="ratings col-xs-6 col-md-6 col-md-offset-3">
                       <% if current_user %>
                         <% if @recipe_rating.nil? %>
-                          I rate:<%= rating_for @recipe, "useful" , enable_half: true %>
+                        My Rating<%= rating_for @recipe, "useful" , enable_half: true %>
                           <script type="text/javascript">
                             $(document).ready(function() {
                               $('.raty-cancel').addClass('hidden');
@@ -191,7 +193,6 @@
                           </script>
 
                         <% else %>
-                            My Rating:
                             <li id="recipe_rating">
                                 <div class="wrapper">
                                  <div class="box" style="font-size:150%;color:gold;">&#9733</div>
@@ -212,11 +213,10 @@
                         <% end %>
                       <% end %>
                     </div>
-                    <div class="add_favorites">
-                      <%= link_to '<span class="glyphicon glyphicon-bookmark" aria-hidden="true"></span>'.html_safe ,add_favorite_path %>
-                    </div>
                   </li>
-                  <li id="rating">Palate Rating:
+									<div class="col-xs-6 palateRating">
+										Palate Rating<br>
+                  <li id="rating">
                       <div class="wrapper">
                        <div class="box" style="font-size:150%;color:gold;">&#9733</div>
                        <div class="box" style="font-size:150%;color:gold;">&#9733</div>
@@ -232,7 +232,12 @@
 
                     $('#rating').width(width);
                     </script>
+										<!-- </div> -->
+									</div>
                   </li>
+									<div class="add_favorites">
+										<%= link_to '<span class="glyphicon glyphicon-bookmark" aria-hidden="true"></span>'.html_safe ,add_favorite_path %>
+									</div>
                   <% if (@recipe.level).present? %>
                     <% recipe_levels = {0=>'Easy',1=>'Medium',2=>'Complex'} %>
                     <li>Level: <%= recipe_levels[@recipe.level] %></li>
