@@ -238,14 +238,10 @@
                     <li>Level: <%= recipe_levels[@recipe.level] %></li>
                   <% end %>
                   <% if @recipe.prep_duration %>
-										<% if  @recipe.prep_duration%>
                     	<li>Prep Time:<%= Time.at(@recipe.prep_duration).utc.strftime("%H:%M") %> hrs.</li>
-										<% end %>
                   <% end %>
                   <% if @recipe.cook_duration  %>
-										<% if  @recipe.cook_duration%>
                     	<li>Cook Time: <%= Time.at(@recipe.cook_duration).utc.strftime("%H:%M") %> hrs.</li>
-										<% end %>
                   <% end %>
                   <% if (@recipe.category).present? %>
                     <li>Category: <%= @recipe.category %></li>
@@ -273,7 +269,6 @@
                 <% if @searchrecipe['level']%>
                   <li>Level: <%= @searchrecipe['level'] %></li>
                 <% end %>
-
                 <% if ((@searchrecipe['prep_duration'][0]).to_i != 0) %>
                   <li>Prep Time:<%= Time.at(@searchrecipe['prep_duration'][0]).utc.strftime("%H:%M")%> hrs.
                     <% if (@searchrecipe['prep_duration'][1]) %>  - <%=   Time.at(@searchrecipe['prep_duration'][1]).utc.strftime("%H:%M") %> hrs.
