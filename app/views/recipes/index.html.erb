@@ -13,7 +13,7 @@
     <% end %> -->
   <% end %>
 
-  <div class= 'row'>
+  <div class="col-xs-12">
     <% if (@searchrecipes != nil) %>
      <% @recipes.each do |recipe| %>
      <div class='col-xs-12 col-md-4 results'>
@@ -52,7 +52,7 @@
       </div>
      <% end %>
     <% else %>
-      <div id="myCarousel" class="carousel slide" data-ride="carousel">
+      <div id="myCarousel" class="carousel slide col-xs-12" data-ride="carousel">
 
        <ol class="carousel-indicators">
          <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
