@@ -23,7 +23,7 @@ class FavoritesController < ApplicationController
 
   def add
     f1 = Favorite.new
-    # binding.pry
+    #  binding.pry
     user = @current_user
     id = params[:id]
     recipe = Recipe.find(id)
@@ -38,12 +38,16 @@ class FavoritesController < ApplicationController
 
       f1.save
       if (f1.save)
-        flash[:notice] = "Successfully bookmarked your recipe !!"
-
+        #flash[:notice] = "Successfully bookmarked your recipe !!"
+        success = true
       end
 
+    else
+    #   flash[:notice] = "Already bookmarked !!"
+      success = false
     end
-    redirect_to :back
+    render :json => { :status => success }
+    # redirect_to :back
 
   end
 
