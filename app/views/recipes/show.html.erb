@@ -116,53 +116,57 @@
 
 	function processingRoutine() {
 		var swipedElement = document.getElementById(triggerElementID);
-		// if ( swipeDirection == 'left' ) {
-		// 	// REPLACE WITH YOUR ROUTINES
-		// 	swipedElement.style.backgroundColor = 'orange';
-		// } else
 		if ( swipeDirection == 'right' ) {
       // swipedElement.style.backgroundColor = 'green';
       var id = window.location.href.split('/').pop();
 
-      $.ajax({
-        type: 'GET',
-        url:'/favorites/add/'+id,
-        // data:{ id: val },
-        success:function(){
-					$(".bookmark-add").fadeIn();
-	          setTimeout(function(){
-	            $(".bookmark-add").fadeOut();
-	          }, 2000);
-					}
-				});
+      // $.ajax({
+      //   type: 'GET',
+      //   url:'/favorites/add/'+id,
+      //   // data:{ id: val },
+      //   success:function(){
+			// 		$(".bookmark-add").fadeIn();
+	    //       setTimeout(function(){
+	    //         $(".bookmark-add").fadeOut();
+	    //       }, 2000);
+			// 		}
+			// 	});
+
+						$.ajax({
+							type: 'GET',
+							url:'/favorites/add/'+id,
+							// data:{ id: val },
+							success:function(e){
+							if(e.status === true){
+										$(".bookmark-add").fadeIn();
+										setTimeout(function(){
+											$(".bookmark-add").fadeOut();
+										}, 2000);
+									}
+									else{
+										$(".bookmark-fail").fadeIn();
+										setTimeout(function(){
+											$(".bookmark-fail").fadeOut();
+										}, 2000);
+
+									}
+								}
+							});
+
 
     }
-
-		// } else if ( swipeDirection == 'up' ) {
-		// 	// REPLACE WITH YOUR ROUTINES
-		// 	swipedElement.style.backgroundColor = 'maroon';
-		// } else if ( swipeDirection == 'down' ) {
-		// 	// REPLACE WITH YOUR ROUTINES
-		// 	swipedElement.style.backgroundColor = 'purple';
-		// }
 	}
 
 </script>
 
 <div class="container" id="swipeBox" ontouchstart="touchStart(event,'swipeBox');" ontouchend="touchEnd(event);" ontouchmove="touchMove(event);" ontouchcancel="touchCancel(event);">
     <div class="col-xs-12 col-md-6 col-md-offset-3" id="showContainer">
-		<!-- <% if flash[:notice] %> -->
-        <div class="alert alert-success" role="alert">
-
-            <%= flash[:notice] %>
-             <script type="text/javascript">
-               setTimeout(function(){
-                 $(".bookmark-add").fadeOut();
-               }, 2000);
-             </script>
-
-        </div>
-      <!-- <% end %> -->
+			 <div class="alert alert-success bookmark-add" role="alert" style="display:none">
+				Bookmarked Successfully !
+			</div>
+			<div class="alert alert-success bookmark-fail" role="alert" style="display:none">
+				Already bookmarked !
+			</div>
       <div class="showHeader">
           <% if @recipe != nil%>
             <h1>
@@ -203,7 +207,7 @@
                                 </div>
 
                               <script  type="text/javascript">
-                              var rating = ("<%= @recipe_rating %>") /5 ;
+                              var rating = ("<%= @recipe_rating %>") / 5 ;
 
                               var width = 102 * rating;
 
@@ -213,6 +217,41 @@
                         <% end %>
                       <% end %>
                     </div>
+
+                    <!-- <div class="add_favorites">
+                      <%#= link_to '<span class="glyphicon glyphicon-bookmark" aria-hidden="true"></span>'.html_safe ,add_favorite_path %>
+											<a class="favlink" href="#">
+												<span class="glyphicon glyphicon-bookmark" aria-hidden="true"></span>
+                      </a>
+				              <script type="text/javascript">
+				                  var id = window.location.href.split('/').pop();
+				                  $('.favlink').on('click', function(e){
+				                      // e.preventDefault();
+				                      $.ajax({
+								              	type: 'GET',
+								              	url:'/favorites/add/'+id,
+								              	// data:{ id: val },
+								              	success:function(data){
+																	console.log(data);
+																if(data.status === true){
+																		console.log("hi");
+								                    	$(".bookmark-add").fadeIn();
+								                    	setTimeout(function(){
+								                      	$(".bookmark-add").fadeOut();
+								                    	}, 2000);
+																		}
+																		else{
+																			$(".bookmark-fail").fadeIn();
+																			setTimeout(function(){
+																				$(".bookmark-fail").fadeOut();
+																			}, 2000);
+																		}
+																	}
+				                      	});
+				                      });
+                  	</script>
+
+                    </div> -->
                   </li>
 									<div class="col-xs-6 palateRating">
 										Palate Rating<br>
@@ -243,14 +282,10 @@
                     <li>Level: <%= recipe_levels[@recipe.level] %></li>
                   <% end %>
                   <% if @recipe.prep_duration %>
-										<% if  @recipe.prep_duration%>
                     	<li>Prep Time:<%= Time.at(@recipe.prep_duration).utc.strftime("%H:%M") %> hrs.</li>
-										<% end %>
                   <% end %>
                   <% if @recipe.cook_duration  %>
-										<% if  @recipe.cook_duration%>
                     	<li>Cook Time: <%= Time.at(@recipe.cook_duration).utc.strftime("%H:%M") %> hrs.</li>
-										<% end %>
                   <% end %>
                   <% if (@recipe.category).present? %>
                     <li>Category: <%= @recipe.category %></li>
@@ -278,7 +313,6 @@
                 <% if @searchrecipe['level']%>
                   <li>Level: <%= @searchrecipe['level'] %></li>
                 <% end %>
-
                 <% if ((@searchrecipe['prep_duration'][0]).to_i != 0) %>
                   <li>Prep Time:<%= Time.at(@searchrecipe['prep_duration'][0]).utc.strftime("%H:%M")%> hrs.
                     <% if (@searchrecipe['prep_duration'][1]) %>  - <%=   Time.at(@searchrecipe['prep_duration'][1]).utc.strftime("%H:%M") %> hrs.

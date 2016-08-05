@@ -112,3 +112,18 @@ li{
 //   padding: 20px;
 //   color: white;
 // }
+
+.carousel{
+ width: 50%;
+ height: 400px;
+ margin: 0 auto;
+
+}
+
+.carousel-inner > .item > img {
+   margin: 0 auto;
+   text-align: center;
+   width: auto;
+   height: auto;
+
+}

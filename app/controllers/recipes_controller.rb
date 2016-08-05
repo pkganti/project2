@@ -35,6 +35,7 @@ class RecipesController < ApplicationController
     string_obj = HTTParty.get(url2)
     object_obj = JSON.parse(string_obj)
     @searchrecipe = object_obj
+    # binding.pry
 
       if (@searchrecipe["recipe"]).present?
         if @searchrecipe["recipe"]["source_url"] =~ /bbcgoodfood/
@@ -201,18 +202,35 @@ class RecipesController < ApplicationController
     if (doc.css("meta[itemprop= 'ratingValue']")).present?
     ratings =  doc.css("meta[itemprop= 'ratingValue']").first['content'] if (doc.css("meta[itemprop= 'ratingValue']").first['content'])
   end
-    prep_time= doc.css('.recipe-details__cooking-time-prep > span').text
-    if ((prep_time.split(/hrs?/)).size > 1)
-     preparation_time = prep_time.split(/hrs?/)
-    else
-     preparation_time.push(prep_time)
+    preping_time_raw= doc.css('.recipe-details__cooking-time-prep > span').text.split(' ')
+    if (preping_time_raw.join(',').include?'hrs') && (preping_time_raw.join(',').include?'mins')
+
+      preparation_time = [(preping_time_raw[0]).to_i * 60 * 60 + ((preping_time_raw[2]).to_i * 60 )]
+    elsif ((preping_time_raw.last).eql?'mins')
+      preparation_time = [(preping_time_raw[0]).to_i * 60]
+    elsif ((preping_time_raw.last).eql?'hrs')
+      preparation_time = [((preping_time_raw[0]).to_i * 60 * 60)]
     end
-    cook_time = doc.css('.recipe-details__cooking-time-cook > span').text
-    if ((cook_time.split(/hrs?/)).size > 1)
-     cooking_time = cook_time.split(/hrs?/)
-    else
-     cooking_time.push(cook_time)
+    # if ((prep_time.split(/hrs?/)).size > 1)
+    #  preparation_time = prep_time.split(/hrs?/)
+    # else
+    #  preparation_time.push(prep_time)
+    # end
+    cooking_time_raw = doc.css('.recipe-details__cooking-time-cook > span').text.split(' ')
+    # binding.pry
+    if (cooking_time_raw.join(',').include?'hrs') && (cooking_time_raw.join(',').include?'mins')
+
+      cooking_time = [(cooking_time_raw[0]).to_i * 60 * 60 + ((cooking_time_raw[2]).to_i * 60 )]
+    elsif ((cooking_time_raw.last).eql?'mins')
+      cooking_time = [(cooking_time_raw[0]).to_i * 60]
+    elsif ((cooking_time_raw.last).eql?'hrs')
+      cooking_time = [((cooking_time_raw[0]).to_i * 60 * 60)]
     end
+    # if ((cook_time.split(/hrs?/)).size > 1)
+    #  cooking_time = cook_time.split(/hrs?/)
+    # else
+    #  cooking_time.push(cook_time)
+    # end
     level = doc.css('.recipe-details__item--skill-level').css('span').text.strip
     servings = doc.css('.recipe-details__item--servings').css('span').text.strip
     directions = []
@@ -232,7 +250,6 @@ class RecipesController < ApplicationController
       end
 
     end
-
 
 
    images = doc.css("[itemprop = 'image']").attr('src').text

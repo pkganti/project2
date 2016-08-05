@@ -3,8 +3,8 @@
   <h1 class='discovery'>I'm hungry for... </h1>
 </div> -->
   <%= form_tag(recipes_path, method: "get") do %>
-  <input type="text" name="recipesearch" id="search" placeholder="  eg. Mac n Cheese"></input>
-  <%= submit_tag "Search", class: "searchButton" %>
+    <input type="text" name="recipesearch" id="search" placeholder="  eg. Mac n Cheese"></input>
+    <%= submit_tag "Search", class: "searchButton" %>
 
     <!-- <% if (params[:recipesearch]).present? %>
       <div class="search_display">
@@ -22,7 +22,12 @@
            <a href="/recipes/<%= recipe.id %>"><img src="<%= recipe.images %>" alt=""></a>
          </div>
          <div id="card-title"><%= recipe.title %> </div>
-         <div id="card-level"><%= recipe.level %> </div>
+         <div id="card-level">
+           <% if (recipe.level).present? %>
+             <% recipe_levels = {0=>'Easy',1=>'Medium',2=>'Complex'} %>
+             <li>Level: <%= recipe_levels[recipe.level] %></li>
+           <% end %>
+         </div>
          <div id="card-rating"><%= recipe.ratings %> </div>
     <!-- <div id="card-cooktime"><%#= recipe.cook_duration+ recipe.prep_duration %> </div> -->
         </div>
@@ -35,24 +40,60 @@
             <a href="/recipes/<%= @searchrecipes[i]["recipe_id"] %>"><img src="<%= @searchrecipes[i]["image_url"] %>"></a>
           </div>
           <div id="card-title"><%= @searchrecipes[i]["title"] %> </div>
-          <div id="card-level"><%= @searchrecipes[i]["level"] %> </div>
+          <div id="card-level">
+            <% if (@searchrecipes[i]["level"]).present? %>
+              <% recipe_levels = {0=>'Easy',1=>'Medium',2=>'Complex'} %>
+              <li>Level: <%= recipe_levels[@searchrecipes[i]["level"]] %></li>
+            <% end %>
+          </div>
           <div id="card-rating"><%= @searchrecipes[i]["ratings"] %> </div>
           <!-- <div id="card-cooktime"><%#S= @searchrecipes[i]["cook_duration"]+ @searchrecipes[i]["prep_duration"] %> </div> -->
         </div>
       </div>
      <% end %>
     <% else %>
-     <!-- <% @recipes.each do |recipe| %>
-       <a href="/recipes/<%= recipe.id %>"><img src="<%= recipe.images %>" alt=""></a>
-       <ul>
-        <li>Title: <%= recipe.title %></li>
-       </ul>
-     <% end %> -->
-     <div class="rolling-images">
-     <% @list_recipes.each_with_index do |x,i| %>
-       <%= link_to image_tag(@list_recipes[i]["images"]), "/recipes/#{@list_recipes[i]["id"]}"%>
-     <% end %>
-     </div>
+      <div id="myCarousel" class="carousel slide" data-ride="carousel">
+
+       <ol class="carousel-indicators">
+         <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+         <li data-target="#myCarousel" data-slide-to="1"></li>
+         <li data-target="#myCarousel" data-slide-to="2"></li>
+         <li data-target="#myCarousel" data-slide-to="3"></li>
+         <li data-target="#myCarousel" data-slide-to="4"></li>
+
+       </ol>
+       <div class="carousel-inner" role="listbox">
+         <div class="item active">
+
+           <%= link_to image_tag(@list_recipes[0]["images"]), "/recipes/#{@list_recipes[0]["id"]}", :class => "first-slide imagecar", :alt => "First slide" %>
+
+         </div>
+         <div class="item">
+           <%= link_to image_tag(@list_recipes[1]["images"]), "/recipes/#{@list_recipes[1]["id"]}", :class => "second-slide imagecar", :alt => "Second slide" %>
+
+         </div>
+         <div class="item">
+           <%= link_to image_tag(@list_recipes[2]["images"]), "/recipes/#{@list_recipes[2]["id"]}", :class => "third-slide imagecar", :alt => "Third slide" %>
+
+         </div>
+
+         <div class="item">
+           <%= link_to image_tag(@list_recipes[4]["images"]), "/recipes/#{@list_recipes[4]["id"]}", :class => "fourth-slide imagecar", :alt => "Fourth slide" %>
+
+         </div>
+         <div class="item">
+           <%= link_to image_tag(@list_recipes[4]["images"]), "/recipes/#{@list_recipes[4]["id"]}", :class => "fifth-slide imagecar", :alt => "Fifth slide" %>
+         </div>
+       </div>
+       <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+         <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+         <span class="sr-only">Previous</span>
+       </a>
+       <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+         <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+         <span class="sr-only">Next</span>
+       </a>
+      </div>
     <% end %>
   </div>
 </div>
