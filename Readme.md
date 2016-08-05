@@ -3,6 +3,7 @@ Palate is the project 2 of the web developer program. The main idea behind devel
 
 ###Current features:
 The following are the things that the user can do with the application currently:
+
 1. User can register to the application.
 2. Edit his profile and upload his profile image.
 3. Search for a recipe that he/she wants to plan for the cook.
@@ -12,7 +13,14 @@ The following are the things that the user can do with the application currently
 
 ###Nice to have:
 The following are the nice to have features that will be implemented shortly:
+
 1. Option for the user to bookmark the recipe coming from API (Currently it can be viewed but not bookmarked).
+2. Including the videos to cooking recipes.
+3. Including the grocery list to give out the weekly notifications on the groceries needed.
+
+###Known issues:
+
+1. Implementing DRY
 
 ##Technologies used
 1. Ruby
