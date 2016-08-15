@@ -19,7 +19,7 @@
              <li>Level: <%= recipe_levels[recipe.level] %></li>
            <% end %>
          </div>
-         <div id="card-rating"><%#= recipe.ratings %> </div>
+         <div id="card-rating"><%= recipe.ratings %> </div>
         </div>
       </div>
       <% end %>
@@ -42,7 +42,7 @@
       </div>
      <% end %>
     <% else %>
-      <div id="myCarousel" class="carousel slide" data-ride="carousel">
+      <!-- <div id="myCarousel" class="carousel slide" data-ride="carousel">
 
        <ol class="carousel-indicators">
          <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
@@ -83,7 +83,12 @@
          <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
          <span class="sr-only">Next</span>
        </a>
-      </div>
+      </div> -->
+      <% @list_recipes.each do |recipe| %>
+        <%# raise "hell" %>
+        <%= link_to image_tag(recipe.images) , recipe %>
+      <% end %>
+
     <% end %>
   </div>
 </div>
