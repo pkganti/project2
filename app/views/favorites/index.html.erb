@@ -8,13 +8,16 @@
     </div>
   <% end %>
 <% end %>
+
 <% @recipes.each do |recipe| %>
-  <div class="row">
-    <div class="col-xs-6">
+<div class='col-xs-12 col-md-4 results'>
+  <div class="recipe-card">
+    <div class="card-wrapper">
       <a href="/recipes/<%= recipe.id %>"><img src="<%= recipe.images %>" alt=""></a>
       <ul>
-        <li>Title: <%= recipe.title %></li>
+        <li class="recipeTitle"><%= recipe.title %></li>
       </ul>
     </div>
   </div>
+</div>
 <% end %>

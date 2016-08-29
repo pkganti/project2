@@ -1,16 +1,7 @@
 <div class='container'>
-  <!-- <div class='row col-xs-8 discoveryhead'>
-  <h1 class='discovery'>I'm hungry for... </h1>
-</div> -->
   <%= form_tag(recipes_path, method: "get") do %>
     <input type="text" name="recipesearch" id="search" placeholder="  eg. Mac n Cheese"></input>
     <%= submit_tag "Search", class: "searchButton" %>
-
-    <!-- <% if (params[:recipesearch]).present? %>
-      <div class="search_display">
-        <sub>Search results for <%= params[:recipesearch] %></sub>
-      </div>
-    <% end %> -->
   <% end %>
 
   <div class="col-xs-12">
@@ -28,8 +19,7 @@
              <li>Level: <%= recipe_levels[recipe.level] %></li>
            <% end %>
          </div>
-         <div id="card-rating"><%= recipe.ratings %> </div>
-    <!-- <div id="card-cooktime"><%#= recipe.cook_duration+ recipe.prep_duration %> </div> -->
+         <div id="card-rating"><%#= recipe.ratings %> </div>
         </div>
       </div>
       <% end %>
