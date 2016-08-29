@@ -39,7 +39,7 @@ var scrapedCategorySubmit = function(event){
 
         var currentTab = tabs[0];
         console.log(currentTab);
-
+        // this connects to the rails method scrape with route /extension and parameter url
         var encURL = baseUrl + '/extension?url=' + encodeURIComponent(currentTab.url);
         //  chrome.tabs.create({ url: baseUrl + '/extension?url=' + encURL });
         console.log('scrape', encURL);
@@ -90,7 +90,7 @@ var scrapedCategorySubmit = function(event){
                     $('#submit').on('click', function() {
                       var bookmark_url = baseUrl + '/extensionbookmark?url=' + encodeURIComponent(currentTab.url)+ '&title=' + $('#title').val() + '&cuisine=' + $('#cuisine').val() + '&category=' + $('#category').val() + '&prep_duration_hour=' + $('#prep_duration_hour').val() + '&prep_duration_mins=' + $('#prep_duration_mins').val() + '&cook_duration_hour=' + $('#cook_duration_hour').val() + '&cook_duration_mins=' + $('#cook_duration_mins').val() + '&images=' + $('.chosen').attr('src');
                         console.log(bookmark_url);
-                        $('#message').html(bookmark_url);
+                        $('#message').html(bookmark_url);////????
                         var xhr = new XMLHttpRequest();
                         xhr.open("GET", bookmark_url, true);
                         xhr.onreadystatechange = function(response) {

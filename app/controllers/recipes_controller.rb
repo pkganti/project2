@@ -36,19 +36,25 @@ class RecipesController < ApplicationController
     object_obj = JSON.parse(string_obj)
     @searchrecipe = object_obj
     # binding.pry
-
       if (@searchrecipe["recipe"]).present?
         if @searchrecipe["recipe"]["source_url"] =~ /bbcgoodfood/
           source_url = @searchrecipe["recipe"]["source_url"]
           recipeObj = @searchrecipe["recipe"]
           @searchrecipe  = bbc_scrape(source_url,recipeObj)
-
+          @searchrecipe = nil
+          @recipe  = bbc_scrape(source_url,recipeObj)
         elsif @searchrecipe["recipe"]["source_url"] =~ /allrecipes/
           source_url = @searchrecipe["recipe"]["source_url"]
           recipeObj = @searchrecipe["recipe"]
           @searchrecipe  = allrecipes_scrape(source_url,recipeObj)
+          @searchrecipe = nil
+          @recipe  = allrecipes_scrape(source_url,recipeObj)
+          @quantities = ''
+          @all_ratings = ''
+          @recipe_avg_rating = ''
+          @recipe_rating = ''
         end
-        # binding.pry
+        binding.pry
       else
         @recipe = Recipe.find_by( :id => params[:id])
         @quantities = Quantity.where(:recipe_id => params[:id])
@@ -200,8 +206,8 @@ class RecipesController < ApplicationController
     doc = Nokogiri::HTML(open(url))
     title = doc.css('.recipe-header__title').text
     if (doc.css("meta[itemprop= 'ratingValue']")).present?
-    ratings =  doc.css("meta[itemprop= 'ratingValue']").first['content'] if (doc.css("meta[itemprop= 'ratingValue']").first['content'])
-  end
+      ratings =  doc.css("meta[itemprop= 'ratingValue']").first['content'] if (doc.css("meta[itemprop= 'ratingValue']").first['content'])
+    end
     preping_time_raw= doc.css('.recipe-details__cooking-time-prep > span').text.split(' ')
     if (preping_time_raw.join(',').include?'hrs') && (preping_time_raw.join(',').include?'mins')
 
@@ -401,7 +407,7 @@ class RecipesController < ApplicationController
         @recipe.save
         @recipe.id
     else
-    r.merge!( {'ratings' => ratings , 'prep_duration' => preparation_time ,'cook_duration' => cooking_time , 'servings' => servings , 'directions' => directions})
+    r.merge!( {'images' => images, 'ratings' => ratings , 'prep_duration' => preparation_time[0] ,'cook_duration' => cooking_time[0] , 'servings' => servings , 'directions' => directions})
 
     end
   end

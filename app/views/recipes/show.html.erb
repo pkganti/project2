@@ -170,9 +170,9 @@
       <div class="showHeader">
           <% if @recipe != nil%>
             <h1>
-              <%= @recipe.title if (@recipe.title).present? %>
+              <%= @recipe['title'] if (@recipe['title']).present? %>
             </h1>
-            <%= image_tag @recipe.images, class: 'showImage' if @recipe.images.present?%>
+            <%= image_tag @recipe['images'], class: 'showImage' if (@recipe['images']).present?%>
           <% else %>
             <h1>
               <%= @searchrecipe["title"] if (@searchrecipe["title"]).present? %>
@@ -272,27 +272,27 @@
 									</script>
 
 									</div>
-                  <% if (@recipe.level).present? %>
+                  <% if (@recipe['level']).present? %>
                     <% recipe_levels = {0=>'Easy',1=>'Medium',2=>'Complex'} %>
-                    <li>Level: <%= recipe_levels[@recipe.level] %></li>
+                    <li>Level: <%= recipe_levels[@recipe['level']] %></li>
                   <% end %>
-                  <% if @recipe.prep_duration %>
-                    	<li>Prep Time:<%= Time.at(@recipe.prep_duration).utc.strftime("%H:%M") %> hrs.</li>
+                  <% if @recipe['prep_duration'] %>
+                    	<li>Prep Time:<%= Time.at(@recipe['prep_duration']).utc.strftime("%H:%M") %> hrs.</li>
                   <% end %>
-                  <% if @recipe.cook_duration  %>
-                    	<li>Cook Time: <%= Time.at(@recipe.cook_duration).utc.strftime("%H:%M") %> hrs.</li>
+                  <% if @recipe['cook_duration']  %>
+                    	<li>Cook Time: <%= Time.at(@recipe['cook_duration']).utc.strftime("%H:%M") %> hrs.</li>
                   <% end %>
-                  <% if (@recipe.category).present? %>
-                    <li>Category: <%= @recipe.category %></li>
+                  <% if (@recipe['category']).present? %>
+                    <li>Category: <%= @recipe['category'] %></li>
                   <% end %>
-                  <% if (@recipe.cuisine).present?%>
-                    <li>Cuisine: <%= @recipe.cuisine %></li>
+                  <% if (@recipe['cuisine']).present?%>
+                    <li>Cuisine: <%= @recipe['cuisine'] %></li>
                   <% end %>
-                  <% if 	@recipe.servings %>
-                  <li>Servings: <%= @recipe.servings %></li>
+                  <% if 	@recipe['servings'] %>
+                  <li>Servings: <%= @recipe['servings'] %></li>
                   <% end %>
-                  <% if @recipe.source_url %>
-                  <li> <%= link_to 'More about this recipe', @recipe.source_url , :target => "_blank"%></li>
+                  <% if @recipe['source_url'] %>
+                  <li> <%= link_to 'More about this recipe', @recipe['source_url'] , :target => "_blank"%></li>
                   <% end %>
                 </ul>
               <% else %>
@@ -331,46 +331,60 @@
             <div id="ingredients">
               <% if @recipe!=nil %>
 							<%# raise "help" %>
-								<% if (@recipe.ingredients).present? %>
+								<% if (@recipe['ingredients']).present? %>
                 <h2>Ingredients</h2>
                 <ul>
-                  <% @quantities.each do |q| %>
-                    <li>
-                      <%= q.size %>
-                      <%= q.unit %>
-                      <%= q.ingredient.name %>
-                    </li>
-                  <% end %>
+									<% if @quantities.eql?('') %>
+										<% @recipe["ingredients"].each do |i| %>
+											<li>
+												<%= i %>
+											</li>
+										<% end %>
+									<% else %>
+										<% @quantities.each do |q| %>
+											<li>
+												<%= q.size %>
+												<%= q.unit %>
+												<%= q.ingredient.name %>
+											</li>
+										<% end %>
+									<% end %>
+
                 </ul>
 								<% end %>
               <% end %>
-              <% if @searchrecipe["ingredients"]%>
-                <h2>Ingredients</h2>
-                <ul>
-                  <% @searchrecipe["ingredients"].each do |i| %>
-                    <li>
-                      <%= i %>
-                    </li>
-                  <% end %>
-                </ul>
-              <% end %>
+							<% if @searchrecipe.present? %>
+	              <% if @searchrecipe["ingredients"]%>
+	                <h2>Ingredients</h2>
+	                <ul>
+	                  <% @searchrecipe["ingredients"].each do |i| %>
+	                    <li>
+	                      <%= i %>
+	                    </li>
+	                  <% end %>
+	                </ul>
+	              <% end %>
+							<% end %>
             </div>
             <div id="directions">
               <% if @recipe!=nil %>
-								<% if @recipe.directions %>
+								<% if @recipe['directions'] %>
                 	<h2>Directions</h2>
-									<%= @recipe.directions %>
+									<%= @recipe['directions'] %>
 								<% end %>
-              <% elsif @searchrecipe['directions']%>
-                <h2>Directions</h2>
-                <ul>
-                  <% @searchrecipe['directions'].each_index do |i| %>
-                    <li>
-                      <%= @searchrecipe['directions'][i] %>
-                    </li>
-                  <% end %>
-                </ul>
-              <% end %>
+							<% end %>
+							<% if @searchrecipe.present? %>
+	              <% if @searchrecipe['directions']%>
+	                <h2>Directions</h2>
+	                <ul>
+	                  <% @searchrecipe['directions'].each_index do |i| %>
+	                    <li>
+	                      <%= @searchrecipe['directions'][i] %>
+	                    </li>
+	                  <% end %>
+	                </ul>
+	              <% end %>
+							<% end %>
             </div>
       </div>
       <%= button_to 'Delete' , recipe_path, :method=> 'delete',:data => {:confirm => "Are you sure"}%>
