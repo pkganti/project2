@@ -19,7 +19,6 @@ def self.save_extension_scrape_recipe(title,preparation_time, cooking_time, rati
   @recipe.servings = servings
   @recipe.directions = directions.join(',')
   @recipe.source_url = url
-  binding.pry
   if ingredients.length > 0
     @recipe.ingredients << ingredients
   end
@@ -140,7 +139,8 @@ end
      @recipe.save
      @recipe.id
    else
-     @recipe = Recipe.save_extension_scrape_recipe(title,preparation_time, cooking_time, ratings, images, level, servings, directions, url, ingredients,user)
+     Recipe.save_api_scrape_recipe(r,title,ratings,preparation_time,cooking_time,level,servings,directions,ingredients,images)
+
   #    @recipe = Recipe.new
   #    @recipe.title = title
   #    @recipe.prep_duration = preparation_time
@@ -218,7 +218,7 @@ end
       @recipe.save
       @recipe.id
     else
-      @recipe = Recipe.save_extension_scrape_recipe(title,preparation_time, cooking_time, ratings, images, level, servings, directions, url, ingredients,user)
+     Recipe.save_api_scrape_recipe(r,title,ratings,preparation_time,cooking_time,level,servings,directions,ingredients,images)
     #     @recipe = Recipe.new
     #     @recipe.title = title
     #     @recipe.prep_duration = preparation_time
@@ -286,7 +286,7 @@ end
       @recipe.save
       @recipe.id
     else
-      @recipe = Recipe.save_extension_scrape_recipe(title,preparation_time, cooking_time, ratings, images, level, servings, directions, url, ingredients,user)
+       Recipe.save_api_scrape_recipe(r,title,ratings,preparation_time,cooking_time,level,servings,directions,ingredients,images)
     #     @recipe = Recipe.new
     #     @recipe.images = images
     #     @recipe.title = title

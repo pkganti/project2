@@ -53,7 +53,6 @@ class RecipesController < ApplicationController
           @recipe_avg_rating = ''
           @recipe_rating = ''
         end
-        binding.pry
       else
         @recipe = Recipe.find_by( :id => params[:id])
         @quantities = Quantity.where(:recipe_id => params[:id])
