@@ -1,4 +1,4 @@
-c<script type="text/javascript">
+<script type="text/javascript">
 	// TOUCH-EVENTS SINGLE-FINGER SWIPE-SENSING JAVASCRIPT
 	// Courtesy of PADILICIOUS.COM and MACOSXAUTOMATION.COM
 
@@ -25,9 +25,11 @@ c<script type="text/javascript">
 	// make sure its ID is passed in the event call placed in the element declaration, like:
 	// <div id="picture-frame" ontouchstart="touchStart(event,'picture-frame');"  ontouchend="touchEnd(event);" ontouchmove="touchMove(event);" ontouchcancel="touchCancel(event);">
 
+
+
 	function touchStart(event,passedName) {
 		// disable the standard ability to select the touched object
-		event.preventDefault();
+		//event.preventDefault();
 		// get the total number of fingers touching the screen
 		fingerCount = event.touches.length;
 		// since we're looking for a swipe (single finger) and not a gesture (multiple fingers),
@@ -45,7 +47,7 @@ c<script type="text/javascript">
 	}
 
 	function touchMove(event) {
-		event.preventDefault();
+		//event.preventDefault();
 		if ( event.touches.length == 1 ) {
 			curX = event.touches[0].pageX;
 			curY = event.touches[0].pageY;
@@ -55,7 +57,7 @@ c<script type="text/javascript">
 	}
 
 	function touchEnd(event) {
-		event.preventDefault();
+		//event.preventDefault();
 		// check to see if more than one finger was used and that there is an ending coordinate
 		if ( fingerCount == 1 && curX != 0 ) {
 			// use the Distance Formula to determine the length of the swipe
@@ -167,12 +169,12 @@ c<script type="text/javascript">
 			<div class="alert alert-success bookmark-fail" role="alert" style="display:none">
 				Already bookmarked !
 			</div>
-      <div class="showHeader">
+      <div class="showH">
           <% if @recipe != nil%>
             <h1>
-              <%= @recipe.title if (@recipe.title).present? %>
+              <%= @recipe["title"] if (@recipe["title"]).present? %>
             </h1>
-            <%= image_tag @recipe.images, class: 'showImage' if @recipe.images.present?%>
+            <%= image_tag @recipe["images"], class: 'showImage' if @recipe["images"].present?%>
           <% else %>
             <h1>
               <%= @searchrecipe["title"] if (@searchrecipe["title"]).present? %>
@@ -188,15 +190,6 @@ c<script type="text/javascript">
                     <!-- <div class="ratings col-xs-12 col-md-6 col-md-offset-3"> -->
 										<div class="ratings col-xs-6 col-md-6 ">
                       <% if current_user %>
-                        <% if @recipe_rating.nil? %>
-                        My Rating<%= rating_for @recipe, "useful" , enable_half: true %>
-                          <script type="text/javascript">
-                            $(document).ready(function() {
-                              $('.raty-cancel').addClass('hidden');
-                            });
-                          </script>
-
-                        <% else %>
                           My Rating:
                                 <div class="wrapper">
                                  <div class="box" style="font-size:150%;color:gold;">&#9733</div>
@@ -214,7 +207,6 @@ c<script type="text/javascript">
                               $('#recipe_rating').width(width);
                               </script>
 
-                        <% end %>
                       <% end %>
                     </div>
                   </li>

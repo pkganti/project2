@@ -5,6 +5,9 @@
 -------------------------------------------------- */
 
 /* Wrapper for page content to push down footer */
+.showH{
+  z-index: 10;
+}
 #wrap {
   min-height: 100%;
   height: auto !important;

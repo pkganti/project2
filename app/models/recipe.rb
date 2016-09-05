@@ -141,32 +141,11 @@ end
    else
      Recipe.save_api_scrape_recipe(r,title,ratings,preparation_time,cooking_time,level,servings,directions,ingredients,images)
 
-  #    @recipe = Recipe.new
-  #    @recipe.title = title
-  #    @recipe.prep_duration = preparation_time
-  #    @recipe.images = images
-  #    @recipe.cook_duration = cooking_time
-  #    @recipe.ratings = ratings
-  #    @recipe.level = level
-  #    @recipe.servings = servings
-  #    @recipe.directions = directions.join(',')
-  #    if ingredients.length > 0
-  #      @recipe.ingredients << ingredients
-  #    end
-  #    @recipe.user_id = user.id
-  #    @recipe.source_url = url
-  #    @recipe.save
-  #    @recipe.id
-  #  else
-  #   r.merge!( {'ratings' => ratings , 'prep_duration' => preparation_time ,'cook_duration' => cooking_time , 'level' => level , 'servings' => servings , 'directions' => directions})
-
   end
 
   end
 
   def self.allrecipes_scrape(url,r, save=false,user)
-    # scrapeurl = url+'/print'
-
     doc = Nokogiri::HTML(open(url))
     ratings =  doc.css("meta[itemprop= 'ratingValue']").first['content']
     title = doc.css('.recipe-summary__h1').text
@@ -176,8 +155,6 @@ end
     preparation_time = [(preparation_time_raw[0]).to_i * 60] if (preparation_time_raw.last).eql?'m'
     preparation_time = [((preparation_time_raw[0]).to_i * 60 *60)] if (preparation_time_raw.last).eql?'h'
     cooking_time_raw = (doc.css("time[itemprop='cookTime']").text).split(' ')
-    # cooking_time = [(cooking_time_raw[0]).to_i * 60] if (cooking_time_raw.last).eql?'m'
-    # cooking_time = [((cooking_time_raw[0]).to_i * 60 * 60)] if (cooking_time_raw.last).eql?'h'
     if (cooking_time_raw.join(',').include?'h') && (cooking_time_raw.join(',').include?'m')
 
       cooking_time = [(cooking_time_raw[0]).to_i * 60 * 60 + ((cooking_time_raw[2]).to_i * 60 )]
@@ -187,8 +164,6 @@ end
       cooking_time = [((cooking_time_raw[0]).to_i * 60 * 60)]
     end
 
-
-    # binding.pry
     servings = doc.css("#metaRecipeServings").first['content']
 
     ingredients = []
@@ -202,15 +177,11 @@ end
         ingredients.push(i.text)
       end
     end
-    #
-    # ingredients.reject! { |i| i.empty? }
 
     directions = []
     doc.css('.recipe-directions__list').css('ol').css('li').each do |step|
      directions.push(step.text.strip)
     end
-
-    # raise "hell"
 
     images = doc.css(".rec-photo").attr('src').text
     if save
@@ -219,25 +190,6 @@ end
       @recipe.id
     else
      Recipe.save_api_scrape_recipe(r,title,ratings,preparation_time,cooking_time,level,servings,directions,ingredients,images)
-    #     @recipe = Recipe.new
-    #     @recipe.title = title
-    #     @recipe.prep_duration = preparation_time
-    #     @recipe.cook_duration = cooking_time
-    #     @recipe.ratings = ratings
-    #     @recipe.images = images
-    #     # @recipe.level = level
-    #     @recipe.servings = servings
-    #     if ingredients.length > 0
-    #       @recipe.ingredients << ingredients
-    #     end
-    #     @recipe.directions = directions.join(',')
-    #     @recipe.source_url = url
-    #     @recipe.user_id = user.id
-    #     @recipe.save
-    #     @recipe.id
-    # else
-    # r.merge!( {'images' => images, 'ratings' => ratings , 'prep_duration' => preparation_time[0] ,'cook_duration' => cooking_time[0] , 'servings' => servings , 'directions' => directions})
-
     end
   end
 
@@ -245,7 +197,6 @@ end
   def self.foodNetwork_scrape(url,r, save=true,user)
     preparation_time=[]
     cooking_time =[]
-    binding.pry
     # (@searchrecipe["recipe"]).merge!( {'level' => 'Easy'})
     doc = Nokogiri::HTML(open(url))
     title= doc.css('div.title > h1').text
