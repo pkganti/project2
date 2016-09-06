@@ -1,10 +1,10 @@
 class FavoritesController < ApplicationController
+  # displaying the recipes in the favorites for the user
   def index
       user_favorites = Favorite.where(:user_id => @current_user.id).pluck(:recipe_id)
       user_recipes = Recipe.where(:user_id => @current_user.id).pluck(:id)
       recipe_id_list = (user_favorites + user_recipes)
       fav_recipes = []
-      # params[:recipesearch] = 'potato'
       search_fav_recipes = []
       recipe_id_list.each do |id|
         fav_recipes.push(Recipe.find(id))
@@ -22,9 +22,10 @@ class FavoritesController < ApplicationController
   end
 
   def add
+    # adding recipes to the favorites
     f1 = Favorite.new
     user = @current_user
-    binding.pry
+    # if the recipe to be favorited is coming from api
     if JSON.parse(params[:recipe][:api_recipe])['source_url'].nil?
       id = params[:id]
       recipe = Recipe.find(id)
@@ -61,10 +62,9 @@ class FavoritesController < ApplicationController
       recipe_api.cook_duration = recipe_params['cook_duration']
       recipe_api.servings = recipe_params['servings']
       recipe_api.directions = recipe_params['directions']
-      # recipe_api.ingredients = params['recipe']['api_recipe']['ingredients']
       recipe_api.source_url = recipe_params['source_url']
       recipe_api.user_id =  @current_user.id
-      # binding.pry
+      # adding the ingredients to the recipe object
       if recipe_params['ingredients'].present?
         recipe_params['ingredients'].each do |i|
            ing = Ingredient.new
@@ -78,7 +78,7 @@ class FavoritesController < ApplicationController
       user.favorites << f1
       recipe_api.favorites << f1
 
-      # redirect_to :back
+      # if the recipe is added to favorites from html, render html, if from mobile swiper, render JSON
       respond_to do |format|
         format.json  { render :json => recipe_api, :status => success }
         format.html  {redirect_to(recipe_path(recipe_api))}
