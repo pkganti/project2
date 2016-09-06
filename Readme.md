@@ -28,6 +28,12 @@ The following are the things that the user can do with the application currently
 5. User can book mark the recipes through the chrome extension.
 6. User can also bookmark and add the recipe which he searches from the database.
 
+## Directions for adding the Palate Chrome Extension
+1. Fork our code- Project2
+2. From the Chrome Browser, go to Window > Extensions
+3. Click the checkbox on the right to turn on Developer mode
+4. Click Load Unpacked Extension button and upload the Chrome Extension File from the forked code
+
 ###Nice to have:
 The following are the nice to have features that will be implemented shortly:
 
