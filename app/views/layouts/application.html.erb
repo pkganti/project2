@@ -22,15 +22,12 @@
                             <span class="icon-bar"></span>
                         </button>
                         <ul class="nav navbar-nav">
-                            <li id="palateLogo"><%= link_to "Palate", recipes_path %></li>
+                            <h2 id="palateLogo"><%= link_to "Palate", recipes_path %></h2>
                         </ul>
                         <div class="collapse navbar-collapse " id="bs-example-navbar-collapse-1">
 
                             <ul class="nav navbar-nav navbar-right">
                                 <% if @current_user.present? %>
-                                <!-- <%# if @current_user.admin? %>
-          <%#= link_to "Users", users_path %>
-        <%# end %> -->
 
                                 <li><%= link_to "Edit Profile", users_edit_path %></li>
                                 <li><%= link_to "Logout #{ @current_user.name }", logout_path, :method => :delete %></li>

@@ -1,6 +1,7 @@
 // Place all the styles related to the recipe controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
 .showHeader h1 {
     text-align: center;
 }
@@ -52,7 +53,7 @@ input.searchButton {
 }
 .searchButton {
     color: white;
-    background-color: #7890cd;
+    background-color: #5e7028;
     height: 50px;
     width: 100px;
     text-align: center;
@@ -112,18 +113,3 @@ li{
 //   padding: 20px;
 //   color: white;
 // }
-
-.carousel{
-margin-top: 10px;
- width: 100vw;
-}
-#myCarousel{
-  margin-top: 100px;
-}
-
-.carousel-inner > .item > img {
-   margin: 0 auto;
-   text-align: center;
-   width: auto;
-   height: auto;
-}

@@ -5,15 +5,15 @@
 @import url(https://fonts.googleapis.com/css?family=Pacifico);
 body {
     font-family:'PT Sans Narrow', sans-serif;
-    margin-top: 70px;
+    margin-top: 70.4px;
     margin-bottom: 80px;
     // background-image: url(coverPhoto.jpg);
     // background-size: cover;
     // height: 100vh;
 }
-@media (min-width: 769px) {
+@media (min-width: 690px) {
   body{
-    margin-top: 70px;
+    margin-top: 70.4px;
     margin-bottom: 50px;
   }
   #swipeBox {
@@ -25,6 +25,17 @@ body {
   padding-left: 0px;
   padding-right: 0px;
 }
+h2{
+  margin-top: 10px;
+}
+h2 a{
+  color: white;
+  margin-left: 15px;
+}
+h2 a:hover{
+  text-decoration: none;
+  color: #777;
+}
 .navbar-default .navbar-nav > li > a {
     color: #777;
     font-size: 22px;
@@ -33,8 +44,9 @@ body {
 #palateLogo{
   font-family: 'Pacifico', cursive !important;
   vertical-align: middle;
-  font-size: 4vw;
-  color: white;
+  font-size: 2em;
+  color: white !important;
+  text-decoration: none !important;
 }
 .container > .navbar-header, .container > .navbar-collapse, .container-fluid > .navbar-header, .container-fluid > .navbar-collapse {
   margin-left: 0px;
@@ -75,15 +87,15 @@ body {
 }
 
 .homepage{
-
-  // background-image: url(coverPhoto.jpg);
-  // position: cover;
+  background-image: url('/assets/coverPhoto.jpg');
+  background-size: cover;
+  height: 100vh;
 }
 
 #logo{
   font-family: 'Pacifico', cursive;
   font-size: 20vw;
-  color: #7890cd;
+  color: white;
   text-align: center;
 }
 .navbar-default {
@@ -92,6 +104,10 @@ body {
 }
 .btn-primary {
     color: #fff;
-    background-color: #7890cd;
-    border-color: #7890cd;
+    background-color: #5e7028;
+    border-color: #5e7028;
+}
+.homeLabel{
+  padding-top: 10px;
+  color: white;
 }
