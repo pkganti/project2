@@ -12,6 +12,7 @@ Rails.application.routes.draw do
 
   get '/favorites/index' => 'favorites#index' , :as => 'favorite_index'
   get '/favorites/add/:id' => 'favorites#add' , :as => 'add_favorite'
+  post '/favorites/add/:id' => 'favorites#add' , :as => 'add_favorite_api'
 
   get '/login' => 'session#new'
   post '/login' => 'session#create'
