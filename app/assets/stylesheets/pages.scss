@@ -13,19 +13,12 @@ body {
 }
 @media (min-width: 769px) {
   body{
-    margin-top: 130px;
+    margin-top: 70px;
     margin-bottom: 50px;
   }
   #swipeBox {
       max-width: 600px;
       text-align: center;
-  }
-  .carousel{
-   width: 50%;
-   height: auto;
-   margin: 0 auto;
-   text-align: center;
-
   }
 }
 .container-fluid{
@@ -37,9 +30,14 @@ body {
     font-size: 22px;
 }
 
-.brand_font{
+#palateLogo{
   font-family: 'Pacifico', cursive !important;
   vertical-align: middle;
+  font-size: 4vw;
+  color: white;
+}
+.container > .navbar-header, .container > .navbar-collapse, .container-fluid > .navbar-header, .container-fluid > .navbar-collapse {
+  margin-left: 0px;
 }
 .wrapper {
  width: 102px;
