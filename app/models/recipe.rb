@@ -36,9 +36,9 @@ def self.taste_scrape(url,r,save=false,user)
   doc = Nokogiri::HTML(open(url))
   title = doc.css('.heading > h1').text
   #Extract the prep time to be an integer and multiply 60 for time in seconds
-  preparation_time = [(doc.css('.prepTime').css('em').text.delete('0:').to_i)*60]
+  preparation_time = [((doc.css('.prepTime').css('em').text.delete('0:').to_i)*60)]
   #Extract the cook time to be an integer and multiply 60 for time in seconds
-  cooking_time = [(doc.css('.cookTime').css('em').text.delete('0:').to_i)*60]
+  cooking_time = [((doc.css('.cookTime').css('em').text.delete('0:').to_i)*60)]
   level = doc.css('.difficultyTitle').css('em').text
   servings = doc.css('.servings').css('em').text
   ratings = doc.css('.rating').css('span.star-level').text
@@ -62,7 +62,9 @@ def self.taste_scrape(url,r,save=false,user)
   images = doc.css('.recipe-image-wrapper > img').attr('src').text
   if save.eql?true
     #Now that recipe fields are scraped from the extension, save as a new recipe
-    @recipe = Recipe.save_extension_scrape_recipe(title,preparation_time, cooking_time, ratings, images, level, servings, directions, url, ingredients,user)
+
+    @recipe = Recipe.save_extension_scrape_recipe(title,preparation_time[0], cooking_time[0], ratings, images, level, servings, directions, url, ingredients,user)
+
     @recipe.save
     @recipe.id
   else
@@ -84,21 +86,21 @@ end
     preping_time_raw= doc.css('.recipe-details__cooking-time-prep > span').text.split(' ')
     if (preping_time_raw.join(',').include?'hrs') && (preping_time_raw.join(',').include?'mins')
 
-      preparation_time = [(preping_time_raw[0]).to_i * 60 * 60 + ((preping_time_raw[2]).to_i * 60 )]
+      preparation_time = [((preping_time_raw[0]).to_i * 60 * 60 + ((preping_time_raw[2]).to_i * 60 )).to_s]
     elsif ((preping_time_raw.last).eql?'mins')
-      preparation_time = [(preping_time_raw[0]).to_i * 60]
+      preparation_time = [((preping_time_raw[0]).to_i * 60).to_s]
     elsif ((preping_time_raw.last).eql?'hrs')
-      preparation_time = [((preping_time_raw[0]).to_i * 60 * 60)]
+      preparation_time = [(((preping_time_raw[0]).to_i * 60 * 60)).to_s]
     end
     #for cook time, if the cook time has hours or mins, extract the integer and convert to seconds
     cooking_time_raw = doc.css('.recipe-details__cooking-time-cook > span').text.split(' ')
 
     if (cooking_time_raw.join(',').include?'hrs') && (cooking_time_raw.join(',').include?'mins')
-      cooking_time = [(cooking_time_raw[0]).to_i * 60 * 60 + ((cooking_time_raw[2]).to_i * 60 )]
+      cooking_time = [((cooking_time_raw[0]).to_i * 60 * 60 + ((cooking_time_raw[2]).to_i * 60 )).to_s]
     elsif ((cooking_time_raw.last).eql?'mins')
-      cooking_time = [(cooking_time_raw[0]).to_i * 60]
+      cooking_time = [((cooking_time_raw[0]).to_i * 60).to_s]
     elsif ((cooking_time_raw.last).eql?'hrs')
-      cooking_time = [((cooking_time_raw[0]).to_i * 60 * 60)]
+      cooking_time = [(((cooking_time_raw[0]).to_i * 60 * 60)).to_s]
     end
     level = doc.css('.recipe-details__item--skill-level').css('span').text.strip
     servings = doc.css('.recipe-details__item--servings').css('span').text.strip
@@ -126,7 +128,7 @@ end
    images = doc.css("[itemprop = 'image']").attr('src').text
    if save
      #Now that recipe fields are scraped from the extension, save as a new recipe
-     @recipe = Recipe.save_extension_scrape_recipe(title,preparation_time, cooking_time, ratings, images, level, servings, directions, url, ingredients,user)
+     @recipe = Recipe.save_extension_scrape_recipe(title,preparation_time[0], cooking_time[0], ratings, images, level, servings, directions, url, ingredients,user)
      @recipe.save
      @recipe.id
    else
@@ -146,16 +148,16 @@ end
     level = 'Easy'
     #Where m (minutes is found) multiply integer to get prep time in seconds, similarly for h (hours)
     preparation_time_raw= (doc.css("time[itemprop='prepTime']").text).split(' ')
-    preparation_time = [(preparation_time_raw[0]).to_i * 60] if (preparation_time_raw.last).eql?'m'
-    preparation_time = [((preparation_time_raw[0]).to_i * 60 *60)] if (preparation_time_raw.last).eql?'h'
+    preparation_time = [((preparation_time_raw[0]).to_i * 60).to_s] if (preparation_time_raw.last).eql?'m'
+    preparation_time = [(((preparation_time_raw[0]).to_i * 60 *60)).to_s] if (preparation_time_raw.last).eql?'h'
     #Where m (minutes is found) multiply integer to get cook time in seconds, similarly for h (hours)
     cooking_time_raw = (doc.css("time[itemprop='cookTime']").text).split(' ')
     if (cooking_time_raw.join(',').include?'h') && (cooking_time_raw.join(',').include?'m')
-      cooking_time = [(cooking_time_raw[0]).to_i * 60 * 60 + ((cooking_time_raw[2]).to_i * 60 )]
+      cooking_time = [((cooking_time_raw[0]).to_i * 60 * 60 + ((cooking_time_raw[2]).to_i * 60 )).to_s]
     elsif ((cooking_time_raw.last).eql?'m')
-      cooking_time = [(cooking_time_raw[0]).to_i * 60]
+      cooking_time = [((cooking_time_raw[0]).to_i * 60).to_s]
     elsif ((cooking_time_raw.last).eql?'h')
-      cooking_time = [((cooking_time_raw[0]).to_i * 60 * 60)]
+      cooking_time = [(((cooking_time_raw[0]).to_i * 60 * 60)).to_s]
     end
 
     servings = doc.css("#metaRecipeServings").first['content']
@@ -181,7 +183,7 @@ end
     images = doc.css(".rec-photo").attr('src').text
     if save
       #Now that recipe fields are scraped from the extension, save as a new recipe
-      @recipe = Recipe.save_extension_scrape_recipe(title,preparation_time, cooking_time, ratings, images, level, servings, directions, url, ingredients,user)
+      @recipe = Recipe.save_extension_scrape_recipe(title,preparation_time[0], cooking_time[0], ratings, images, level, servings, directions, url, ingredients,user)
       @recipe.save
       @recipe.id
     else
@@ -200,9 +202,9 @@ end
     prep_time= doc.css('.cooking-times > dl >dd:nth-child(4)')[0].text
     #Find prep time and extract integers corresponding to hour or minutes and convert to seconds
     if ((prep_time.split(/hr*/)).size > 0)
-     preparation_time.push((prep_time.split(' ')[0]).to_i * 60)
+     preparation_time.push((prep_time.split(' ')[0]).to_i * 60 )
     elsif ((prep_time.split(/min*/)).size > 0)
-     preparation_time.push((prep_time.split(' ')[0]).to_i)
+     preparation_time.push((prep_time.split(' ')[0]).to_i )
     else
      preparation_time.push(prep_time)
     end
