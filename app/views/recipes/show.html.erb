@@ -339,11 +339,12 @@
                     <% recipe_levels = {0=>'Easy',1=>'Medium',2=>'Complex'} %>
                     <li>Level: <%= recipe_levels[@recipe['level']] %></li>
                   <% end %>
+                  <%# raise "help" %>
                   <% if @recipe['prep_duration'] %>
-                    	<li>Prep Time:<%#= Time.at(@recipe['prep_duration']).utc.strftime("%H:%M") %> hrs.</li>
+                    	<li>Prep Time:<%= Time.at(@recipe['prep_duration']).utc.strftime("%H:%M") %> hrs.</li>
                   <% end %>
                   <% if @recipe['cook_duration']  %>
-                    	<li>Cook Time: <%#= Time.at(@recipe['cook_duration']).utc.strftime("%H:%M") %> hrs.</li>
+                    	<li>Cook Time: <%= Time.at(@recipe['cook_duration']).utc.strftime("%H:%M") %> hrs.</li>
                   <% end %>
                   <% if (@recipe['category']).present? %>
                     <li>Category: <%= @recipe['category'] %></li>
@@ -393,7 +394,6 @@
             </div>
             <div id="ingredients">
               <% if @recipe!=nil %>
-							<%# raise "help" %>
 								<% if (@recipe.ingredients).present? %>
                 <h2>Ingredients</h2>
                 <ul>
