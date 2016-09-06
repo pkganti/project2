@@ -39,14 +39,10 @@ class RecipesController < ApplicationController
         if @searchrecipe["recipe"]["source_url"] =~ /bbcgoodfood/
           source_url = @searchrecipe["recipe"]["source_url"]
           recipeObj = @searchrecipe["recipe"]
-          # @searchrecipe  = bbc_scrape(source_url,recipeObj)
-          # @searchrecipe = nil
           @recipe  = Recipe.bbc_scrape(source_url,recipeObj,@current_user)
         elsif @searchrecipe["recipe"]["source_url"] =~ /allrecipes/
           source_url = @searchrecipe["recipe"]["source_url"]
           recipeObj = @searchrecipe["recipe"]
-          # @searchrecipe  = allrecipes_scrape(source_url,recipeObj)
-          # @searchrecipe = nil
           @recipe  = Recipe.allrecipes_scrape(source_url,recipeObj,@current_user)
           @quantities = ''
           @all_ratings = ''
@@ -107,8 +103,6 @@ class RecipesController < ApplicationController
       @chromeUrl =  params.fetch(:url)
       if @chromeUrl =~ /bbcgoodfood\.com/
         new_id = Recipe.bbc_scrape(@chromeUrl,{},save=true,@current_user)
-        # @recipe = Recipe.find_by :id => new_id
-        # @recipe.cuisine = params.fetch(:)
         status = recipe_url(new_id)
       elsif @chromeUrl =~ /taste\.com\.au/
         new_id = Recipe.taste_scrape(@chromeUrl.gsub(' ','+'),{},save=true,@current_user)

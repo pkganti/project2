@@ -59,10 +59,8 @@ def self.taste_scrape(url,r,save=false,user)
   # File.write('../../taste_scrape_log.txt')
   directions =[]
   doc.css('.method-tab-content > ol > li > p.description').each do |d|
-    # binding.pry
     directions.push(d.text.remove('[').remove(']'))
   end
-  # binding.pry
   images = doc.css('.recipe-image-wrapper > img').attr('src').text
   if save.eql?true
     @recipe = Recipe.save_extension_scrape_recipe(title,preparation_time, cooking_time, ratings, images, level, servings, directions, url, ingredients,user)
@@ -201,21 +199,27 @@ end
     doc = Nokogiri::HTML(open(url))
     title= doc.css('div.title > h1').text
     # ($(".gig-rating-stars")[1].title).split(' ')[0]
-    prep_time= doc.css('.cooking-times > dl >dd:nth-child(4)').text
-    if ((prep_time.split(/hrs?/)).size > 1)
-     preparation_time = prep_time.split(/hrs?/)
+    prep_time= doc.css('.cooking-times > dl >dd:nth-child(4)')[0].text
+    if ((prep_time.split(/hr*/)).size > 0)
+     preparation_time.push((prep_time.split(' ')[0]).to_i * 60)
+    elsif ((prep_time.split(/min*/)).size > 0)
+     preparation_time.push((prep_time.split(' ')[0]).to_i)
     else
      preparation_time.push(prep_time)
     end
-    cook_time = doc.css('.cooking-times > dl >dd:nth-child(6)').text
-    if ((cook_time.split(/hrs?/)).size > 1)
-     cooking_time = cook_time.split(/hrs?/)
+
+    cook_time = doc.css('.cooking-times > dl >dd:nth-child(6)')[0].text
+    if ((cook_time.split(/hr*/)).size > 0)
+      cooking_time.push((cook_time.split(' ')[0]).to_i * 60)
+    elsif ((cook_time.split(/min*/)).size > 1)
+      cooking_time.push((cook_time.split(' ')[0]).to_i)
     else
      cooking_time.push(cook_time)
     end
-    level = doc.css('.difficulty > dl:nth-child(2) >dd').text
-    servings = doc.css('.difficulty > dl:nth-child(1) >dd').text
-    images = doc.css('div .photo-video figure div a div img').attr('src').text
+    level = doc.css('.difficulty > dl:nth-child(2) >dd')[0].text
+    servings = doc.css('.difficulty > dl:nth-child(1) >dd')[0].text
+    images = doc.css('div .photo-video img').attr('src').text
+    ratings = ""
     ingredients = []
     doc.css(".ingredients > ul > li").each do |i|
       if save
@@ -233,11 +237,11 @@ end
     end
 
     if save
-      @recipe = Recipe.save_extension_scrape_recipe(title,preparation_time, cooking_time, ratings, images, level, servings, directions, url, ingredients,user)
+      @recipe = Recipe.save_extension_scrape_recipe(title,preparation_time[0], cooking_time[0], ratings, images, level, servings, directions, url, ingredients,user)
       @recipe.save
       @recipe.id
     else
-       Recipe.save_api_scrape_recipe(r,title,ratings,preparation_time,cooking_time,level,servings,directions,ingredients,images)
+       Recipe.save_api_scrape_recipe(r,title,ratings,preparation_time[0],cooking_time[0],level,servings,directions,ingredients,images)
     #     @recipe = Recipe.new
     #     @recipe.images = images
     #     @recipe.title = title
