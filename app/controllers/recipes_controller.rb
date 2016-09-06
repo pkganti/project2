@@ -35,26 +35,20 @@ class RecipesController < ApplicationController
     string_obj = HTTParty.get(url2)
     object_obj = JSON.parse(string_obj)
     @searchrecipe = object_obj
-    # binding.pry
       if (@searchrecipe["recipe"]).present?
         if @searchrecipe["recipe"]["source_url"] =~ /bbcgoodfood/
           source_url = @searchrecipe["recipe"]["source_url"]
           recipeObj = @searchrecipe["recipe"]
-          @searchrecipe  = bbc_scrape(source_url,recipeObj)
-          @searchrecipe = nil
-          @recipe  = bbc_scrape(source_url,recipeObj)
+          @recipe  = Recipe.bbc_scrape(source_url,recipeObj,@current_user)
         elsif @searchrecipe["recipe"]["source_url"] =~ /allrecipes/
           source_url = @searchrecipe["recipe"]["source_url"]
           recipeObj = @searchrecipe["recipe"]
-          @searchrecipe  = allrecipes_scrape(source_url,recipeObj)
-          @searchrecipe = nil
-          @recipe  = allrecipes_scrape(source_url,recipeObj)
+          @recipe  = Recipe.allrecipes_scrape(source_url,recipeObj,@current_user)
           @quantities = ''
           @all_ratings = ''
           @recipe_avg_rating = ''
           @recipe_rating = ''
         end
-        binding.pry
       else
         @recipe = Recipe.find_by( :id => params[:id])
         @quantities = Quantity.where(:recipe_id => params[:id])
@@ -108,18 +102,16 @@ class RecipesController < ApplicationController
 
       @chromeUrl =  params.fetch(:url)
       if @chromeUrl =~ /bbcgoodfood\.com/
-        new_id = bbc_scrape(@chromeUrl,{},save=true)
-        # @recipe = Recipe.find_by :id => new_id
-        # @recipe.cuisine = params.fetch(:)
+        new_id = Recipe.bbc_scrape(@chromeUrl,{},save=true,@current_user)
         status = recipe_url(new_id)
       elsif @chromeUrl =~ /taste\.com\.au/
-        new_id = taste_scrape(@chromeUrl.gsub(' ','+'),{},save=true)
+        new_id = Recipe.taste_scrape(@chromeUrl.gsub(' ','+'),{},save=true,@current_user)
         status = recipe_url(new_id)
       elsif @chromeUrl =~ /foodnetwork\.com/
-        new_id = foodNetwork_scrape(@chromeUrl,{},save=true)
+        new_id = Recipe.foodNetwork_scrape(@chromeUrl,{},save=true,@current_user)
         status = recipe_url(new_id)
       elsif @chromeUrl =~ /allrecipes\.com/
-        new_id = allrecipes_scrape(@chromeUrl,{}, save=true)
+        new_id = Recipe.allrecipes_scrape(@chromeUrl,{}, save=true,@current_user)
         status = recipe_url(new_id)
       else
         status = 'notok'
@@ -197,280 +189,6 @@ class RecipesController < ApplicationController
     duration = hour + mins
   end
 
-  def bbc_scrape(url,r,save=false)
-    # binding.pry
-    # raise "hell"
-    preparation_time=[]
-    cooking_time =[]
-    # (@searchrecipe["recipe"]).merge!( {'level' => 'Easy'})
-    doc = Nokogiri::HTML(open(url))
-    title = doc.css('.recipe-header__title').text
-    if (doc.css("meta[itemprop= 'ratingValue']")).present?
-      ratings =  doc.css("meta[itemprop= 'ratingValue']").first['content'] if (doc.css("meta[itemprop= 'ratingValue']").first['content'])
-    end
-    preping_time_raw= doc.css('.recipe-details__cooking-time-prep > span').text.split(' ')
-    if (preping_time_raw.join(',').include?'hrs') && (preping_time_raw.join(',').include?'mins')
-
-      preparation_time = [(preping_time_raw[0]).to_i * 60 * 60 + ((preping_time_raw[2]).to_i * 60 )]
-    elsif ((preping_time_raw.last).eql?'mins')
-      preparation_time = [(preping_time_raw[0]).to_i * 60]
-    elsif ((preping_time_raw.last).eql?'hrs')
-      preparation_time = [((preping_time_raw[0]).to_i * 60 * 60)]
-    end
-    # if ((prep_time.split(/hrs?/)).size > 1)
-    #  preparation_time = prep_time.split(/hrs?/)
-    # else
-    #  preparation_time.push(prep_time)
-    # end
-    cooking_time_raw = doc.css('.recipe-details__cooking-time-cook > span').text.split(' ')
-    # binding.pry
-    if (cooking_time_raw.join(',').include?'hrs') && (cooking_time_raw.join(',').include?'mins')
-
-      cooking_time = [(cooking_time_raw[0]).to_i * 60 * 60 + ((cooking_time_raw[2]).to_i * 60 )]
-    elsif ((cooking_time_raw.last).eql?'mins')
-      cooking_time = [(cooking_time_raw[0]).to_i * 60]
-    elsif ((cooking_time_raw.last).eql?'hrs')
-      cooking_time = [((cooking_time_raw[0]).to_i * 60 * 60)]
-    end
-    # if ((cook_time.split(/hrs?/)).size > 1)
-    #  cooking_time = cook_time.split(/hrs?/)
-    # else
-    #  cooking_time.push(cook_time)
-    # end
-    level = doc.css('.recipe-details__item--skill-level').css('span').text.strip
-    servings = doc.css('.recipe-details__item--servings').css('span').text.strip
-    directions = []
-    doc.css('#recipe-method').css('ol').each do |step|
-     directions.push(step.css('li').text.strip.gsub("\n", '<br>'))
-    end
-
-    ingredients = []
-    doc.css("[itemprop='ingredients']").each do |i|
-      if save
-        ingr = Ingredient.new
-        ingr.name = i.text
-        ingr.save
-        ingredients.push(ingr)
-      else
-        ingredients.push(i.text)
-      end
-
-    end
-
-
-   images = doc.css("[itemprop = 'image']").attr('src').text
-   if save
-     @recipe = Recipe.new
-     @recipe.title = title
-     @recipe.prep_duration = preparation_time
-     @recipe.images = images
-     @recipe.cook_duration = cooking_time
-     @recipe.ratings = ratings
-     @recipe.level = level
-     @recipe.servings = servings
-     @recipe.directions = directions.join(',')
-     if ingredients.length > 0
-       @recipe.ingredients << ingredients
-     end
-     @recipe.user_id = @current_user.id
-     @recipe.source_url = url
-     @recipe.save
-     @recipe.id
-   else
-    r.merge!( {'ratings' => ratings , 'prep_duration' => preparation_time ,'cook_duration' => cooking_time , 'level' => level , 'servings' => servings , 'directions' => directions})
-
-  end
-
-  end
-
-  def taste_scrape(url,r,save=false)
-    # raise "jhsbdj"
-    # url = /' '/'+'
-    doc = Nokogiri::HTML(open(url))
-    # raise 'hell'
-    title = doc.css('.heading > h1').text
-    # prep_time = (doc.css('.prepTime').css('em').text.split(':'))
-    # cook_time = (doc.css('.cookTime').css('em').text.split(':'))
-    # binding.pry
-    preparation_time = [(doc.css('.prepTime').css('em').text.delete('0:').to_i)*60]
-    cooking_time = [(doc.css('.cookTime').css('em').text.delete('0:').to_i)*60]
-    level = doc.css('.difficultyTitle').css('em').text
-    servings = doc.css('.servings').css('em').text
-    ratings = doc.css('.rating').css('span.star-level').text
-    ingredients = []
-    doc.css('.ingredient-table > li > label').each do |i|
-      if save
-        ingr = Ingredient.new
-        ingr.name = i.text
-        ingr.save
-        ingredients.push(ingr)
-      else
-        ingredients.push(i.text)
-      end
-    end
-    # File.write('../../taste_scrape_log.txt')
-    directions =[]
-    doc.css('.method-tab-content > ol > li > p.description').each do |d|
-      # binding.pry
-      directions.push(d.text.remove('[').remove(']'))
-    end
-    # binding.pry
-    images = doc.css('.recipe-image-wrapper > img').attr('src').text
-    if save
-        @recipe = Recipe.new
-        @recipe.title = title
-        @recipe.prep_duration = preparation_time
-        @recipe.cook_duration = cooking_time
-        @recipe.ratings = ratings
-        @recipe.images = images
-        @recipe.level = level
-        @recipe.servings = servings
-        @recipe.directions = directions.join(',')
-        @recipe.source_url = url
-        if ingredients.length > 0
-          @recipe.ingredients << ingredients
-        end
-         @recipe.user_id = @current_user.id
-        @recipe.save
-        @recipe.id
-    else
-    r.merge!( {'title' => title,'ratings' => ratings , 'prep_duration' => preparation_time ,'cook_duration' => cooking_time , 'level' => level , 'servings' => servings , 'directions' => directions, 'ingredients' =>  ingredients, 'image_url' => images})
-    end
-  end
-
-  def allrecipes_scrape(url,r, save=false)
-    # scrapeurl = url+'/print'
-
-    # (@searchrecipe["recipe"]).merge!( {'level' => 'Easy'})
-    doc = Nokogiri::HTML(open(url))
-    # raise "hell"
-    ratings =  doc.css("meta[itemprop= 'ratingValue']").first['content']
-    title = doc.css('.recipe-summary__h1').text
-    images = doc.css('.rec-photo').attr('src').text
-
-    preparation_time_raw= (doc.css("time[itemprop='prepTime']").text).split(' ')
-    preparation_time = [(preparation_time_raw[0]).to_i * 60] if (preparation_time_raw.last).eql?'m'
-    preparation_time = [((preparation_time_raw[0]).to_i * 60 *60)] if (preparation_time_raw.last).eql?'h'
-    cooking_time_raw = (doc.css("time[itemprop='cookTime']").text).split(' ')
-    # cooking_time = [(cooking_time_raw[0]).to_i * 60] if (cooking_time_raw.last).eql?'m'
-    # cooking_time = [((cooking_time_raw[0]).to_i * 60 * 60)] if (cooking_time_raw.last).eql?'h'
-    if (cooking_time_raw.join(',').include?'h') && (cooking_time_raw.join(',').include?'m')
-
-      cooking_time = [(cooking_time_raw[0]).to_i * 60 * 60 + ((cooking_time_raw[2]).to_i * 60 )]
-    elsif ((cooking_time_raw.last).eql?'m')
-      cooking_time = [(cooking_time_raw[0]).to_i * 60]
-    elsif ((cooking_time_raw.last).eql?'h')
-      cooking_time = [((cooking_time_raw[0]).to_i * 60 * 60)]
-    end
-
-
-    # binding.pry
-    servings = doc.css("#metaRecipeServings").first['content']
-
-    ingredients = []
-    doc.css('.recipe-ingredients > ul > li > label').each do |i|
-      if save
-        ingr = Ingredient.new
-        ingr.name = i.text
-        ingr.save
-        ingredients.push(ingr)
-      else
-        ingredients.push(i.text)
-      end
-    end
-    #
-    # ingredients.reject! { |i| i.empty? }
-
-    directions = []
-    doc.css('.recipe-directions__list').css('ol').css('li').each do |step|
-     directions.push(step.text.strip)
-    end
-
-    # raise "hell"
-
-    images = doc.css(".rec-photo").attr('src').text
-    if save
-        @recipe = Recipe.new
-        @recipe.title = title
-        @recipe.prep_duration = preparation_time
-        @recipe.cook_duration = cooking_time
-        @recipe.ratings = ratings
-        @recipe.images = images
-        # @recipe.level = level
-        @recipe.servings = servings
-        if ingredients.length > 0
-          @recipe.ingredients << ingredients
-        end
-        @recipe.directions = directions.join(',')
-        @recipe.source_url = url
-        @recipe.user_id = @current_user.id
-        @recipe.save
-        @recipe.id
-    else
-    r.merge!( {'images' => images, 'ratings' => ratings , 'prep_duration' => preparation_time[0] ,'cook_duration' => cooking_time[0] , 'servings' => servings , 'directions' => directions})
-
-    end
-  end
-
-
-  def foodNetwork_scrape(url,r, save=true)
-    preparation_time=[]
-    cooking_time =[]
-    # (@searchrecipe["recipe"]).merge!( {'level' => 'Easy'})
-    doc = Nokogiri::HTML(open(url))
-    title= doc.css('div.title > h1').text
-    # ($(".gig-rating-stars")[1].title).split(' ')[0]
-    prep_time= doc.css('.cooking-times > dl >dd:nth-child(4)').text
-    if ((prep_time.split(/hrs?/)).size > 1)
-     preparation_time = prep_time.split(/hrs?/)
-    else
-     preparation_time.push(prep_time)
-    end
-    cook_time = doc.css('.cooking-times > dl >dd:nth-child(6)').text
-    if ((cook_time.split(/hrs?/)).size > 1)
-     cooking_time = cook_time.split(/hrs?/)
-    else
-     cooking_time.push(cook_time)
-    end
-    level = doc.css('.difficulty > dl:nth-child(2) >dd').text
-    servings = doc.css('.difficulty > dl:nth-child(1) >dd').text
-    images = doc.css('div .photo-video figure div a div img').attr('src').text
-    ingredients = []
-    doc.css(".ingredients > ul > li").each do |i|
-      if save
-        ingr = Ingredient.new
-        ingr.name = i.text
-        ingr.save
-        ingredients.push(ingr)
-      else
-        ingredients.push(i.text)
-      end
-    end
-    directions = []
-    doc.css(".recipe-directions-list > li > p").each do |d|
-      directions.push(d.text)
-    end
-    # binding.pry
-    if save
-        @recipe = Recipe.new
-        @recipe.images = images
-        @recipe.title = title
-        @recipe.prep_duration = preparation_time
-        @recipe.cook_duration = cooking_time
-        @recipe.level = level
-        @recipe.servings = servings
-        if ingredients.length > 0
-          @recipe.ingredients << ingredients
-        end
-        @recipe.directions = directions.join(',')
-        @recipe.source_url = url
-        @recipe.user_id = @current_user.id
-        @recipe.save
-        @recipe.id
-    else
-    r.merge!( {'ratings' => ratings , 'prep_duration' => preparation_time ,'cook_duration' => cooking_time , 'level' => level , 'servings' => servings , 'directions' => directions})
-    end
-  end
 
   def ratings_avg(recipe_id)
     ratings = Rate.where(:rateable_id => recipe_id).pluck(:stars)

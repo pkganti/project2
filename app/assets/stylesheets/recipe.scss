@@ -114,10 +114,11 @@ li{
 // }
 
 .carousel{
- width: 100%;
- height: auto;
- margin: 0 auto;
-
+margin-top: 10px;
+ width: 100vw;
+}
+#myCarousel{
+  margin-top: 100px;
 }
 
 .carousel-inner > .item > img {
@@ -125,5 +126,4 @@ li{
    text-align: center;
    width: auto;
    height: auto;
-
 }

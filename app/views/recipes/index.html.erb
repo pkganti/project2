@@ -4,7 +4,7 @@
     <%= submit_tag "Search", class: "searchButton" %>
   <% end %>
 
-  <div class= 'row'>
+  <div class="col-xs-12">
     <% if (@searchrecipes != nil) %>
      <% @recipes.each do |recipe| %>
      <div class='col-xs-12 col-md-4 results'>
@@ -42,51 +42,24 @@
       </div>
      <% end %>
     <% else %>
-      <!-- <div id="myCarousel" class="carousel slide" data-ride="carousel">
-
-       <ol class="carousel-indicators">
-         <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-         <li data-target="#myCarousel" data-slide-to="1"></li>
-         <li data-target="#myCarousel" data-slide-to="2"></li>
-         <li data-target="#myCarousel" data-slide-to="3"></li>
-         <li data-target="#myCarousel" data-slide-to="4"></li>
-
-       </ol>
-       <div class="carousel-inner" role="listbox">
-         <div class="item active">
-
-           <%= link_to image_tag(@list_recipes[0]["images"]), "/recipes/#{@list_recipes[0]["id"]}", :class => "first-slide imagecar", :alt => "First slide" %>
-
-         </div>
-         <div class="item">
-           <%= link_to image_tag(@list_recipes[1]["images"]), "/recipes/#{@list_recipes[1]["id"]}", :class => "second-slide imagecar", :alt => "Second slide" %>
-
-         </div>
-         <div class="item">
-           <%= link_to image_tag(@list_recipes[2]["images"]), "/recipes/#{@list_recipes[2]["id"]}", :class => "third-slide imagecar", :alt => "Third slide" %>
-
-         </div>
-
-         <div class="item">
-           <%= link_to image_tag(@list_recipes[4]["images"]), "/recipes/#{@list_recipes[4]["id"]}", :class => "fourth-slide imagecar", :alt => "Fourth slide" %>
-
-         </div>
-         <div class="item">
-           <%= link_to image_tag(@list_recipes[4]["images"]), "/recipes/#{@list_recipes[4]["id"]}", :class => "fifth-slide imagecar", :alt => "Fifth slide" %>
+      <!-- if nothing is yet searched, display random recipes from Palate's database -->
+      <% @list_recipes.each do |recipe| %>
+      <div class='col-xs-12 col-md-4 results'>
+        <div class="recipe-card">
+          <div class="card-wrapper">
+            <a href="/recipes/<%= recipe.id %>"><img src="<%= recipe.images %>" alt=""></a>
+          </div>
+          <div id="card-title"><%= recipe.title %> </div>
+          <div id="card-level">
+            <% if (recipe.level).present? %>
+              <% recipe_levels = {0=>'Easy',1=>'Medium',2=>'Complex'} %>
+              <li>Level: <%= recipe_levels[recipe.level] %></li>
+            <% end %>
+          </div>
+          <div id="card-rating"><%= recipe.ratings %> </div>
          </div>
        </div>
-       <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
-         <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-         <span class="sr-only">Previous</span>
-       </a>
-       <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
-         <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-         <span class="sr-only">Next</span>
-       </a>
-      </div> -->
-      <% @list_recipes.each do |recipe| %>
-        <%# raise "hell" %>
-        <%= link_to image_tag(recipe.images) , recipe %>
+        <%#= link_to image_tag(recipe.images) , recipe %>
       <% end %>
 
     <% end %>
