@@ -1,6 +1,6 @@
 $(document).ready(function() {
-  var baseUrl = 'http://localhost:3000'; //the root url
-  // var baseUrl = 'http://wdi15project2.herokuapp.com';
+  // var baseUrl = 'http://localhost:3000'; //the root url
+  var baseUrl = 'http://wdi15project2.herokuapp.com';
 
 var scrapedCategorySubmit = function(event){
   //run function for qualified recipes from a scraped channel (BBC Good Food, Taste, Food Network or AllRecipes)
