@@ -133,7 +133,7 @@ end
      @recipe.id
    else
      #Recipe fields are scraped for recipes found through the food2fork API
-     Recipe.save_api_scrape_recipe(r,title,ratings,preparation_time[0],cooking_time[0],level,servings,directions,ingredients,images)
+     Recipe.save_api_scrape_recipe(r,title,ratings,preparation_time[0].to_i,cooking_time[0].to_i,level,servings,directions,ingredients,images)
 
    end
 
@@ -188,7 +188,7 @@ end
       @recipe.id
     else
      #Recipe fields are scraped for recipes found through the food2fork API and ready to be rendered
-     Recipe.save_api_scrape_recipe(r,title,ratings,preparation_time[0],cooking_time[0],level,servings,directions,ingredients,images)
+     Recipe.save_api_scrape_recipe(r,title,ratings,preparation_time[0].to_i,cooking_time[0].to_i,level,servings,directions,ingredients,images)
     end
   end
 
