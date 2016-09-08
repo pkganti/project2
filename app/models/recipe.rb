@@ -183,7 +183,7 @@ end
     images = doc.css(".rec-photo").attr('src').text
     if save
       #Now that recipe fields are scraped from the extension, save as a new recipe
-      @recipe = Recipe.save_extension_scrape_recipe(title,preparation_time[0], cooking_time[0], ratings, images, level, servings, directions, url, ingredients,user)
+      @recipe = Recipe.save_extension_scrape_recipe(title,preparation_time[0], cooking_time[], ratings, images, level, servings, directions, url, ingredients,user)
       @recipe.save
       @recipe.id
     else

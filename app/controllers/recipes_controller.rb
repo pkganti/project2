@@ -205,7 +205,7 @@ class RecipesController < ApplicationController
 
   def ratings_avg(recipe_id)
     ratings = Rate.where(:rateable_id => recipe_id).pluck(:stars)
-  
+
     if (ratings.size > 0)
       avg = (ratings.sum)/(ratings.size)
     end
