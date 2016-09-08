@@ -36,7 +36,7 @@
 										<div class="ratings col-xs-6 col-md-6 col-md-offset-3">
                       <% if current_user %>
                         <% if @recipe_rating.nil? %>
-                        My Rating<%= rating_for @recipe, "useful" , enable_half: true %>
+                        My Rating<%#= rating_for @recipe, "useful" , enable_half: true %>
                           <script type="text/javascript">
                             $(document).ready(function() {
                               $('.raty-cancel').addClass('hidden');
