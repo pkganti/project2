@@ -46,7 +46,7 @@ class RecipesController < ApplicationController
           recipeObj = @searchrecipe["recipe"]
           # calling allrecipes_scrape to fetch recipe detials from model
           @recipe  = Recipe.allrecipes_scrape(source_url,recipeObj,@current_user)
-          @quantities = ''
+          # @quantities = ''
           @all_ratings = ''
           @recipe_avg_rating = ''
           @recipe_rating = ''
