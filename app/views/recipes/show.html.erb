@@ -339,7 +339,6 @@
                     <% recipe_levels = {0=>'Easy',1=>'Medium',2=>'Complex'} %>
                     <li>Level: <%= recipe_levels[@recipe['level']] %></li>
                   <% end %>
-                  <%# raise "help" %>
                   <% if @recipe['prep_duration'] %>
                     	<li>Prep Time:<%= Time.at(@recipe['prep_duration']).utc.strftime("%H:%M") %> hrs.</li>
                   <% end %>
@@ -394,23 +393,24 @@
             </div>
             <div id="ingredients">
               <% if @recipe!=nil %>
-								<% if (@recipe.ingredients).present? %>
+							<%# raise "help" %>
+								<% if (@recipe['ingredients']).present? %>
                 <h2>Ingredients</h2>
                 <ul>
-									<% if (@quantities.eql?(''|| nil) )%>
-										<% @recipe.ingredients.each do |i| %>
+									<% if @quantities.eql?('') %>
+										<% @recipe["ingredients"].each do |i| %>
 											<li>
-												<%= i.name %>
+												<%= i %>
 											</li>
 										<% end %>
 									<% else %>
-										<% @quantities.each do |q| %>
+										<%# @quantities.each do |q| %>
 											<li>
-												<%= q.size %>
-												<%= q.unit %>
-												<%= q.ingredient.name %>
+												<%#= q.size %>
+												<%#= q.unit %>
+												<%#= q.ingredient.name %>
 											</li>
-										<% end %>
+										<%# end %>
 									<% end %>
 
                 </ul>
