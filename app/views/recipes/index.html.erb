@@ -3,7 +3,6 @@
     <input type="text" name="recipesearch" id="search" placeholder="  eg. Mac n Cheese"></input>
     <%= submit_tag "Search", class: "searchButton" %>
   <% end %>
-
   <div class="col-xs-12">
     <% if (@searchrecipes != nil) %>
      <% @recipes.each do |recipe| %>
@@ -19,7 +18,12 @@
              <li>Level: <%= recipe_levels[recipe.level] %></li>
            <% end %>
          </div>
-         <div id="card-rating"><%= recipe.ratings %> </div>
+         <div id="card-rating">
+           <%#= recipe.ratings %>
+           <% (recipe.ratings).to_i.times do |i| %>
+            <span style="font-size:150%;color:gold;">&#9733;</span>
+          <% end %>
+         </div>
         </div>
       </div>
       <% end %>
@@ -36,7 +40,12 @@
               <li>Level: <%= recipe_levels[@searchrecipes[i]["level"]] %></li>
             <% end %>
           </div>
-          <div id="card-rating"><%= @searchrecipes[i]["ratings"] %> </div>
+          <div id="card-rating">
+            <%#= @searchrecipes[i]["ratings"] %>
+            <% (@searchrecipes[i]["ratings"]).to_i.times do |i| %>
+             <span style="font-size:150%;color:gold;">&#9733;</span>
+           <% end %>
+          </div>
           <!-- <div id="card-cooktime"><%#S= @searchrecipes[i]["cook_duration"]+ @searchrecipes[i]["prep_duration"] %> </div> -->
         </div>
       </div>
@@ -56,7 +65,11 @@
               <li>Level: <%= recipe_levels[recipe.level] %></li>
             <% end %>
           </div>
-          <div id="card-rating"><%= recipe.ratings %> </div>
+          <div id="card-rating">
+            <% (recipe.ratings).to_i.times do |i| %>
+             <span style="font-size:150%;color:gold;">&#9733;</span>
+           <% end %>
+          </div>
          </div>
        </div>
         <%#= link_to image_tag(recipe.images) , recipe %>
