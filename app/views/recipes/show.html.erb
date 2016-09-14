@@ -36,7 +36,7 @@
 										<div class="ratings col-xs-6 col-md-6 col-md-offset-3">
                       <% if current_user %>
                         <% if @recipe_rating.nil? %>
-                        My Rating<%#= rating_for @recipe, "useful" , enable_half: true %>
+                        My Rating<%= rating_for @recipe, "useful" , enable_half: true %>
                           <script type="text/javascript">
                             $(document).ready(function() {
                               $('.raty-cancel').addClass('hidden');
@@ -393,25 +393,26 @@
             </div>
             <div id="ingredients">
               <% if @recipe!=nil %>
-							<%# raise "help" %>
-								<% if (@recipe['ingredients']).present? %>
+						<% if (@recipe['ingredients']).present? %>
                 <h2>Ingredients</h2>
                 <ul>
-									<% if @quantities.eql?('') %>
-										<% @recipe["ingredients"].each do |i| %>
-											<li>
-												<%= i %>
-											</li>
-										<% end %>
-									<% else %>
-										<%# @quantities.each do |q| %>
-											<li>
-												<%#= q.size %>
-												<%#= q.unit %>
-												<%#= q.ingredient.name %>
-											</li>
-										<%# end %>
-									<% end %>
+                  <% if (@quantities) %>
+  									<% if (@quantities.eql?'' )%>
+  										<% @recipe.ingredients.each do |i| %>
+  											<li>
+  												<%= i.name %>
+  											</li>
+  										<% end %>
+  									<% else %>
+  										<% @quantities.each do |q| %>
+  											<li>
+  												<%= q.size %>
+  												<%= q.unit %>
+  												<%= q.ingredient.name %>
+  											</li>
+  										<% end %>
+  									<% end %>
+                <% end %>
 
                 </ul>
 								<% end %>

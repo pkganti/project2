@@ -28,7 +28,7 @@ end
 
 def self.save_api_scrape_recipe(r,title,ratings,preparation_time,cooking_time,level,servings,directions,ingredients,images)
 #render the recipe fields when a recipe is found from the food2fork api
-    r.merge!( {'title' => title,'ratings' => ratings , 'prep_duration' => preparation_time ,'cook_duration' => cooking_time , 'level' => level , 'servings' => servings , 'directions' => directions, 'ingredients' =>  ingredients, 'images' => images})
+    r.merge!( {'title' => title,'ratings' => ratings , 'prep_duration' => preparation_time ,'cook_duration' => cooking_time , 'level' => level , 'servings' => servings , 'directions' => directions, 'ingredients' =>  ingredients,'quantities' => '', 'images' => images})
 end
 
 def self.taste_scrape(url,r,save=false,user)
@@ -133,7 +133,7 @@ end
      @recipe.id
    else
      #Recipe fields are scraped for recipes found through the food2fork API
-     Recipe.save_api_scrape_recipe(r,title,ratings,preparation_time,cooking_time,level,servings,directions,ingredients,images)
+     Recipe.save_api_scrape_recipe(r,title,ratings,preparation_time[0].to_i,cooking_time[0].to_i,level,servings,directions,ingredients,images)
 
    end
 
@@ -183,12 +183,12 @@ end
     images = doc.css(".rec-photo").attr('src').text
     if save
       #Now that recipe fields are scraped from the extension, save as a new recipe
-      @recipe = Recipe.save_extension_scrape_recipe(title,preparation_time[0], cooking_time[0], ratings, images, level, servings, directions, url, ingredients,user)
+      @recipe = Recipe.save_extension_scrape_recipe(title,preparation_time[0], cooking_time[], ratings, images, level, servings, directions, url, ingredients,user)
       @recipe.save
       @recipe.id
     else
      #Recipe fields are scraped for recipes found through the food2fork API and ready to be rendered
-     Recipe.save_api_scrape_recipe(r,title,ratings,preparation_time,cooking_time,level,servings,directions,ingredients,images)
+     Recipe.save_api_scrape_recipe(r,title,ratings,preparation_time[0].to_i,cooking_time[0].to_i,level,servings,directions,ingredients,images)
     end
   end
 
