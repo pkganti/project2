@@ -3,6 +3,7 @@ body {
     font-family:'PT Sans Narrow', sans-serif;
     font-size: 100%;
     width: 400px;
+    padding:10px;
 }
 .wrapper {
     width: 380px;
@@ -23,8 +24,8 @@ body {
     display: none;
 }
 label {
-    padding-top: 10px;
-    margin-top: 10px;
+    padding-top: 20px;
+    margin-top: 20px;
 }
 img:hover {
     border: 5px solid gray;
@@ -37,11 +38,11 @@ img {
     border: 5px solid transparent;
 }
 .chosen {
-    border: 5px solid red;
+    border: 5px solid #5e7028;
 }
 
 .chosen:hover{
-  border: 5px solid red;
+  border: 5px solid #5e7028;
 }
 #image-results {
     width: 350px;
