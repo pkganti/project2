@@ -42,8 +42,13 @@ input.searchButton {
 }
 .recipe-card {
     border: 1px solid black;
+<<<<<<< HEAD
     max-width: 250px; 
     height: 325px;
+=======
+    // max-width: 250px;
+    height: 350px;
+>>>>>>> 34588a5c1ded47ee687a5a1845a9ad2340a27cfb
     text-align: center;
     // border-radius: 15px;
 }
@@ -51,6 +56,9 @@ input.searchButton {
     width: 100%;
     max-height: 250px;
     position: cover;
+}
+#card-level li{
+    text-align: center;
 }
 .searchButton {
     color: white;

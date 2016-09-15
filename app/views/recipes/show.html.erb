@@ -127,10 +127,10 @@
 											<div class="bookmarking">
 												<% if (@recipe['source_url']).nil? %>
 												<% r_id = @recipe.id %>
-													<form action="/favorites/add/<%= @recipe.id %>" ,method="post">
+													<form action="/favorites/add/<%= @recipe.id %>" method="post">
 												<% else %>
 												<% r_id = 0 %>
-													<form action="/favorites/add/0" ,method="post">
+													<form action="/favorites/add/0" method="post">
 												<% end %>
 
 													<input class="form-control recipe_api_value" name="recipe[api_recipe]" style="display: none;" value="<%= @recipe.to_json %>">
