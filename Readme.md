@@ -1,5 +1,7 @@
 ##Palate
 Palate is the project 2 of the web developer program. The main idea behind developing this application is to help people find their favorite dishes.
+[Palate Demo Video](https://vimeo.com/182811584)
+
 
 ##Technologies used
 1. Ruby
@@ -45,5 +47,7 @@ The following are the nice to have features that will be implemented shortly:
 
 1. Implementing DRY
 
+
 Click here to access the application: [Palate](
 https://wdi15project2.herokuapp.com/)
+Click here to read our UX case study for research and product development: [UX Case Study](https://katmlee.github.io/palate.html)

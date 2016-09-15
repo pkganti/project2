@@ -110,6 +110,7 @@ class RecipesController < ApplicationController
       if @chromeUrl =~ /bbcgoodfood\.com/
         new_id = Recipe.bbc_scrape(@chromeUrl,{},save=true,@current_user)
         status = recipe_url(new_id)
+        #recipe_url is a helper
       elsif @chromeUrl =~ /taste\.com\.au/
         new_id = Recipe.taste_scrape(@chromeUrl.gsub(' ','+'),{},save=true,@current_user)
         status = recipe_url(new_id)
